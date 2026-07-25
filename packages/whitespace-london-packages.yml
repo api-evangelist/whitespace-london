@@ -1,0 +1,73 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://github.com/whitespace-software (GitHub organisation "Whitespace", London,
+  blog www.whitespace.co.uk) plus registry searches of npm, PyPI, NuGet, Maven Central,
+  pkg.go.dev, RubyGems, Packagist and crates.io on 2026-07-25.
+summary:
+  registry_packages: 0
+  source_distributions: 2
+  note: >-
+    Whitespace publishes NO client library to any public package registry. Searches of
+    npm, PyPI, NuGet, Maven Central, pkg.go.dev, RubyGems, Packagist and crates.io return
+    no first-party Whitespace Software Limited package (npm/NuGet hits for "whitespace"
+    are unrelated string-utility libraries). What Whitespace does publish is first-party,
+    MIT-licensed SOURCE on its GitHub organisation: a C# helper client plus command-line
+    utilities, and a Node/Cucumber API test harness. Integrators are otherwise expected to
+    generate a client from the OpenAPI at swagger.whitespace.co.uk or call the REST API
+    with curl, per the Getting Started guide.
+packages:
+- language: csharp
+  registry: github
+  name: whitespace-software/CSharpUtils
+  url: https://github.com/whitespace-software/CSharpUtils
+  install: git clone https://github.com/whitespace-software/CSharpUtils.git
+  official: true
+  license: MIT
+  distribution: source
+  description: >-
+    "Windows programs and command-line utilities to access Whitespace Platform APIs."
+    Ships a reusable client in WSShared (WSAPIClient.cs, WSSettings.cs, WSUtilities.cs and
+    typed result classes for PlatformDocument, RisksRootResult, WSAttachment, WSOIDCResult,
+    WSTeam, WSUserMyDetails) alongside runnable examples: HelloWorld, Standalone, RisksList,
+    RiskPack, EvidenceOfCover, VerifyAttachments and MIReport.
+  last_pushed: '2022-12-08'
+  note: >-
+    This is the closest thing to a first-party SDK — a shared C# API client plus utilities —
+    but it is not published to NuGet and has not been pushed since December 2022.
+- language: javascript
+  registry: github
+  name: whitespace-software/UnderTests
+  url: https://github.com/whitespace-software/UnderTests
+  install: git clone https://github.com/whitespace-software/UnderTests.git
+  official: true
+  distribution: source
+  kind: test-harness
+  description: API testing in Node using Cucumber-JS against the Whitespace Platform API.
+  last_pushed: '2020-11-25'
+  note: A first-party test harness rather than a client library.
+registries_checked:
+- registry: npm
+  result: no first-party package
+- registry: pypi
+  result: no first-party package
+- registry: nuget
+  result: no first-party package
+- registry: maven-central
+  result: no first-party package
+- registry: pkg.go.dev
+  result: no first-party package
+- registry: rubygems
+  result: no first-party package
+- registry: packagist
+  result: no first-party package
+- registry: crates.io
+  result: no first-party package
+third_party_dependencies:
+- name: "@azure/service-bus"
+  registry: npm
+  official: false
+  note: >-
+    Not a Whitespace package. The published queue-consumer sample (Appendix A of
+    "Integrating with Whitespace via Queues 3.1") uses Microsoft's @azure/service-bus
+    client to read the client's Azure Service Bus queue.

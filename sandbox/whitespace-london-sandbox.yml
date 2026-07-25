@@ -1,0 +1,96 @@
+generated: '2026-07-25'
+method: searched
+source: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+docs:
+- https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+- https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+- https://swagger.whitespace.co.uk/
+name: Whitespace Sandbox
+published: true
+self_serve: false
+summary: >-
+  Whitespace runs a first-class test environment called Sandbox with "identical functionality
+  at all levels" to Production, where every organisation, user and contract is unreal. It is
+  the mandated first step of the three-step integration process: all integration work is
+  built and tested on Sandbox before Production access is granted. Access is not self-serve —
+  Sandbox user accounts, an API service account and Sandbox service-bus queues are all
+  requested from support@whitespace.co.uk.
+environments:
+- mode: test
+  name: Sandbox
+  base_url: https://sandbox.whitespace.co.uk
+  data: entirely unreal organisations, users and data — safe for full experimentation
+  ui: yes — the platform UI runs on the same host, so integrators can generate test data by hand
+  queues: separate Sandbox Azure Service Bus queue(s), requested from support
+  token_ip_allowlist: optional (recommended) — unlike Production, where it is mandatory
+  token_expiry_monitoring: not monitored by Whitespace; the integrator must track expiry
+- mode: live
+  name: Production
+  base_url: https://www.whitespaceplatform.com
+  token_ip_allowlist: required — the contractual second authentication factor
+  token_expiry_monitoring: monitored by Whitespace, which warns clients of pending expiry
+- mode: other
+  name: Tess
+  base_url: https://tess.whitespace.co.uk
+- mode: other
+  name: Beta
+  base_url: https://beta.whitespace.co.uk
+- mode: other
+  name: Staging
+  base_url: https://staging.whitespace.co.uk
+credentials:
+  separation: >-
+    Tokens are environment-specific. A token is issued for SANDBOX or for PRODUCTION and named
+    for the account it belongs to; there is no key prefix convention (no sk_test/sk_live
+    equivalent) — the environment is chosen when the token is requested.
+  request_path: >-
+    Email support@whitespace.co.uk with the organisation name or COMPANYID, the contact email,
+    the environment (SANDBOX or PRODUCTION), the preferred expiry date (up to one year) and the
+    calling IP address(es). Tokens arrive within 3 working days as a password-protected zip.
+  dummy_counterparties: >-
+    "Brokers can be given a dummy (Re)insurer organisation, and vice versa, to enable
+    experimentation with the workflow. Dummy organisations are also available to third parties."
+    This is how a one-sided integrator can exercise the full quote/firm-order/line/sign flow.
+connectivity_check:
+  operation: GET /api/version
+  url: https://sandbox.whitespace.co.uk/api/version
+  auth_required: false
+  purpose: >-
+    The documented first call. It needs no authentication, so it confirms network reachability
+    before any credential is in play, and returns the platform build in use.
+published_test_values:
+  note: >-
+    Whitespace publishes no magic test identifiers (no test card numbers, no reserved IDs). The
+    values below appear verbatim in the public guides as illustrative Sandbox fixtures and are
+    recorded as documentation examples, not as usable credentials.
+  example_users:
+  - underwriter.palermo@wspt.co.uk
+  example_organisations:
+  - PALERMO (Palermo Insurance Inc, underwriter)
+  - AJC (AJC Broking Ltd, broker)
+  - BLACKPOOL
+  - WANTAGELTD (service-account naming example)
+  example_channels:
+  - palermo_ALL
+  - ajc_PROPERTYAFRICA
+  - blackpool_MARINE
+  example_ids:
+  - IC213DA609-D6B5-4A05-86B8-3FD91E861F57 (root risk)
+  - IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO (firm-order instance)
+  - MUD38EC011-780A-42D3-94DA-FD9063F5DAF9 (user)
+  - B0999JC2505221216 (UMR / broker contract reference)
+tooling:
+  interactive_console:
+    url: https://swagger.whitespace.co.uk/
+    kind: Swagger UI
+    note: >-
+      A public, unauthenticated Swagger UI over the full 113-path spec. It can issue live calls
+      once a bearer token is supplied, making it the de-facto API console.
+  cli: cli/whitespace-london-cli.yml
+  test_harness: https://github.com/whitespace-software/UnderTests
+time_simulation:
+  supported: false
+  note: No test clocks or time-travel fixtures are published.
+related:
+  authentication: authentication/whitespace-london-authentication.yml
+  conventions: conventions/whitespace-london-conventions.yml

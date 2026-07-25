@@ -1,0 +1,101 @@
+generated: '2026-07-25'
+method: searched
+source: openapi/whitespace-london-platform-openapi.yml
+docs:
+- https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+- https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+- https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Renewable_Token_for_the_API.pdf
+- https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+summary:
+  types:
+  - http
+  http_schemes:
+  - bearer
+  bearer_format: JWT
+  self_serve: false
+  oauth2: false
+  oidc: false
+  mtls: false
+  api_key: false
+  second_factor: IP allowlisting (contractually required on Production)
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  applied: 'global — security: [{bearerAuth: []}]'
+  sources:
+  - openapi/whitespace-london-platform-openapi.yml
+credentials:
+- kind: service token
+  audience: system-to-system integrations (dedicated service accounts, recommended)
+  issued_by: Whitespace Support (support@whitespace.co.uk), out of band
+  issued_since: January 2022
+  delivery: >-
+    A password-protected zip containing one JSON file per account, provided within 3 working
+    days (GMT); the password is sent separately as a secure email.
+  payload_keys:
+  - key: token
+    description: The value passed in the Authorization Bearer header.
+  - key: kid
+    description: Identifier used to revoke the token.
+  - key: expiry
+    description: Expiry date of the token.
+  max_lifetime: 1 year
+  account_naming: wssvc_COMPANYID_contact.email@youremail.domain
+  ip_allowlist: >-
+    Required on PRODUCTION as the contractually-mandated second authentication factor.
+    Multiple IPs or a reasonable range are accepted; a universal 0.0.0.0-255.255.255.255
+    range is refused. IPs are optional (but recommended) on SANDBOX.
+  expiry_monitoring: >-
+    Whitespace monitors token expiry on PRODUCTION and warns clients; SANDBOX expiry is not
+    monitored and must be tracked by the integrator.
+  usage: 'Authorization: Bearer <token>'
+- kind: renewable / user token
+  audience: desktop, mobile and web applications acting for a logged-in platform user
+  flow: browser-redirect authorization-code-like exchange (not OAuth 2.0, not OIDC)
+  steps:
+  - GET {ROOT}/auth/apiLogin?email={email}[&client_id={client_id}] returns a redirect URL
+  - The user completes password entry and MFA at that URL
+  - The redirect back carries code and state parameters
+  - 'POST the code and state values to {ROOT}/auth/apiLogin?email={email} — returns a token'
+  - Refresh by calling {ROOT}/auth/apiRefresh with the Authorization Bearer header
+  token_lifetime: 1 hour
+  refresh_window: >-
+    Call /auth/apiRefresh every 15-45 minutes. The call errors if the token has expired or
+    if the current token is less than 10 minutes old.
+  client_id: >-
+    Web implementations must register their redirect URL with Whitespace and be issued a
+    client_id out of band before generating tokens.
+  note: >-
+    Also the credential used by the CSharpUtils utilities (settings key "renewableToken",
+    copied by the user from the platform's user settings panel).
+multi_organisation:
+  name: SUMO (Single User, Multiple Organisation)
+  header: 'UserID: MU<36-character identifier>'
+  discovery: GET /api/shared/corporate — filter the "members" arrays for the user's uniqueID
+  service_tokens: Not supported for SUMO; a separate token is required per corporate identity.
+  error_without_header: '{"reason": "Invalid WSAUTH: Valid UserID must be supplied", "error": true}'
+failure_mode:
+  status: 401
+  body: '{"error": true, "reason": "Invalid WSAUTH"}'
+  causes:
+  - Token expired or revoked
+  - Associated platform user is not in Live or ReadOnly state (Draft/Suspended are rejected)
+  - Source IP address is not on the allowlist
+  - ReadOnly users attempting a POST
+anonymous_endpoints:
+- GET /api/version
+onboarding:
+  self_serve: false
+  path: >-
+    Request Sandbox user accounts and an API service account from support@whitespace.co.uk,
+    then Sandbox service bus queue(s), then Production service account(s) and queue(s).
+  commercial_terms: https://www.whitespace.co.uk/interchange-agreement
+scopes:
+  supported: false
+  note: >-
+    There is no OAuth 2.0 authorization server and no scope surface. Authorisation is
+    enforced by platform role (broker / underwriter), user state (Live / ReadOnly) and
+    Couchbase channel membership (companyID_teamID) rather than by token scopes — see
+    conventions/whitespace-london-conventions.yml.

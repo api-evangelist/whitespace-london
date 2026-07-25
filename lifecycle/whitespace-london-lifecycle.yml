@@ -1,0 +1,113 @@
+generated: '2026-07-25'
+method: searched
+source: openapi/whitespace-london-platform-openapi.yml
+docs:
+- https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+- https://www.whitespace.co.uk/release-notes
+- https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+versioning:
+  scheme: uri-path, date-stamped and optional
+  format: /api/v{YY.MM}/<resource>
+  docs: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  current_versioned_families:
+  - family: Defined Data
+    current: v23.09
+    superseded: v22.04
+    paths:
+    - /api/v23.09/data/{riskID}
+    - /api/v22.04/data/{riskID}
+  unversioned_default: >-
+    Most endpoints exist only at /api/<resource> with no version segment; a version is
+    inserted only for exceptional changes.
+  no_version_bump_for:
+  - Additions to the output format
+  - Optional additions to the input format
+  - Changes to the internal behaviour of an endpoint
+  platform_version:
+    scheme: semver-like major.minor(.patch) for the platform itself
+    current: '3.7'
+    released: '2026-07-10'
+    discovery: GET /api/version (anonymous, returns platformVersion and buildDate)
+deprecation:
+  policy_url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  policy: >-
+    Old versions are never removed. Whitespace's published position is that when a new
+    versioned endpoint is released "the old version ... would continue to be the old version,
+    forever", and that integrated systems will legitimately hold a mixture of /api,
+    /api/v20.02, /api/v20.05 paths. There is therefore no sunset date, no removal schedule
+    and no forced migration; superseded endpoints are marked in the reference documentation
+    and new integrators are steered to the current version.
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  removal_schedule: none — superseded endpoints are retained indefinitely
+deprecated_operations:
+- operation: GET /api/comments
+  spec_flag: false
+  evidence: >-
+    Summary reads "Gets all comments. Deprecated in favour of /risks/$rootID/related/RWComment".
+  replacement: GET /api/risks/{rootID}/related/{type} with type RWComment
+- operation: POST /api/showDeclarationToFacility
+  spec_flag: false
+  evidence: >-
+    Summary reads "Please use the showToFacility Endpoint instead, this is the old version".
+  replacement: POST /api/declarations/{riskID}/showToFacility/{facilityID}
+- operation: GET /api/v22.04/data/{riskID}
+  spec_flag: false
+  evidence: >-
+    Description reads "NOTE that this is the old version, new integrators please use v23.09".
+  replacement: GET /api/v23.09/data/{riskID}
+- operation: POST /api/v22.04/data/{riskID}
+  spec_flag: false
+  evidence: Superseded by the v23.09 Defined Data write endpoint.
+  replacement: POST /api/v23.09/data/{riskID}
+note_on_spec_flags: >-
+  None of the four superseded operations carries the OpenAPI `deprecated: true` flag — the
+  deprecation is expressed only in prose in the summary/description. Machine consumers cannot
+  detect it from the spec.
+release_cadence:
+  major_minor: roughly quarterly (3.2 May 2025, 3.3 Sep 2025, 3.4 Oct 2025, 3.5 Jan 2026, 3.6 Apr 2026, 3.7 Jul 2026)
+  patch: as needed between minors, published as patch release notes
+  data_updates: periodic reference-data updates (v103 Jul 2025, v104 Nov 2025, v105 Feb 2026, v106 Jun 2026)
+  changelog: changelog/whitespace-london-changelog.yml
+  public_url: https://www.whitespace.co.uk/release-notes
+  note: >-
+    "Some minor platform releases do not have a file published here. They are usually
+    infrastructure changes to the platform."
+environments:
+- name: Sandbox
+  url: https://sandbox.whitespace.co.uk/
+  purpose: test environment with identical functionality and entirely unreal organisations, users and data
+- name: Production
+  url: https://www.whitespaceplatform.com
+  purpose: the live platform; access arranged separately with Whitespace Support after Sandbox testing
+- name: Tess
+  url: https://tess.whitespace.co.uk/
+- name: Beta
+  url: https://beta.whitespace.co.uk/
+- name: Staging
+  url: https://staging.whitespace.co.uk/
+status_page:
+  url: null
+  found: false
+  evidence:
+  - url: https://status.whitespace.co.uk/
+    status: 0
+    note: DNS does not resolve.
+  - url: https://whitespace.statuspage.io/
+    status: 200
+    note: >-
+      An Atlassian Statuspage exists at this subdomain but returns "Whitespace Status - Page
+      Inactive" — it is not a live status page and is not linked from any Whitespace property.
+  - url: https://www.whitespace.co.uk/status
+    status: 404
+sla:
+  url: null
+  published: false
+  note: >-
+    No public uptime target or SLA. Service levels are governed by the Whitespace Interchange
+    Agreement (https://www.whitespace.co.uk/interchange-agreement) between Whitespace and each
+    contracted organisation.
+support:
+  channel: support@whitespace.co.uk (Whitespace Integration Team)
+  page: https://www.whitespace.co.uk/support-training/

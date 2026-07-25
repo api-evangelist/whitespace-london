@@ -96,6 +96,12 @@ apis:
   - type: Documentation
     url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
 common:
+- type: AgenticAccess
+  url: agentic-access/whitespace-london-agentic-access.yml
+- type: DomainSecurity
+  url: security/whitespace-london-domain-security.yml
+- type: Authentication
+  url: authentication/whitespace-london-authentication.yml
 - type: Website
   url: https://www.whitespace.co.uk/
 - type: Documentation
@@ -120,6 +126,46 @@ common:
   url: https://twitter.com/WhitespaceEC1
 - type: ParentCompany
   url: https://www.verisk.com
+- type: Packages
+  url: packages/whitespace-london-packages.yml
+- type: CLI
+  url: cli/whitespace-london-cli.yml
+- type: Conventions
+  url: conventions/whitespace-london-conventions.yml
+- type: ErrorCatalog
+  url: errors/whitespace-london-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/whitespace-london-lifecycle.yml
+- type: Deprecation
+  url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+- type: ChangeLog
+  url: changelog/whitespace-london-changelog.yml
+- type: ChangeLog
+  url: https://www.whitespace.co.uk/release-notes
+- type: Sandbox
+  url: sandbox/whitespace-london-sandbox.yml
+- type: Conformance
+  url: conformance/whitespace-london-conformance.yml
+- type: DataModel
+  url: data-model/whitespace-london-data-model.yml
+- type: AsyncAPI
+  url: asyncapi/whitespace-london-queues-asyncapi.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: MCPServer
+  url: mcp/whitespace-london-mcp.yml
+- type: LLMsTxt
+  url: llms/whitespace-london-llms.txt
+- type: Overlay
+  url: overlays/whitespace-london-platform-overlay.yaml
+- type: DeveloperPortal
+  url: https://apidocs.whitespace.co.uk/
+- type: GettingStarted
+  url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+- type: GitHubOrganization
+  url: https://github.com/whitespace-software
+- type: Login
+  url: https://www.whitespaceplatform.com/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

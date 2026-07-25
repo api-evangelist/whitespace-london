@@ -1,0 +1,132 @@
+generated: '2026-07-25'
+method: searched
+source: openapi/whitespace-london-platform-openapi.yml
+docs:
+- https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+- https://www.whitespace.co.uk/integration/
+- https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+summary: >-
+  Whitespace's conformance story is a market-standards story, not a security-certification
+  story. It is ACORD-native — it authored the JSON Market Reform Contract (JMRC) and donated it
+  to ACORD for incorporation into the Global Reinsurance and Large Commercial data standards —
+  and it is one of two placing platforms with fully recognised status from Lloyd's. On the
+  cross-cutting web-API side it is deliberately plain: OpenAPI 3.0.0, HTTP bearer JWT, and none
+  of OAuth 2.0, OIDC, RFC 9457, RFC 8594, JSON:API or OData. No SOC 2 / ISO 27001 / PCI DSS
+  certification is published on any Whitespace property.
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: >-
+    OpenAPI 3.0.0 document "Whitespace Platform API" v0.1.0 with 113 paths, 121 operations, 26
+    component schemas and 4 declared servers, served inline at
+    https://swagger.whitespace.co.uk/index.spec.js and saved verbatim in openapi/.
+- id: jmrc
+  name: JSON Market Reform Contract
+  conforms: true
+  role: author
+  evidence: >-
+    "The JMRC (JSON Market Reform Contract) is the resulting digital placing standard that
+    Whitespace has now donated to ACORD ... and which will be incorporated into ACORD's
+    industry-owned Global Reinsurance and Large Commercial Data Standards" — JMRC Specification
+    Version 0.5, published 21/10/2021. GET /api/risks/{riskID} returns a risk in JMRC format and
+    POST /api/risks/save creates one from a full JMRC.
+  spec: https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+- id: acord-grlc
+  name: ACORD Global Reinsurance and Large Commercial data standards
+  conforms: true
+  evidence: >-
+    The Defined Data endpoints accept an alternative tagset parameter documented as "Currently
+    supported ACORDGPM" and return values tagged ACORDGPM:InsuredName,
+    ACORDGPM:BrokerContractReference, ACORDGPM:InceptionDate, ACORDGPM:ExpiryDate and similar,
+    paired with their MRC headings. 34 ACORD references appear in the OpenAPI.
+  operations:
+  - GET /api/v23.09/data/{riskID}/tagset/{tagset}
+  - GET /api/v22.04/data/{riskID}/tagset/{tagset}
+- id: mrc
+  name: Market Reform Contract (London market contract headings, MRC v3)
+  conforms: true
+  evidence: >-
+    The Lookup family enumerates the MRC heading set — GET /api/lookup/headings,
+    GET /api/lookup/check/{heading}, GET /api/lookup/headingsInSection/{section},
+    GET /api/lookup/endorsementHeadingsInSection/{section}, GET /api/lookup/namevariations —
+    and contract values are addressed by mrcHeading throughout Defined Data.
+- id: lloyds-electronic-placement
+  name: Lloyd's recognised electronic placing platform
+  conforms: true
+  evidence: >-
+    Whitespace is one of only two electronic placing systems granted fully recognised status by
+    Lloyd's for the London subscription market.
+- id: cdr
+  name: Core Data Record
+  conforms: partial
+  evidence: >-
+    https://www.whitespace.co.uk/integration/ references work with partner systems to produce
+    CDR-compliant data. No CDR endpoint or CDR schema is published in the API.
+- id: oauth2
+  conforms: false
+  evidence: >-
+    The only securityScheme is bearerAuth (http/bearer/JWT). No authorization server, no token
+    endpoint, no scopes. The renewable-token flow resembles an authorization-code exchange but
+    is a proprietary /auth/apiLogin + /auth/apiRefresh pair.
+- id: oidc
+  conforms: false
+  evidence: >-
+    /.well-known/openid-configuration returns the Angular SPA shell on platform hosts and 404 on
+    the marketing domain — see well-known/whitespace-london-well-known.yml.
+- id: jwt
+  conforms: true
+  evidence: securitySchemes.bearerAuth declares bearerFormat JWT; tokens carry a kid used for revocation.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors use a proprietary {"error": true, "reason": "..."} envelope with content-type
+    application/json; no application/problem+json anywhere in the spec.
+- id: rfc8594-sunset
+  conforms: false
+  evidence: No Sunset or Deprecation headers; superseded endpoints are retained indefinitely.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: No /.well-known/security.txt on any Whitespace host.
+- id: idempotency-key
+  conforms: false
+  evidence: >-
+    No Idempotency-Key header is documented or declared. Write safety relies on _rev optimistic
+    concurrency instead — see conventions/whitespace-london-conventions.yml.
+- id: json-api
+  conforms: false
+- id: odata
+  conforms: false
+- id: fhir
+  conforms: false
+  evidence: Not applicable — Whitespace is a commercial (re)insurance placing platform, not healthcare.
+- id: fapi
+  conforms: false
+- id: scim
+  conforms: false
+  evidence: >-
+    User and organisation data is readable (GET /api/user/myDetails, GET /api/shared/corporate)
+    but there is no SCIM provisioning surface; users are managed in the Whitespace admin portal.
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    A real event surface exists (per-client Azure Service Bus queues) but Whitespace publishes no
+    AsyncAPI document. See asyncapi/whitespace-london-queues-asyncapi.yml for the API Evangelist
+    description generated from the published queue guides.
+- id: amqp
+  conforms: true
+  evidence: >-
+    Events are delivered over Microsoft Azure Service Bus queues, consumed with the standard
+    Azure Service Bus SDKs (.NET, Java, Python, JavaScript, TypeScript).
+- id: al3
+  conforms: false
+  evidence: Not applicable — AL3/IVANS are US agency-download rails, not London-market ones.
+certifications:
+  published: false
+  searched:
+  - https://www.whitespace.co.uk/ (no ISO 27001, SOC 2, Cyber Essentials or PCI claim in page body)
+  - https://www.whitespace.co.uk/security (404)
+  - https://www.whitespace.co.uk/trust (404)
+  note: >-
+    No trust centre, certification page or compliance program is published under a Whitespace
+    domain. Whitespace is part of Verisk; any group-level certification would live on Verisk
+    properties and is not claimed here.

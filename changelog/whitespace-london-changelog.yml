@@ -1,0 +1,170 @@
+generated: '2026-07-25'
+method: searched
+source: https://www.whitespace.co.uk/release-notes
+url: https://www.whitespace.co.uk/release-notes
+title: Release Notes and User Guides
+scheme: platform semver-like major.minor.patch, plus separately numbered reference-data updates
+current_version: '3.7'
+current_release_date: '2026-07-10'
+scope: >-
+  Whitespace publishes a single public, dated changelog for the whole platform — every major
+  release, patch release and reference-data update back to 1.3, each linking a PDF of the full
+  notes plus per-feature user guides. It is a product changelog rather than an API-only one:
+  API-affecting changes appear inside the release-note PDFs, and the OpenAPI at
+  swagger.whitespace.co.uk carries its own "Last update" date (29th May 2025) rather than a
+  version history. The page warns that "some minor platform releases do not have a file
+  published here. They are usually infrastructure changes to the platform."
+verification:
+  discovery_endpoint: GET /api/version
+  anonymous: true
+  returns: platformVersion, buildDate, revapiCommit, riskLibraryCommit, revapiCommitMessage
+breaking_change_policy: >-
+  Version-bearing API endpoints are never removed (see lifecycle/whitespace-london-lifecycle.yml);
+  releases add capability rather than retire it, so the changelog records additions and
+  enhancements rather than breaking changes.
+entries:
+- version: '3.7'
+  type: major
+  date: '2026-07-10'
+  notes: https://www.whitespace.co.uk/media/vonjmh4g/release-notes-3-7-0.pdf
+  breaking: false
+  highlights:
+  - New and improved inbox page on the Whitespace Platform
+  - Draft firm orders can be deleted
+  - Exported declarations have enhanced facility breakdown tables
+  - Labels have been enhanced for contracts and templates
+- version: d106
+  type: data-update
+  date: '2026-06-10'
+  notes: https://www.whitespace.co.uk/media/zuyg21wa/release-note-d106-1.pdf
+  breaking: false
+  highlights:
+  - Reference-data update v106
+- version: 3.6.1
+  type: patch
+  notes: https://www.whitespace.co.uk/media/bliajbmz/release-notes-v3-6-1.pdf
+  breaking: false
+- version: '3.6'
+  type: major
+  date: '2026-04-10'
+  notes: https://www.whitespace.co.uk/media/wuxh2vj3/release-notes-3-6-0.pdf
+  breaking: false
+  highlights:
+  - Name search when showing a contract, so brokers can search underwriters by name rather than organisation
+  - Ability to show a contract to some but not all underwriters in a team
+  - Fully-tracked contract renewals that make it easy to examine every contract in a renewal chain
+  - Data-first support for associating D-U-N-S numbers with stamps
+- version: 3.5.5
+  type: patch
+  notes: https://www.whitespace.co.uk/media/hzxj5z1a/full-release-notes-3-5-5.pdf
+  breaking: false
+- version: d105
+  type: data-update
+  date: '2026-02-13'
+  notes: https://www.whitespace.co.uk/media/ihsnakxr/release-note-d105.pdf
+  breaking: false
+- version: 3.5.3
+  type: patch
+  notes: https://www.whitespace.co.uk/media/kezo34r2/release-notes-v3-5-3-1.pdf
+  breaking: false
+- version: 3.5.2
+  type: patch
+  notes: https://www.whitespace.co.uk/media/frqlbsz5/release-notes-v3-5-2-1.pdf
+  breaking: false
+- version: 3.5.1
+  type: patch
+  notes: https://www.whitespace.co.uk/media/42tfxznw/release-notes-v3-5-1-1-1.pdf
+  breaking: false
+- version: '3.5'
+  type: major
+  date: '2026-01-30'
+  notes: https://www.whitespace.co.uk/media/mzxjulm0/full-release-notes-3-5.pdf
+  breaking: false
+  highlights:
+  - The 'Programme' contract type, linking other contracts as layers for large complex placements
+  - Greater flexibility for the 'Code' field of Non-Bureau stamps (authority codes up to 36 characters)
+  - "'Policy Number Only' templates letting underwriters outside London bind without stamps"
+  - Export options to separately show or hide registered and invoice addresses on (re)insurer stamps
+- version: 3.4.6
+  type: patch
+  notes: https://www.whitespace.co.uk/media/3lqpfcvd/release-notes-v3-4-6-1.pdf
+  breaking: false
+- version: 3.4.5
+  type: patch
+  notes: https://www.whitespace.co.uk/media/biehmjfp/release-notes-v3-4-5.pdf
+  breaking: false
+- version: d104
+  type: data-update
+  date: '2025-11-18'
+  notes: https://www.whitespace.co.uk/media/1k4knul1/full-summary-notes-v104.pdf
+  breaking: false
+- version: 3.4.3
+  type: patch
+  notes: https://www.whitespace.co.uk/media/2ihlzbkc/full-release-notes-3-4-3.pdf
+  breaking: false
+- version: 3.4.2
+  type: patch
+  notes: https://www.whitespace.co.uk/media/dbiohgep/release-notes-v3-4-2-1.pdf
+  breaking: false
+- version: 3.4.1
+  type: patch
+  notes: https://www.whitespace.co.uk/media/kupbdyxp/release-notes-v3-4-1-1.pdf
+  breaking: false
+- version: '3.4'
+  type: major
+  date: '2025-10-31'
+  notes: https://www.whitespace.co.uk/media/a4pdr5mw/release-notes-3-4-0.pdf
+  breaking: false
+  highlights:
+  - Import selected text or a table from a Word or PDF document directly into a contract heading
+  - "'All Available Stamps' stamp group for the Approved (Re)Insurer functionality"
+  - Draft contracts can import a Questionnaire from a Template
+  - Full display of stamp addresses in the platform and optionally in exported contracts
+  - Multiple email addresses for copying a user's notifications
+  - Several export enhancements (per-section page numbering, in-line PDF attachments, per-participant stamp pages)
+- version: '3.3'
+  type: major
+  date: '2025-09-04'
+  notes: https://www.whitespace.co.uk/media/hwpaflis/release-notes-3-3.pdf
+  breaking: false
+  highlights:
+  - "'Auto-Cascade', automatically progressing declarations when the facility leader writes their line"
+  - A range of improvements to table formatting
+  - Option to rename contract drafts
+  - Contract Library and Contract Builder enhancements
+  - New broker permissions and underwriter stamp address requirements
+- version: d103
+  type: data-update
+  date: '2025-07-31'
+  notes: https://www.whitespace.co.uk/media/m33nd5xu/full-release-notes-v103.pdf
+  breaking: false
+- version: 3.2.4
+  type: patch
+  notes: https://www.whitespace.co.uk/media/upcpr4lv/release-notes-v3-2-4-v0-3.pdf
+  breaking: false
+- version: 3.2.3
+  type: patch
+  notes: https://www.whitespace.co.uk/media/oihdd4db/full-release-notes-3-2-3.pdf
+  breaking: false
+- version: 3.2.2
+  type: patch
+  notes: https://www.whitespace.co.uk/media/ho1fkyxq/release-notes-v3-2-2.pdf
+  breaking: false
+- version: 3.2.1
+  type: patch
+  notes: https://www.whitespace.co.uk/media/gepb2h4o/release-notes-v3-2-1.pdf
+  breaking: false
+- version: '3.2'
+  type: major
+  date: '2025-05-23'
+  notes: https://www.whitespace.co.uk/media/kiqi1dx1/release-notes-v3-2-0.pdf
+  breaking: false
+  highlights:
+  - "'Approved Stamps', letting brokers restrict underwriters to specifically-approved stamps"
+  - Mandatory data tag sets, ensuring a contract is properly tagged before it is shown as a firm order
+  - Registered office and/or billing addresses associated with stamps case-by-case
+  - Hidable section headings that do not appear in exported documents
+history_note: >-
+  The page continues back through 3.1.x, 3.0.x, 2.x and 1.3-1.6 with a release-notes PDF and
+  per-feature user guides for each; only the recent window is captured here, per pipeline
+  convention. The live page remains the source of truth.

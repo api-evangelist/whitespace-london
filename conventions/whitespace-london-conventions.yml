@@ -1,0 +1,155 @@
+generated: '2026-07-25'
+method: searched
+source: openapi/whitespace-london-platform-openapi.yml
+docs:
+- https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+- https://apidocs.whitespace.co.uk/Whitespace_Channels_v1.0.pdf
+- https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+- https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+- https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+summary: >-
+  A deliberately plain REST/JSON contract over a Couchbase document store. GET reads, POST
+  writes — there are no PUT or PATCH verbs and only three DELETEs in 121 operations. Every
+  object is a platform document addressed by a compound string ID, access is governed by
+  Couchbase channels rather than token scopes, and safe re-submission is handled by document
+  revision (_rev) optimistic concurrency, NOT by an idempotency key.
+http:
+  base_urls:
+    sandbox: https://sandbox.whitespace.co.uk
+    production: https://www.whitespaceplatform.com
+    other_documented: [https://tess.whitespace.co.uk, https://beta.whitespace.co.uk, https://staging.whitespace.co.uk]
+  methods:
+    get: read operations; a few take query-string parameters (e.g. /api/summary?from=2024-01-01)
+    post: >-
+      every state-changing operation. Most carry a JSON body; where the endpoint is purely an
+      instruction, Whitespace advises sending {} as empty but valid JSON.
+    put: not used
+    patch: not used
+    delete: used only for labels and customer key/value data (3 of 121 operations)
+  content_type: application/json, except endpoints that exist to return another format (PDF, XML, XLSX)
+authentication:
+  style: HTTP bearer JWT
+  header: 'Authorization: Bearer <token>'
+  extra_header: 'UserID: MU<id> — required only for SUMO (multi-organisation) users'
+  artifact: authentication/whitespace-london-authentication.yml
+idempotency:
+  supported: false
+  idempotency_key_header: null
+  note: >-
+    Whitespace documents no Idempotency-Key header and the OpenAPI declares no idempotency
+    parameter. Write safety is instead handled by optimistic concurrency: "when a document
+    revision is required it must be the most recent one; using a blank or a previously stored
+    one will fail, as we need to keep data synchronised" (Getting Started, General
+    Observations). Re-POSTing a business action is therefore not idempotent — clients must
+    re-GET the document, take the current _rev, and re-submit.
+concurrency:
+  model: optimistic locking on document revision
+  field: _rev
+  format: '<sequence>-<hash>, e.g. 1-a302cd4445e3d12c33fdabf467e2789b; the number before the dash increments from 1'
+  failure: the write is rejected if _rev is blank or stale
+pagination:
+  style: batched summaries with a date cursor
+  endpoints:
+  - GET /api/summary
+  - POST /api/summary
+  - GET /api/summary/pinned
+  default_page: the sixty most recently updated risks when called with no parameters
+  parameters:
+  - name: from
+    in: query
+    example: /api/summary?from=2024-01-01
+  filters: POST /api/summary accepts a JSON filter payload instead of query parameters
+  note: >-
+    There is no Link header, no cursor token and no total-count field. Bulk history is walked
+    through /api/activities/{rootID}/full and POST /api/activities/filter (which requires a
+    single activity type and accepts an optional date range).
+identifiers:
+  root_risk:
+    prefix: IC
+    length: 38 characters
+    description: The ID of the entire slip, spanning every stage and instance of the contract.
+    example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+  instance:
+    separator: '::'
+    description: >-
+      A specific document or contract instance inside the slip — the rootID followed by ::
+      and further segments. Known segment codes include FO (Firm Order), ACTI (activity),
+      ARCH (archive), ATCH (attachment) and LGUS (line guidance set).
+    example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO
+  user:
+    prefix: MU
+    length: 36 characters after the prefix; permanent per corporate identity
+    example: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+  common_mistake: >-
+    {rootID} tokens accept only the root identifier (no :: separators); {riskID} tokens accept
+    full document identifiers. Passing the wrong one is the most commonly reported error.
+authorization_model:
+  mechanism: Couchbase channels
+  channel_format: '{companyid}_{TEAMID} — companyID lower-case, teamID upper-case, e.g. blackpool_MARINE'
+  shared_channel: 'shared — every user is a member; used for platform-wide documents'
+  discovery:
+  - GET /api/user/myDetails — the organisation, teams and channels the caller can see
+  - GET /api/shared/corporate — every organisation on the platform with companyIDs, teamIDs and channels
+  role_gating: >-
+    Operations are marked "Broker Only" or "Underwriter Only" in their OpenAPI summary; the
+    rest work for both roles but behave differently depending on the stage of the risk.
+  immutability: companyID and teamID are fixed at onboarding and can never be changed.
+versioning:
+  scheme: optional date-stamped URI path segment
+  format: /api/v{YY.MM}/<resource>
+  live_examples:
+  - /api/v22.04/data/{riskID}
+  - /api/v23.09/data/{riskID}
+  policy: >-
+    Only exceptional changes create a versioned endpoint. Additions to the output format,
+    optional additions to the input format, and internal behaviour changes never bump a
+    version. The unversioned /api/<resource> path "would continue to be the old version,
+    forever" — Whitespace does not retire versioned endpoints.
+  artifact: lifecycle/whitespace-london-lifecycle.yml
+errors:
+  envelope:
+    error: boolean, always true on failure
+    reason: human-readable string (may be absent)
+  example: '{"error": true, "reason": "Invalid WSAUTH"}'
+  default_status: 400
+  opacity: >-
+    "In general the API does not give feedback on the reason for the error to discourage
+    malicious use." Integrators are directed to email the Integration Team with the endpoint
+    and payload.
+  rfc9457: false
+  artifact: errors/whitespace-london-problem-types.yml
+rate_limiting:
+  documented: false
+  headers: none documented
+  note: >-
+    No rate-limit policy, quota or X-RateLimit/RateLimit header is published. Throughput is
+    governed contractually (Interchange Agreement) and by IP allowlisting rather than by
+    published limits.
+request_tracing:
+  request_id_header: none documented
+  correlation: >-
+    Queue messages carry a unique message id and the _id of the activity document, which is
+    the practical correlation key between a platform action and the API objects behind it.
+  provenance_block: >-
+    Platform documents embed a provenance object (dataHash, provHash, system, userID, version,
+    writtenAt) that records which system and user wrote the document.
+events:
+  mechanism: Azure Service Bus queues (per client, optionally per team)
+  webhooks: false
+  artifact: asyncapi/whitespace-london-queues-asyncapi.yml
+data_conventions:
+  timestamps: '"YYYY-MM-DD HH:MM:SS" strings (e.g. "2022-05-25 11:16:46"), not RFC 3339'
+  document_type_field: type (e.g. RWActivity, RWComment, RWLineGuidanceSet)
+  defined_data: >-
+    Contract values are addressed by MRC heading and can be requested against an alternative
+    tagset (currently ACORDGPM) via /data/{riskID}/tagset/{tagset}.
+  verify_before_write: >-
+    POST /api/v23.09/data/{riskID}/verify (and the v22.04 equivalent) validates a Defined Data
+    payload before the update POST; the docs recommend calling it first because a bad payload
+    returns 500.
+related:
+  authentication: authentication/whitespace-london-authentication.yml
+  errors: errors/whitespace-london-problem-types.yml
+  lifecycle: lifecycle/whitespace-london-lifecycle.yml
+  data_model: data-model/whitespace-london-data-model.yml
+  sandbox: sandbox/whitespace-london-sandbox.yml

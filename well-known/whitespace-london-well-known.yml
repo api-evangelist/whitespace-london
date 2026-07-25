@@ -1,0 +1,56 @@
+generated: '2026-07-25'
+method: probed
+source: live HTTP probes on 2026-07-25
+result: none
+summary: >-
+  Whitespace publishes NO /.well-known/ discovery surface. On the marketing and docs hosts
+  every probe 404s. On the platform hosts (sandbox.whitespace.co.uk and the production host
+  www.whitespaceplatform.com) every /.well-known/ path returns HTTP 200 but the body is the
+  Angular single-page-application shell (<!doctype html> ... <title>Whitespace Platform</title>),
+  not a discovery document — the SPA catch-all route answers any unmatched path. No
+  security.txt, no OIDC/OAuth authorization-server metadata (consistent with the out-of-band,
+  support-issued JWT service-token model), no api-catalog, no ai-plugin.json. Nothing was
+  saved because nothing real was served; no WellKnown or SecurityTxt pointer is wired.
+hosts:
+- host: https://www.whitespace.co.uk
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+- host: https://whitespace.co.uk
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+- host: https://apidocs.whitespace.co.uk
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+- host: https://sandbox.whitespace.co.uk
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    real: false
+    note: Angular SPA shell, not RFC 9116 text.
+  - path: /.well-known/openid-configuration
+    status: 200
+    real: false
+    note: Angular SPA shell, not an OIDC discovery document.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    real: false
+    note: Angular SPA shell, not RFC 8414 metadata.
+  - path: /.well-known/api-catalog
+    status: 200
+    real: false
+    note: Angular SPA shell, not RFC 9727 api-catalog.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    real: false
+    note: Angular SPA shell, not a plugin manifest.
+- host: https://www.whitespaceplatform.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    real: false
+    note: Angular SPA shell, not RFC 9116 text.

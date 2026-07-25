@@ -1,0 +1,414 @@
+# generated: '2026-07-25'
+# method: generated
+# source: openapi/whitespace-london-platform-openapi.yml
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Whitespace Platform API
+  version: 1.0.0
+  description: 'Enhancements applied on top of the OpenAPI 3.0.0 document Whitespace serves inline at
+    https://swagger.whitespace.co.uk/index.spec.js. The published specification declares NO operationId
+    on any of its 121 operations, declares no production server, and marks four superseded operations
+    as deprecated only in prose. This overlay adds a stable operationId per operation (derived from the
+    path, deterministic and unique), declares the production host named in the spec description, sets
+    deprecated: true on the four superseded operations, and records the API Evangelist artifacts derived
+    from the spec. It never mutates the harvested document.'
+extends: openapi/whitespace-london-platform-openapi.yml
+actions:
+- target: $.info
+  description: Stamp API Evangelist provenance and the artifacts derived from this specification.
+  update:
+    x-apievangelist-slug: whitespace-london
+    x-apievangelist-generated: '2026-07-25'
+    x-apievangelist-artifacts:
+      authentication: authentication/whitespace-london-authentication.yml
+      conventions: conventions/whitespace-london-conventions.yml
+      errors: errors/whitespace-london-problem-types.yml
+      lifecycle: lifecycle/whitespace-london-lifecycle.yml
+      changelog: changelog/whitespace-london-changelog.yml
+      sandbox: sandbox/whitespace-london-sandbox.yml
+      data-model: data-model/whitespace-london-data-model.yml
+      asyncapi: asyncapi/whitespace-london-queues-asyncapi.yml
+      conformance: conformance/whitespace-london-conformance.yml
+      skills: skills/_index.yml
+    x-acord:
+      jmrc: true
+      tagset: ACORDGPM
+      specification: https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+- target: $.servers
+  description: Add the production host, which the spec description names in prose ('Once your Integration
+    is ready to go live, the URL for production is https://www.whitespaceplatform.com') but does not declare
+    as a server.
+  update:
+    url: https://www.whitespaceplatform.com
+    description: Production (live platform)
+- target: $.paths['/api/activities/{riskID}'].get
+  update:
+    operationId: getActivities
+- target: $.paths['/api/activities/{rootID}/full'].get
+  update:
+    operationId: getActivitiesFull
+- target: $.paths['/api/activities/filter/help'].get
+  update:
+    operationId: getFilterHelp
+- target: $.paths['/api/activities/filter'].post
+  update:
+    operationId: activitiesFilter
+- target: $.paths['/api/attachments/{corporate}/{logo}'].get
+  update:
+    operationId: getAttachments
+- target: $.paths['/api/attachments/{rootID}'].get
+  update:
+    operationId: getAttachments2
+- target: $.paths['/api/attachments/array/{rootID}'].get
+  update:
+    operationId: getAttachmentsArray
+- target: $.paths['/api/attachments/{parentDocID}/{identifier}'].get
+  update:
+    operationId: getAttachments3
+- target: $.paths['/api/attachments/{riskID}/{attachmentName}'].post
+  update:
+    operationId: attachments
+- target: $.paths['/api/attachments/{rootID}/showToCarriers'].post
+  update:
+    operationId: attachmentsShowToCarriers
+- target: $.paths['/api/attachbyunderwriter/{riskID}/{underwriter_channel}/{attachmentname}'].post
+  update:
+    operationId: attachbyunderwriter
+- target: $.paths['/api/bindNotifyParties'].post
+  update:
+    operationId: bindNotifyParties
+- target: $.paths['/api/brokerNote/{rootID}/save'].post
+  update:
+    operationId: brokerNoteSave
+- target: $.paths['/api/comments'].get
+  update:
+    operationId: getComments
+    deprecated: true
+    x-deprecation-note: Deprecated in favour of GET /api/risks/{rootID}/related/{type} with type RWComment.
+- target: $.paths['/api/comments'].post
+  update:
+    operationId: comments
+- target: $.paths['/api/comments/global'].get
+  update:
+    operationId: getCommentsGlobal
+- target: $.paths['/api/customer/{teamID}/{uniqueID}'].get
+  update:
+    operationId: getCustomer
+- target: $.paths['/api/customer/{teamID}/{uniqueID}/{key}'].post
+  update:
+    operationId: customer
+- target: $.paths['/api/customer/{teamID}/{uniqueID}/{key}'].delete
+  update:
+    operationId: deleteCustomer
+- target: $.paths['/api/v22.04/data/{riskID}'].get
+  update:
+    operationId: getDataV2204
+    deprecated: true
+    x-deprecation-note: Superseded by GET /api/v23.09/data/{riskID}; new integrators should use v23.09.
+- target: $.paths['/api/v22.04/data/{riskID}'].post
+  update:
+    operationId: dataV2204
+    deprecated: true
+    x-deprecation-note: Superseded by POST /api/v23.09/data/{riskID}; new integrators should use v23.09.
+- target: $.paths['/api/v22.04/data/{riskID}/tagset/{tagset}'].get
+  update:
+    operationId: getDataTagsetV2204
+- target: $.paths['/api/v22.04/data/{riskID}/verify'].post
+  update:
+    operationId: dataVerifyV2204
+- target: $.paths['/api/v23.09/data/{riskID}'].get
+  update:
+    operationId: getDataV2309
+- target: $.paths['/api/v23.09/data/{riskID}'].post
+  update:
+    operationId: dataV2309
+- target: $.paths['/api/v23.09/data/{riskID}/tagset/{tagset}'].get
+  update:
+    operationId: getDataTagsetV2309
+- target: $.paths['/api/v23.09/data/{riskID}/verify'].post
+  update:
+    operationId: dataVerifyV2309
+- target: $.paths['/api/declarations/{riskID}/showToFacility/{facilityID}'].post
+  update:
+    operationId: declarationsShowToFacility
+- target: $.paths['/api/documents/{docID}'].get
+  update:
+    operationId: getDocuments
+- target: $.paths['/api/documents/corporateApprovedCarriers/getAll'].get
+  update:
+    operationId: getCorporateApprovedCarriersGetAll
+- target: $.paths['/api/documents/corporateApprovedCarriers/saveAndPropagate'].post
+  update:
+    operationId: corporateApprovedCarriersSaveAndPropagate
+- target: $.paths['/api/documents/getLineGuidanceForRoot/{rootID}'].get
+  update:
+    operationId: getDocumentsGetLineGuidanceForRoot
+- target: $.paths['/api/endorsements/{rootID}'].get
+  update:
+    operationId: getEndorsements
+- target: $.paths['/export/pdf/{riskID}'].post
+  update:
+    operationId: exportPdf
+- target: $.paths['/api/labels/{root_or_label_ID}'].delete
+  update:
+    operationId: deleteLabels
+- target: $.paths['/api/labels/{root_or_label_ID}'].get
+  update:
+    operationId: getLabels
+- target: $.paths['/api/labels/{root_or_label_ID}'].post
+  update:
+    operationId: labels
+- target: $.paths['/api/labels/suggested'].get
+  update:
+    operationId: getLabelsSuggested
+- target: $.paths['/api/labels/teamLabels'].get
+  update:
+    operationId: getLabelsTeamLabels
+- target: $.paths['/api/lines/{rootID}/combinedSets'].get
+  update:
+    operationId: getLinesCombinedSets
+- target: $.paths['/api/lookup/check/{heading}'].get
+  update:
+    operationId: getLookupCheck
+- target: $.paths['/api/lookup/headings'].get
+  update:
+    operationId: getLookupHeadings
+- target: $.paths['/api/lookup/endorsementHeadingsInSection/{section}'].get
+  update:
+    operationId: getLookupEndorsementHeadingsInSection
+- target: $.paths['/api/lookup/headingsInSection/{section}'].get
+  update:
+    operationId: getLookupHeadingsInSection
+- target: $.paths['/api/lookup/namevariations'].get
+  update:
+    operationId: getLookupNamevariations
+- target: $.paths['/api/lookup/person/{email}'].get
+  update:
+    operationId: getLookupPerson
+- target: $.paths['/mireport/fetch'].post
+  update:
+    operationId: mireportFetch
+- target: $.paths['/mireport/prepare'].post
+  update:
+    operationId: mireportPrepare
+- target: $.paths['/api/overview/{rootID}'].get
+  update:
+    operationId: getOverview
+- target: $.paths['/api/owner/{rootID}'].get
+  update:
+    operationId: getOwner
+- target: $.paths['/api/owner/{rootID}'].post
+  update:
+    operationId: owner
+- target: $.paths['/api/v23.09/data/questionnaire/{riskID}'].get
+  update:
+    operationId: getDataQuestionnaireV2309
+- target: $.paths['/api/questionnaire/{riskID}'].get
+  update:
+    operationId: getQuestionnaire
+- target: $.paths['/api/questionnaire/{riskID}/answer'].post
+  update:
+    operationId: questionnaireAnswer
+- target: $.paths['/api/risks/{riskID}'].get
+  update:
+    operationId: getRisks
+- target: $.paths['/api/risks/{riskID}/editLineItem'].post
+  update:
+    operationId: risksEditLineItem
+- target: $.paths['/api/risks/{riskID}/editMultipleLineItems'].post
+  update:
+    operationId: risksEditMultipleLineItems
+- target: $.paths['/api/risks/{riskID}/changeDraftNowQuoteInPreparation'].post
+  update:
+    operationId: risksChangeDraftNowQuoteInPreparation
+- target: $.paths['/api/risks/{riskID}/cloneDraft'].post
+  update:
+    operationId: risksCloneDraft
+- target: $.paths['/api/risks/{riskID}/declineQuoteRequest'].post
+  update:
+    operationId: risksDeclineQuoteRequest
+- target: $.paths['/api/risks/{riskID}/draftToFirmOrder'].post
+  update:
+    operationId: risksDraftToFirmOrder
+- target: $.paths['/api/risks/{riskID}/endorsementFollowers'].get
+  update:
+    operationId: getRisksEndorsementFollowers
+- target: $.paths['/api/risks/{riskID}/getExtendedMRC'].get
+  update:
+    operationId: getRisksGetExtendedMRC
+- target: $.paths['/api/risks/{riskID}/lineitem/{mrcHeading}'].get
+  update:
+    operationId: getRisksLineitem
+- target: $.paths['/api/risks/{riskID}/markAsFirmOrder'].post
+  update:
+    operationId: risksMarkAsFirmOrder
+- target: $.paths['/api/risks/{riskID}/markAsIndicative'].post
+  update:
+    operationId: risksMarkAsIndicative
+- target: $.paths['/api/risks/{riskID}/requestWrittenLineSets'].post
+  update:
+    operationId: risksRequestWrittenLineSets
+- target: $.paths['/api/risks/{riskID}/showQuoteToBroker'].post
+  update:
+    operationId: risksShowQuoteToBroker
+- target: $.paths['/api/risks/{riskID}/showToLeadUnderwriter'].post
+  update:
+    operationId: risksShowToLeadUnderwriter
+- target: $.paths['/api/risks/{riskID}/signSets'].post
+  update:
+    operationId: risksSignSets
+- target: $.paths['/api/risks/{riskID}/reSignSets'].post
+  update:
+    operationId: risksReSignSets
+- target: $.paths['/api/risks/{riskID}/writeLine'].post
+  update:
+    operationId: risksWriteLine
+- target: $.paths['/api/risks/newDraft'].post
+  update:
+    operationId: risksNewDraft
+- target: $.paths['/api/risks/root/{rootID}'].get
+  update:
+    operationId: getRisksRoot
+- target: $.paths['/api/risks/{rootID}/related/{type}'].get
+  update:
+    operationId: getRisksRelated
+- target: $.paths['/api/risks/save'].post
+  update:
+    operationId: risksSave
+- target: $.paths['/api/risks/{EndorsementID}/showEndorsement'].post
+  update:
+    operationId: risksShowEndorsement
+- target: $.paths['/api/risks/{EndorsementID}/acceptEndorsement'].post
+  update:
+    operationId: risksAcceptEndorsement
+- target: $.paths['/api/risks/changeRiskName/{rootID}'].post
+  update:
+    operationId: risksChangeRiskName
+- target: $.paths['/api/risks/{quoteID}/createDraftFromQuote'].post
+  update:
+    operationId: risksCreateDraftFromQuote
+- target: $.paths['/api/risks/{riskID}/lineItemAttributes'].post
+  update:
+    operationId: risksLineItemAttributes
+- target: $.paths['/api/risks/{riskID}/getQuoteDetails'].get
+  update:
+    operationId: getRisksGetQuoteDetails
+- target: $.paths['/api/risks/{riskID}/saveQuoteDetails'].post
+  update:
+    operationId: risksSaveQuoteDetails
+- target: $.paths['/api/risks/{riskID}/createBindableQuote'].post
+  update:
+    operationId: risksCreateBindableQuote
+- target: $.paths['/api/risks/{riskID}/selfApproveSecondApproval'].post
+  update:
+    operationId: risksSelfApproveSecondApproval
+- target: $.paths['/api/risks/{riskID}/duplicateDraft'].post
+  update:
+    operationId: risksDuplicateDraft
+- target: $.paths['/api/risks/{riskID}/changeHeadings'].post
+  update:
+    operationId: risksChangeHeadings
+- target: $.paths['/api/risks/{riskID}/declineFirmOrder'].post
+  update:
+    operationId: risksDeclineFirmOrder
+- target: $.paths['/api/risks/{riskID}/withdrawFirmOrder'].post
+  update:
+    operationId: risksWithdrawFirmOrder
+- target: $.paths['/api/risks/{riskID}/saveVerticalLines'].post
+  update:
+    operationId: risksSaveVerticalLines
+- target: $.paths['/api/risks/{riskID}/notTakeUpQuotation'].post
+  update:
+    operationId: risksNotTakeUpQuotation
+- target: $.paths['/api/risks/{riskID}/rollbackSigned'].post
+  update:
+    operationId: risksRollbackSigned
+- target: $.paths['/api/risks/{riskID}/createEndorsement'].post
+  update:
+    operationId: risksCreateEndorsement
+- target: $.paths['/api/risks/{riskID}/deleteDraft'].post
+  update:
+    operationId: risksDeleteDraft
+- target: $.paths['/api/risks/{riskID}/applyTemplate'].post
+  update:
+    operationId: risksApplyTemplate
+- target: $.paths['/api/risks/{riskID}/rejectWrittenLine/{writtenLineSetID}'].post
+  update:
+    operationId: risksRejectWrittenLine
+- target: $.paths['/api/risks/{riskID}/acceptWrittenLine/{writtenLineSetID}'].post
+  update:
+    operationId: risksAcceptWrittenLine
+- target: $.paths['/api/risks/{riskID}/createContractCorrection'].post
+  update:
+    operationId: risksCreateContractCorrection
+- target: $.paths['/api/risks/{riskID}/contractAttributes'].post
+  update:
+    operationId: risksContractAttributes
+- target: $.paths['/api/risks/{riskID}/setTemplateChannels'].post
+  update:
+    operationId: risksSetTemplateChannels
+- target: $.paths['/api/risks/{riskID}/quoteOnRequest'].post
+  update:
+    operationId: risksQuoteOnRequest
+- target: $.paths['/api/risks/{riskID}/deleteEndorsement'].post
+  update:
+    operationId: risksDeleteEndorsement
+- target: $.paths['/bodapi/risks/from'].post
+  update:
+    operationId: risksFrom
+- target: $.paths['/api/risks/{riskID}/editLineItemWithBB'].post
+  update:
+    operationId: risksEditLineItemWithBB
+- target: $.paths['/api/risks/{riskID}/recordLine'].post
+  update:
+    operationId: risksRecordLine
+- target: $.paths['/api/risks/{riskID}/forwardAsQuoteRequest'].post
+  update:
+    operationId: risksForwardAsQuoteRequest
+- target: $.paths['/api/risks/{riskID}/setEndorsementFollowerRoles'].post
+  update:
+    operationId: risksSetEndorsementFollowerRoles
+- target: $.paths['/api/risks/{riskID}/setEndorsementFollowerTemplate'].post
+  update:
+    operationId: risksSetEndorsementFollowerTemplate
+- target: $.paths['/api/risks/{riskID}/completeEndorsement'].post
+  update:
+    operationId: risksCompleteEndorsement
+- target: $.paths['/api/sections/{rootID}/save'].post
+  update:
+    operationId: sectionsSave
+- target: $.paths['/api/shared/corporate'].get
+  update:
+    operationId: getSharedCorporate
+- target: $.paths['/api/shared/compressedCorporate'].get
+  update:
+    operationId: getSharedCompressedCorporate
+- target: $.paths['/api/shared/corporate/memberStates'].get
+  update:
+    operationId: getCorporateMemberStates
+- target: $.paths['/api/summary'].get
+  update:
+    operationId: getSummary
+- target: $.paths['/api/summary'].post
+  update:
+    operationId: summary
+- target: $.paths['/api/summary/pinned'].get
+  update:
+    operationId: getSummaryPinned
+- target: $.paths['/api/showDeclarationToFacility'].post
+  update:
+    operationId: showDeclarationToFacility
+    deprecated: true
+    x-deprecation-note: Superseded by POST /api/declarations/{riskID}/showToFacility/{facilityID}.
+- target: $.paths['/api/user/colleagues'].get
+  update:
+    operationId: getUserColleagues
+- target: $.paths['/api/user/colleagues/{state}'].get
+  update:
+    operationId: getUserColleagues2
+- target: $.paths['/api/user/myDetails'].get
+  update:
+    operationId: getUserMyDetails
+- target: $.paths['/api/version'].get
+  update:
+    operationId: getVersion

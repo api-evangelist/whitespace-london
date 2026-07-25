@@ -1,0 +1,96 @@
+generated: '2026-07-25'
+method: searched
+source: openapi/whitespace-london-platform-openapi.yml
+docs:
+- https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+- https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+- https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+format: proprietary
+rfc9457: false
+content_type: application/json
+envelope:
+  fields:
+  - name: error
+    type: boolean
+    description: Always true on a failed call.
+  - name: reason
+    type: string
+    description: >-
+      Short human-readable reason. Frequently omitted — Whitespace deliberately withholds
+      error detail "to discourage malicious use".
+  example: '{"error": true, "reason": "Invalid WSAUTH"}'
+policy: >-
+  There is no error-code registry. Errors are usually reported with a 400 status and no
+  explanatory body; 401 is the one failure with a documented, stable reason string. The
+  Getting Started guide lists the common causes of an opaque 400 and directs integrators to
+  email the Whitespace Integration Team with the endpoint and JSON payload.
+spec_coverage:
+  operations: 121
+  responses_declared:
+    '200': 120
+    '401': 36
+    '500': 2
+  note: >-
+    The published OpenAPI declares no 400 responses even though the docs say most errors are
+    400s — the spec's response coverage is thinner than the real error surface.
+problems:
+- status: 400
+  title: Bad request (unexplained)
+  detail: >-
+    The default failure mode for a malformed request. The API generally returns no reason.
+  method: searched
+  source: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  common_causes:
+  - >-
+    Wrong risk IC number — some endpoints need the exact iteration (segments separated by ::),
+    others need the root ID (no :: separators).
+  - >-
+    Confusing team IDs with team channels: teamIDs are upper-case (MARINE), channels are the
+    lower-case company name plus underscore plus teamID (priceforbes_MARINE).
+  - >-
+    A stale or blank document revision (_rev). The revision supplied must be the most recent
+    one or the write is rejected so data stays synchronised.
+  remediation: >-
+    Re-GET the document, take the current _id and _rev, confirm root vs instance ID form, and
+    re-submit. If it still fails, email support@whitespace.co.uk with the endpoint and payload.
+- status: 401
+  title: Invalid WSAUTH
+  detail: '{"error": true, "reason": "Invalid WSAUTH"}'
+  method: searched
+  source: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  declared_in_spec: true
+  spec_occurrences: 36
+  causes:
+  - The service token has expired or been revoked (revocation is by kid).
+  - The associated platform user is not in Live or ReadOnly state (Draft or Suspended is rejected).
+  - A ReadOnly user attempted a POST.
+  - The calling IP address is not on the allowlist for the token.
+  remediation: >-
+    Check token expiry (max lifetime one year, not monitored on Sandbox), the user's state in
+    the admin portal, and the allowlisted IP ranges; request a replacement token from
+    support@whitespace.co.uk.
+- status: 401
+  title: 'Invalid WSAUTH: Valid UserID must be supplied'
+  detail: '{"reason": "Invalid WSAUTH: Valid UserID must be supplied", "error": true}'
+  method: searched
+  source: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  applies_to: SUMO users holding logins under multiple corporate identities
+  remediation: >-
+    Send the UserID header with the MU identifier for the corporate identity being acted for;
+    resolve it from GET /api/shared/corporate.
+- status: 500
+  title: Defined Data payload not acceptable
+  detail: >-
+    "The data was not acceptable. We recommend calling the /api/v23.09/data/$RiskID/verify POST
+    endpoint first which will report the reason for rejection."
+  method: derived
+  source: openapi/whitespace-london-platform-openapi.yml
+  source_operations:
+  - POST /api/v22.04/data/{riskID}
+  - POST /api/v23.09/data/{riskID}
+  remediation: >-
+    Call POST /api/v{version}/data/{riskID}/verify with the same payload first — it reports why
+    the data would be rejected — then repeat the update.
+related:
+  conventions: conventions/whitespace-london-conventions.yml
+  authentication: authentication/whitespace-london-authentication.yml

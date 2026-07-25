@@ -1,0 +1,92 @@
+generated: '2026-07-25'
+method: searched
+source: https://github.com/whitespace-software/CSharpUtils
+name: Whitespace CSharpUtils
+kind: first-party command-line utilities
+official: true
+license: MIT
+status: published
+packaged_binary: false
+note: >-
+  Whitespace ships no installable, versioned CLI (no Homebrew tap, no npm/NuGet global tool,
+  no release binaries). What it publishes is a first-party, MIT-licensed set of Windows
+  command-line programs and examples in the whitespace-software/CSharpUtils repository,
+  built on a shared WSAPIClient. They are compiled from source with the .NET toolchain and
+  run as <Utility>.exe with a JSON settings file. The binary surface is catalogued here; the
+  source distribution is catalogued in packages/whitespace-london-packages.yml.
+install:
+- method: source
+  steps:
+  - git clone https://github.com/whitespace-software/CSharpUtils.git
+  - Open the utility's .sln in Visual Studio (or dotnet build) to produce <Utility>.exe
+configuration:
+  file: JSON settings file passed as the first argument
+  keys:
+  - key: root
+    description: Base URL of the Whitespace environment
+    example: https://sandbox.whitespace.co.uk
+  - key: bucket
+    description: Environment data bucket
+    example: sandboxbucket
+  - key: renewableToken
+    description: >-
+      Renewable API token copied from the user settings panel of the Whitespace Platform UI.
+      See authentication/whitespace-london-authentication.yml.
+commands:
+- name: RisksList
+  usage: RisksList.exe [settings file] [field] [value]
+  description: >-
+    Calls GET /api/risks and prints matching risks, optionally filtered by a single field.
+  examples:
+  - RisksList.exe [settings file]
+  - RisksList.exe [settings file] UMR B0999JC12345678
+  - RisksList.exe [settings file] ID IC12345678
+  - RisksList.exe [settings file] Status Signed
+  - RisksList.exe [settings file] InsuredName Acem
+  api_surface:
+  - GET /api/summary
+  - GET /api/risks/{riskID}
+- name: RiskPack
+  usage: RiskPack.exe [settings file] <riskID>
+  description: Creates a folder containing the contract PDF and all attachments for a risk.
+  api_surface:
+  - POST /export/pdf/{riskID}
+  - GET /api/attachments/{rootID}
+  - GET /api/attachments/{parentDocID}/{identifier}
+- name: EvidenceOfCover
+  usage: EvidenceOfCover.exe [settings file] <riskID>
+  description: >-
+    Produces an Evidence of Cover PDF from a template (template.json) using contract data
+    read from the platform.
+  api_surface:
+  - GET /api/risks/{riskID}/getExtendedMRC
+  - GET /api/v23.09/data/{riskID}
+- name: VerifyAttachments
+  usage: VerifyAttachments.exe [settings file] <rootID>
+  description: >-
+    Gets the number of channels on an IC::ATCH attachment document and looks for additional
+    channels across the /risks/root items.
+  api_surface:
+  - GET /api/risks/root/{rootID}
+  - GET /api/attachments/{rootID}
+- name: MIReport
+  usage: MIReport.exe [settings file]
+  description: Pulls the management-information report.
+  api_surface:
+  - POST /mireport/prepare
+  - POST /mireport/fetch
+- name: HelloWorld
+  usage: HelloWorld.exe [settings file]
+  description: Minimal example calling the API through the reusable WSShared client.
+  api_surface:
+  - GET /api/user/myDetails
+- name: Standalone
+  usage: Standalone.exe [settings file]
+  description: >-
+    The same connection demonstrated with all code inline in a single file of fewer than
+    100 lines, for integrators who want to follow every step.
+  api_surface:
+  - GET /api/user/myDetails
+related:
+  packages: packages/whitespace-london-packages.yml
+  authentication: authentication/whitespace-london-authentication.yml
