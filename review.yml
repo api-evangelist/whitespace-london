@@ -1,0 +1,385 @@
+aid: whitespace-london
+name: Whitespace
+homeMarket: United Kingdom
+tier: market-infrastructure
+review:
+  question: >-
+    Does Whitespace publish a real, public developer portal and downloadable API
+    specification for the London-market placing platform, and what is its ACORD posture?
+  answer: true
+  date: '2026-07-25'
+  reviewer: API Evangelist
+  gated: true
+  gatedNote: >-
+    Documentation is fully public and unauthenticated; CREDENTIALS are not. Sandbox and
+    production service tokens are issued by Whitespace Support to contracted broker, carrier
+    and vendor organisations, are restricted to allowlisted IP addresses, and expire within
+    one year. There is no self-serve signup, no free tier, and no public key issuance.
+findings:
+  summary: |
+    Whitespace is the rare insurance-sector record where the API surface is genuinely
+    documented in public. apidocs.whitespace.co.uk returns HTTP 200 with no login and acts
+    as a real developer portal: an API index that links endpoint documentation on Swagger,
+    an access/token guide set, an Azure Service Bus queues integration guide set, a data
+    persistence and Defined Data corpus, and step-by-step use-case guides for brokers and
+    carriers. swagger.whitespace.co.uk returns HTTP 200 and is a stock Swagger UI
+    distribution whose spec is inlined in index.spec.js as a JavaScript object literal
+    (const spec = {...}); there is no /openapi.json, /swagger.json, /api-docs, /spec or
+    /redoc — all return 404. Extracting the object literal yields a complete OpenAPI 3.0.0
+    document, "Whitespace Platform API" version 0.1.0, dated "Last update 29th May 2025",
+    with 113 paths, 26 component schemas, four declared servers, and a single bearerAuth
+    (HTTP bearer, JWT) security scheme applied globally. That spec is the only machine
+    readable artifact published and it is saved verbatim in this repo.
+
+    The four insurance verbs split cleanly. QUOTE and BIND are richly covered because
+    Whitespace is a placing platform for the subscription market: quoteOnRequest,
+    saveQuoteDetails, getQuoteDetails, showQuoteToBroker, declineQuoteRequest,
+    markAsIndicative and notTakeUpQuotation on the quote side; createBindableQuote,
+    draftToFirmOrder, markAsFirmOrder, declineFirmOrder, withdrawFirmOrder, writeLine,
+    recordLine, requestWrittenLineSets, acceptWrittenLine, rejectWrittenLine, signSets,
+    reSignSets and rollbackSigned on the bind/line side, plus a full endorsement lifecycle
+    (createEndorsement, showEndorsement, acceptEndorsement, completeEndorsement,
+    deleteEndorsement, endorsementFollowers). ISSUE is covered as contract document
+    production rather than policy issuance: getExtendedMRC, POST /export/pdf/{riskID} and
+    GET /api/documents/{docID}. FNOL and claims are entirely absent and correctly so —
+    Whitespace does not do claims. The audience is agent/partner-facing (brokers and
+    underwriters at contracted London-market firms and their vendor systems), never
+    consumer-facing.
+
+    The ACORD posture is the strongest of any company likely to appear in this data set,
+    and it is verifiable rather than marketing. Whitespace authored the JSON Market Reform
+    Contract (JMRC) standard — the Market Reform Contract expressed in JSON — and, per its
+    own published specification, "donated to ACORD for industry-wide use", to be
+    "incorporated into ACORD's industry-owned Global Reinsurance and Large Commercial Data
+    Standards". The JMRC ACORD Specification v0.5 is published as a public PDF on the docs
+    site. In the API itself, the Defined Data endpoints (/api/v22.04/data/{riskID} and
+    /api/v23.09/data/{riskID}, with /tagset/{tagset} and /verify variants) accept an
+    alternative tagset parameter documented as "Currently supported ACORDGPM" and return
+    contract values carrying tags such as ACORDGPM:InsuredName,
+    ACORDGPM:BrokerContractReference, ACORDGPM:InceptionDate and
+    ACORDGPM:InsuredAddressNumberAndStreet alongside the corresponding MRC headings. The
+    integration page additionally references work to produce CDR (Core Data Record)
+    compliant data with partner systems. No AL3, IVANS, agency-download, Applied Epic or
+    Vertafore reference appears, which is expected — those are US agency-system rails, not
+    London-market ones.
+
+    Events are real but are not webhooks. Whitespace publishes two guides describing
+    per-client Azure Service Bus queues: every user action creates an activity document
+    which is placed on the client's queue as a time-stamped message carrying an activity
+    code, document reference and message id, which the client system then uses to call back
+    into the REST API. Queues are provisioned by Whitespace Support per organisation or
+    team. No AsyncAPI document, no webhook registration endpoint and no public event catalog
+    exists. No public Postman workspace or collection was found. No GraphQL surface exists:
+    POST to https://sandbox.whitespace.co.uk/graphql returns nginx 405 Not Allowed. No
+    .proto files are published. /.well-known/openid-configuration and
+    /.well-known/oauth-authorization-server on sandbox.whitespace.co.uk return the Angular
+    single-page-application shell rather than discovery documents, and return 404 on the
+    marketing domain — so there is no OAuth/OIDC discovery despite the JWT bearer scheme;
+    tokens are minted and revoked by Whitespace Support out of band, with a documented kid
+    for revocation.
+  developerPortal:
+    url: https://apidocs.whitespace.co.uk/
+    httpStatus: 200
+    fetched: '2026-07-25'
+    classification: real self-serve developer portal (public reference documentation)
+    loginWall: false
+    note: >-
+      Publicly readable API index with no authentication — endpoint documentation on Swagger,
+      access/token guides, queue integration guides, Defined Data and data-dictionary corpus,
+      and broker/carrier use-case guides. Credential issuance, however, is not self-serve.
+  apiReference:
+    url: https://swagger.whitespace.co.uk/
+    httpStatus: 200
+    fetched: '2026-07-25'
+    note: Swagger UI standalone distribution; spec inlined in ./index.spec.js, not served as a JSON/YAML file.
+  probes:
+  - url: https://whitespace.co.uk/
+    status: 200
+  - url: https://www.whitespace.co.uk/
+    status: 200
+  - url: https://www.whitespace.co.uk/integration/
+    status: 200
+  - url: https://apidocs.whitespace.co.uk/
+    status: 200
+  - url: https://swagger.whitespace.co.uk/
+    status: 200
+  - url: https://swagger.whitespace.co.uk/index.spec.js
+    status: 200
+    note: The OpenAPI 3.0.0 document, as a JavaScript object literal.
+  - url: https://sandbox.whitespace.co.uk/
+    status: 200
+  - url: https://sandbox.whitespace.co.uk/api/version
+    status: 200
+    note: 'Anonymous and unauthenticated: {"platformVersion":30700,"buildDate":"2026-07-03@12:42:50",...}'
+  - url: https://developer.whitespace.co.uk
+    status: 0
+    note: DNS does not resolve.
+  - url: https://developers.whitespace.co.uk
+    status: 0
+    note: DNS does not resolve.
+  - url: https://docs.whitespace.co.uk
+    status: 0
+    note: DNS does not resolve.
+  - url: https://api.whitespace.co.uk
+    status: 0
+    note: DNS does not resolve.
+  - url: https://www.whitespace.co.uk/developers
+    status: 404
+  - url: https://www.whitespace.co.uk/developer
+    status: 404
+  - url: https://www.whitespace.co.uk/api
+    status: 404
+  - url: https://www.whitespace.co.uk/partners
+    status: 404
+  - url: https://www.whitespace.co.uk/integrations
+    status: 404
+    note: The real path is /integration/ (singular), which returns 200.
+  - url: https://apidocs.whitespace.co.uk/openapi.json
+    status: 404
+  - url: https://apidocs.whitespace.co.uk/openapi.yaml
+    status: 404
+  - url: https://apidocs.whitespace.co.uk/swagger.json
+    status: 404
+  - url: https://apidocs.whitespace.co.uk/api-docs
+    status: 404
+  - url: https://apidocs.whitespace.co.uk/spec
+    status: 404
+  - url: https://apidocs.whitespace.co.uk/redoc
+    status: 404
+  - url: https://swagger.whitespace.co.uk/openapi.json
+    status: 404
+  - url: https://swagger.whitespace.co.uk/swagger.json
+    status: 404
+  - url: https://swagger.whitespace.co.uk/index.spec.json
+    status: 404
+  - url: https://sandbox.whitespace.co.uk/.well-known/openid-configuration
+    status: 200
+    note: Returns the Angular SPA shell, not an OIDC discovery document. Not a discovery endpoint.
+  - url: https://sandbox.whitespace.co.uk/.well-known/oauth-authorization-server
+    status: 200
+    note: Returns the Angular SPA shell, not an authorization-server metadata document.
+  - url: https://whitespace.co.uk/.well-known/openid-configuration
+    status: 404
+  - url: https://sandbox.whitespace.co.uk/graphql
+    status: 405
+    note: nginx "405 Not Allowed" on POST introspection. No GraphQL surface.
+  specs:
+  - file: openapi/whitespace-london-platform-openapi.yml
+    title: Whitespace Platform API
+    openapiVersion: 3.0.0
+    infoVersion: 0.1.0
+    specSelfDatedAs: Last update 29th May 2025
+    paths: 113
+    schemas: 26
+    sourceURL: https://swagger.whitespace.co.uk/index.spec.js
+    sourceHttpStatus: 200
+    fetched: '2026-07-25'
+    extraction: >-
+      The document is served as the JavaScript object literal assigned to `const spec` in
+      index.spec.js. The leading `const spec =` assignment was stripped. The served bytes
+      contain regular-expression backslash sequences (\d, \., \$, \B, \U) inside JSON string
+      values that are legal in JavaScript but invalid JSON escapes; each such lone backslash
+      was doubled so the document parses, preserving the author's evident regex intent. No
+      keys, paths, schemas, servers, security or descriptions were added, removed or altered.
+      The resulting object was serialised to YAML.
+    servers:
+    - url: https://sandbox.whitespace.co.uk/
+      description: Sandbox Environment
+    - url: https://tess.whitespace.co.uk/
+      description: Tess Environment
+    - url: https://beta.whitespace.co.uk/
+      description: Staging/test environment (declared "Beta Environment")
+    - url: https://staging.whitespace.co.uk/
+      description: Staging Environment
+    serversNote: >-
+      No production server is declared in the spec. Production access is arranged separately
+      with Whitespace Support after Sandbox testing, per the Getting Started guide.
+  specsCount: 1
+  insuranceVerbs:
+    quote:
+      exposed: true
+      audience: agent-facing (brokers and underwriters at contracted London-market firms)
+      endpoints:
+      - POST /api/risks/{riskID}/quoteOnRequest
+      - POST /api/risks/{riskID}/saveQuoteDetails
+      - GET /api/risks/{riskID}/getQuoteDetails
+      - POST /api/risks/{riskID}/showQuoteToBroker
+      - POST /api/risks/{riskID}/declineQuoteRequest
+      - POST /api/risks/{riskID}/markAsIndicative
+      - POST /api/risks/{riskID}/notTakeUpQuotation
+      - POST /api/risks/{riskID}/forwardAsQuoteRequest
+      - POST /api/risks/{quoteID}/createDraftFromQuote
+    bind:
+      exposed: true
+      audience: agent-facing
+      endpoints:
+      - POST /api/risks/{riskID}/createBindableQuote
+      - POST /api/risks/{riskID}/draftToFirmOrder
+      - POST /api/risks/{riskID}/markAsFirmOrder
+      - POST /api/risks/{riskID}/declineFirmOrder
+      - POST /api/risks/{riskID}/withdrawFirmOrder
+      - POST /api/risks/{riskID}/writeLine
+      - POST /api/risks/{riskID}/recordLine
+      - POST /api/risks/{riskID}/requestWrittenLineSets
+      - POST /api/risks/{riskID}/acceptWrittenLine/{writtenLineSetID}
+      - POST /api/risks/{riskID}/rejectWrittenLine/{writtenLineSetID}
+      - POST /api/risks/{riskID}/signSets
+      - POST /api/risks/{riskID}/reSignSets
+      - POST /api/risks/{riskID}/rollbackSigned
+      - POST /api/bindNotifyParties
+    issue:
+      exposed: true
+      note: >-
+        Contract document production rather than carrier policy issuance — Whitespace produces
+        the agreed digital MRC contract, not a policy schedule from a policy admin system.
+      endpoints:
+      - GET /api/risks/{riskID}/getExtendedMRC
+      - POST /export/pdf/{riskID}
+      - GET /api/documents/{docID}
+      - GET /api/attachments/{rootID}
+    fnol:
+      exposed: false
+      note: >-
+        No FNOL, claim, loss or notification endpoint exists. Whitespace is a placing
+        platform; claims are out of scope for the product. Absence is a correct finding.
+  acord:
+    posture: >-
+      ACORD-native: authored the JSON Market Reform Contract (JMRC) and donated it to ACORD
+      for the Global Reinsurance and Large Commercial data standards; the Defined Data API
+      returns an ACORDGPM tagset alongside MRC headings.
+    evidence:
+    - source: https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+      status: 200
+      quote: >-
+        "The JMRC (JSON Market Reform Contract) is the resulting digital placing standard that
+        Whitespace has now donated to ACORD, the standards-setting body for the global
+        insurance industry, and which will be incorporated into ACORD's industry-owned Global
+        Reinsurance and Large Commercial Data Standards, which are widely used through the
+        global insurance value chain." (JMRC Specification Version 0.5, published 21/10/2021)
+    - source: openapi/whitespace-london-platform-openapi.yml
+      quote: >-
+        tagset path parameter described as "An alternative tagset to the default. Currently
+        supported ACORDGPM", example "ACORDGPM"; response examples carry tags including
+        ACORDGPM:InsuredName, ACORDGPM:BrokerContractReference, ACORDGPM:InceptionDate,
+        ACORDGPM:ExpiryDate, ACORDGPM:InstructionType and ACORDGPM:InsuredAddress* paired with
+        their mrcHeading values. 34 ACORD references appear in the spec.
+    - source: https://www.whitespace.co.uk/integration/
+      status: 200
+      note: References work with partner systems to produce CDR (Core Data Record) compliant data.
+    al3: not applicable / no reference found (AL3 and IVANS are US agency rails, not London-market)
+    ivans: no reference found
+    ngds: >-
+      Not named as NGDS, but the JMRC donation targets ACORD's Global Reinsurance and Large
+      Commercial (GRLC) data standards, which is the same standards family.
+  auth:
+    model: HTTP bearer JWT service token, issued out of band and IP-allowlisted
+    securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+    selfServe: false
+    detail: >-
+      Whitespace Support supplies a JSON file per service account or platform user containing
+      token, kid (for revocation) and expiry. The token value is sent as
+      "Authorization: Bearer <token>". Calls are rejected with 401 and
+      {"error":true,"reason":"Invalid WSAUTH"} if the token is expired or revoked, if the
+      associated platform user is not Live or ReadOnly, or if the source IP address is not
+      allowlisted. Maximum token lifetime is one year. A separate refresh-token flow is
+      documented. No OAuth2 authorization server, no OIDC discovery, no mTLS, no API key.
+    onboardingPath: >-
+      Request Sandbox user accounts, an API service account and service bus queues from
+      support@whitespace.co.uk; test on Sandbox; then request Production service account(s)
+      and queue(s). Commercial terms are governed by the Whitespace Interchange Agreement.
+  transports:
+  - protocol: REST
+    scheme: https
+    baseURL: https://sandbox.whitespace.co.uk/
+    documented: true
+    note: Sandbox is the documented base URL; production hostname is provided on onboarding.
+  - protocol: AMQP / Azure Service Bus queues
+    documented: true
+    specPublished: false
+    note: >-
+      Per-client (and per-team) queues carry an activity message for every platform action —
+      time-stamped, with an activity code, document reference and message id — which the
+      client system consumes and then calls back into the REST API. Queues are provisioned by
+      Whitespace Support. This is the platform's event mechanism.
+  - protocol: Webhooks
+    documented: false
+    note: No webhook registration endpoint or event catalog is published. Queues replace webhooks.
+  - protocol: AsyncAPI
+    documented: false
+    note: No AsyncAPI document is published for the queue surface.
+  - protocol: GraphQL
+    documented: false
+    note: POST to /graphql on sandbox returns nginx 405 Not Allowed. No GraphQL surface.
+  - protocol: gRPC
+    documented: false
+    note: No .proto files published.
+  postman:
+    published: false
+    note: >-
+      No public Postman workspace or collection was found. https://www.postman.com/whitespace
+      returns the generic Postman SPA shell with no Whitespace Software workspace content.
+  sdks:
+    published: false
+    note: >-
+      No first-party SDK or client library is published. The docs provide a C# access example
+      PDF and bash/curl samples for macOS/Unix and Windows command line only.
+  corporate:
+    legalName: Whitespace Software Limited
+    companyNumber: '02020348'
+    registeredIn: England & Wales
+    registeredAddress: 26th Floor, 22 Bishopsgate, London, EC2N 4BQ, United Kingdom
+    parent: Verisk (via Sequel)
+    lloydsStatus: >-
+      Granted fully recognised status by Lloyd's for electronic placement; one of two
+      Lloyd's-approved placing platforms.
+    platformVersion: 3.7.0 (build 2026-07-03, per anonymous GET /api/version on sandbox)
+sources:
+- url: https://www.whitespace.co.uk/
+  type: Website
+  status: 200
+  note: Company overview, ownership by Verisk, product positioning.
+- url: https://www.whitespace.co.uk/integration/
+  type: Documentation
+  status: 200
+  note: >-
+    "Its why our entire Platform is built on APIs"; links to apidocs; integration access is
+    via hello@whitespace.co.uk, not self-serve. References CDR-compliant data work.
+- url: https://apidocs.whitespace.co.uk/
+  type: Documentation
+  status: 200
+  note: Public API index — no login. Links Swagger, access guides, queues, Defined Data, use-case guides.
+- url: https://swagger.whitespace.co.uk/
+  type: APIReference
+  status: 200
+  note: Swagger UI; spec inlined at ./index.spec.js.
+- url: https://swagger.whitespace.co.uk/index.spec.js
+  type: OpenAPI
+  status: 200
+  note: Source of the harvested OpenAPI 3.0.0 document (113 paths).
+- url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  type: Documentation
+  status: 200
+  note: Three-step Sandbox-to-Production onboarding via support@whitespace.co.uk.
+- url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  type: Documentation
+  status: 200
+  note: Service token format (token/kid/expiry), IP allowlisting, 401 Invalid WSAUTH, one-year max lifetime.
+- url: https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  type: Specification
+  status: 200
+  note: JMRC v0.5, published 21/10/2021 — the ACORD donation is stated here.
+- url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  type: Documentation
+  status: 200
+  note: Azure Service Bus queue event mechanism in place of webhooks.
+- url: https://apidocs.whitespace.co.uk/Whitespace_Data_Dictionary.xlsx
+  type: Documentation
+  status: 200
+  note: Data dictionary v1.13 (platform 3.6.2, data update v106) published as a public spreadsheet.
+- url: https://www.whitespace.co.uk/interchange-agreement
+  type: TermsOfService
+  status: 200
