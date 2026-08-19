@@ -37,7 +37,7 @@ tags:
 - Market Infrastructure
 created: '2026-07-25'
 modified: '2026-07-25'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: whitespace-london:whitespace-platform-api
   name: Whitespace Platform API
