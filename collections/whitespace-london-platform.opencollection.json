@@ -1,0 +1,2778 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Whitespace Platform API",
+    "version": "0.1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Activities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "A list of the activity documents that describe the history of one specific document instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/activities/:riskID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "The unique ID of the specific document/contract instance to retrieve the list of activity documents for"
+              }
+            ]
+          },
+          "docs": "This endpoint returns the activity associated with one specific version of a contract or another single document associated with a risk. In most cases, this will be less useful than GET /activities/{RootID}/full, which returns all the activities associated with a root risk."
+        },
+        {
+          "info": {
+            "name": "A list of the activity documents that describe the full history of a root risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/activities/:rootID/full",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique ID of a root risk to retrieve the complete list of activity documents for"
+              }
+            ]
+          },
+          "docs": "This endpoint returns the activities that have been performed on all of the contract instances falling under a root risk and all of its associated attachments or other documents. The activity documents summarised by this endpoint record the complete history of that risk across its lifespan. To target one specific version of a contract, or one attachment, endorsement, or other document, use GET /activities/{RiskID}, or to target a specific activity type within a date range across all root risks v"
+        },
+        {
+          "info": {
+            "name": "A help file detailing use of the POST /activities/filter API",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/activities/filter/help"
+          },
+          "docs": "This call returns instructions on using the POST /activities/filter API to return a list of activity documents visible to the user, filtered by activity type and, optionally, date and time. The instructions include a list of the most commonly filtered activities. For a complete and fully up-to-date list of activities, please email support@whitespace.co.uk"
+        },
+        {
+          "info": {
+            "name": "Fetch a list of all activity visible to the user matching a specific activity type and optional date range",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/activities/filter",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "A parameter matching a single activity is required for this call, but the 'from' and 'to' parameters are optional, and take a date/time block in yyyy-mm-dd hh:mm:ss format. If the date parameters are missing, all visible activity documents matching the activity will be returned. Note that the 'from' parameter can instead accept a duration. If a duration is used, it is calculated backwards from the present time, and the 'to' parameter should be omitted. See GET /activities/filter/help for example"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Attachments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a logo for the corporate (broker or carrier) on the system",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/attachments/:corporate/:logo",
+            "params": [
+              {
+                "name": "corporate",
+                "value": "Corporate-BLACKPOOL",
+                "type": "path",
+                "description": "The corporate company id, uppercase and prefixed by 'Corporate-"
+              },
+              {
+                "name": "logo",
+                "value": "logocolour",
+                "type": "path",
+                "description": "Either logocolour for a coloured logo, or logobw for a black-and-white one"
+              }
+            ]
+          },
+          "docs": "Get a logo for the corporate (broker or carrier) on the system"
+        },
+        {
+          "info": {
+            "name": "Gets meta data for all attachments available on a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/attachments/:rootID",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ]
+          },
+          "docs": "Gets meta data for all attachments available on a risk"
+        },
+        {
+          "info": {
+            "name": "Gets meta data for all attachments on a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/attachments/array/:rootID",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ]
+          },
+          "docs": "Gets meta data for all attachments on a risk"
+        },
+        {
+          "info": {
+            "name": "Get an attachment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/attachments/:parentDocID/:identifier",
+            "params": [
+              {
+                "name": "parentDocID",
+                "value": "IC88965CED-A84B-42F3-8D42-A3534DB92B08::ATCH::A-2343226A-631E-4A1B-A89E-6FBEEFE0E5F3",
+                "type": "path",
+                "description": "The RWAttachmentCollection document, which is parentDocID in a call to /api/attachments/$RiskID -- <b>OR</b>, for Subjectivity Attachments, grab the <b>_id</b> from /api/risks/{rootID}/related/{type} with a type of RWSubjectivityResponse."
+              },
+              {
+                "name": "identifier",
+                "value": "A-2343226A-631E-4A1B-A89E-6FBEEFE0E5F3",
+                "type": "path",
+                "description": "The unique id of the attachment, which is <b>identifier</b> in a call to /api/attachments/$RiskID -- <b>OR</b>, for Subjectivity Attachments, grab the <b>_id</b> from /api/risks/{rootID}/related/{type} with a type of RWSubjectivityResponse."
+              }
+            ]
+          },
+          "docs": "<p>Download an attachment, using values from a call to /api/attachments/$RiskID. The content will not be JSON, but the contents of the attachment which can be saved to a file.</p> <p>Due to limitations in Swagger, the attachment might not display properly when tested, but all attachment types can be downloaded normally outside Swagger.</p> <p>If you want to download an attachment linked to a Subjectivity, you need to grab the <b>_id</b> and <b>identifier</b> by calling /api/risks/{rootID}/relate"
+        },
+        {
+          "info": {
+            "name": "Upload an attachment - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/attachments/:riskID/:attachmentName",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "ICBC2860DE-3E55-40CD-99B8-5457E11D8C0A",
+                "type": "path",
+                "description": "The root ID of the risk, starting IC"
+              },
+              {
+                "name": "attachmentName",
+                "value": "AerialPhoto.png",
+                "type": "path",
+                "description": "A helpful name for the attached document. Often (but not necessarily) the original file name."
+              },
+              {
+                "name": "newVersionOf",
+                "value": "A-8652873F-40C7-4667-9A4A-CDD968C55E93",
+                "type": "query",
+                "description": "The ID of the existing attachment you want to replace"
+              }
+            ]
+          },
+          "docs": "<p>Broker users can call this endpoint to upload an attachment document to a risk. The document is not automatically shared with carriers. The broker must deliberately share it as required.</p> <p>The payload is not JSON, but the binary content of the file. The MIME Content header must correctly define the file, so \"image/png\" for an image, \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\" for an XLSX spreadsheet and so on. All content headers should match the <a href='https://"
+        },
+        {
+          "info": {
+            "name": "Show an attachment to carriers - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/attachments/:rootID/showToCarriers",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique root ID of the risk."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Show an attachment to carriers - Broker Only"
+        },
+        {
+          "info": {
+            "name": "Upload an Attachment as an Underwriter - Underwriter Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/attachbyunderwriter/:riskID/:underwriter_channel/:attachmentname",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              },
+              {
+                "name": "underwriter_channel",
+                "value": "whitesails_ALL",
+                "type": "path",
+                "description": "The channel name of the underwriter team that the contract is in"
+              },
+              {
+                "name": "attachmentname",
+                "value": "example.png",
+                "type": "path",
+                "description": "The name of file to attach"
+              }
+            ]
+          },
+          "docs": "This call allows an Underwriter account to attach a document to a specific contract. Note that the attachment is automatically shared with the broker when uploaded. The example given below only works with png files due to the objects specified in the requestBody array, but any file type can be attached via API."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Bind Notify Parties",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Bind notify and non-notify parties to a contract declared to a facility/MGA. At least one (re)insurer has to be assigned as a non/notify party before making this call.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/bindNotifyParties",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Bind notify and non-notify parties to a contract declared to a facility/MGA. At least one (re)insurer has to be assigned as a non/notify party before making this call."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Internal Broker Note",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add text to the internal brokers'' note belonging to the risk, creating it if currently blank - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/brokerNote/:rootID/save",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique root ID of the risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add text to the internal brokers'' note belonging to the risk, creating it if currently blank - Broker Only"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Comments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets all comments. Deprecated in favour of /risks/$rootID/related/RWComment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/comments"
+          },
+          "docs": "<div>This endpoint returns <b>all</b> comments a user can see.</div> <p/> <div>This will become impractical as volumes grow over time, so the endpoint is deprecated.</div> <p/> <div>We recommend loading the comments on an individual risk by using the 'related' endpoint with 'RWComment' as the document type /risks/$rootID/related/RWComment</div>"
+        },
+        {
+          "info": {
+            "name": "Add a comment to a discussion between teams on a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/comments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<div>A discussion can be started by either Broker or Underwriter by creating a new comment. The discussion is between the broker and carrier teams on the risk, with the individual making the comment identified.</div>"
+        },
+        {
+          "info": {
+            "name": "An array of 'global' comments sent by Whitespace to all platform users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/comments/global"
+          },
+          "docs": "<div>Whitespace can communicate with platform users through comments sent to everyone which are dismissed when read. This endpoint fetches those global comments.</div>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Customer",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieves the additional data across all keys used to store information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/customer/:teamID/:uniqueID",
+            "params": [
+              {
+                "name": "teamID",
+                "value": "MARINE",
+                "type": "path",
+                "description": "The team ID for the relevant team that the user belongs to"
+              },
+              {
+                "name": "uniqueID",
+                "value": "XYZ-123",
+                "type": "path",
+                "description": "An idientifier, usually a reference to an external system"
+              }
+            ]
+          },
+          "docs": "<div>The document return includes each payload of JSON as keys below customerData.</div>"
+        },
+        {
+          "info": {
+            "name": "Saves additional data, usually to link to other systems",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/customer/:teamID/:uniqueID/:key",
+            "params": [
+              {
+                "name": "teamID",
+                "value": "MARINE",
+                "type": "path",
+                "description": "The team ID for the relevant team that the user belongs to"
+              },
+              {
+                "name": "uniqueID",
+                "value": "XYZ-123",
+                "type": "path",
+                "description": "An idientifier, usually a reference to an external system"
+              },
+              {
+                "name": "key",
+                "value": "pas_reference",
+                "type": "path",
+                "description": "A key to refer to the JSON for fetching later"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<div>The payload can be any JSON. It is recorded against a unique identifier, usually a reference to an external system. Additionally, a key allows different pieces of data to be recorded against one identifer.</div>"
+        },
+        {
+          "info": {
+            "name": "Deletes additional data",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://sandbox.whitespace.co.uk/api/customer/:teamID/:uniqueID/:key",
+            "params": [
+              {
+                "name": "teamID",
+                "value": "MARINE",
+                "type": "path",
+                "description": "The team ID for the relevant team that the user belongs to"
+              },
+              {
+                "name": "uniqueID",
+                "value": "XYZ-123",
+                "type": "path",
+                "description": "An idientifier, usually a reference to an external system"
+              },
+              {
+                "name": "key",
+                "value": "pas_reference",
+                "type": "path",
+                "description": "A key to refer to the JSON for fetching later"
+              }
+            ]
+          },
+          "docs": "Deletes additional data"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Data",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets all Defined Data for a Risk.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/v22.04/data/:riskID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ]
+          },
+          "docs": "<div>This endpoint returns the Defined Data for a risk. NOTE that this is the old version, new integrators please use v23.09.</div>"
+        },
+        {
+          "info": {
+            "name": "Sets risk data through the Defined Data mechanism",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/v22.04/data/:riskID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<div>The payload needs the metadata from a previous GET, a multiSectionDefinition array which can be empty, and a definedData array with the values to be updated.</div> <p>You can NOT have an empty string as a value for a tag, please use ??? as the placeholder instead.</p>"
+        },
+        {
+          "info": {
+            "name": "Gets all Defined Data for a Risk using an alternate tagset",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/v22.04/data/:riskID/tagset/:tagset",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              },
+              {
+                "name": "tagset",
+                "value": "ACORDGPM",
+                "type": "path",
+                "description": "An alternative tagset to the default. Currently supported ACORDGPM"
+              }
+            ]
+          },
+          "docs": "<div>This endpoint returns the Defined Data for a risk</div>"
+        },
+        {
+          "info": {
+            "name": "Verifies the risk data to check that it is acceptable for the update POST",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/v22.04/data/:riskID/verify",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<div>This endpoint describes any problems with the data that is intended to be sent to POST /api/v22.04/data/$RiskID.</div> <div>It just does a verify, it <b>does not</b> save any data.</div>"
+        },
+        {
+          "info": {
+            "name": "Gets all tagged data for a risk using the default Whitespace Defined Data tagset.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/v23.09/data/:riskID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ]
+          },
+          "docs": "<p>This endpoint returns the Defined Data for a risk.</p> <p>This data now includes several items of implicit information retrieved and tagged by the endpoint itself, including these new Controlled tags -- Agreement_Party_Role, Participation_Basis, Premium_Discount_Indicator, Subjectivity_Indicator, Subjectivity_Due_Date, Subjectivity_Condition, Subjectivity_Terms, Section_Reference, Insurer_Identification_Pseudonym, Reinsurer_Identification_Pseudonym, Insurer_Identification_Split_Percentage, Re"
+        },
+        {
+          "info": {
+            "name": "Sets tagged data in the risk through the Defined Data system.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/v23.09/data/:riskID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C",
+                "type": "path",
+                "description": "The unique ID of the risk."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<div>The payload needs the metadata from a previous GET, a multiSectionDefinition array which can be empty, and a definedData array with the values to be updated.</div> <p>You can NOT have an empty string as a value for a tag, please use ??? as the placeholder instead.</p>"
+        },
+        {
+          "info": {
+            "name": "Gets all tagged data for a risk using an alternate set of data tags.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/v23.09/data/:riskID/tagset/:tagset",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              },
+              {
+                "name": "tagset",
+                "value": "ACORDGPM",
+                "type": "path",
+                "description": "An alternative tagset to the default. Currently supported -- ACORDGPM"
+              }
+            ]
+          },
+          "docs": "<div>This endpoint returns the Defined Data for a risk using tag field names that are not the default Whitespace tags.</div>"
+        },
+        {
+          "info": {
+            "name": "Verifies the data payload to check that it will be accepted by an update POST, and explains errors in detail.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/v23.09/data/:riskID/verify",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<div>This endpoint describes any problems with a data payload that is to be sent to the POST /api/v23.09/data/$RiskID call.</div> <div>Unlike an update POST operation, it provides verbose error descriptions rather than a simple failure notification. <div>Please note that this call is solely for verification, it <b>does not</b> save any data.</div>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Show Declaration to Facility",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Sends a firm order declaration to a facility - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/declarations/:riskID/showToFacility/:facilityID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "The unique ID of the Firm Order or Bindable Quote that you want to show to the Facility"
+              },
+              {
+                "name": "facilityID",
+                "value": "ICE82100B0-2D8B-4DD5-883E-B3D2AC98DA81",
+                "type": "path",
+                "description": "The root ID of the facility you are showing to"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This is the new endpoint for showing a Firm Order or Bindable Quoteto a Facility. It has better error handling and you no longer are required to send in information for sections that you are not showing. You also no longer need to use valueIsLeaderLineGuidance, as by default it will use the given line guidance for the leader. As before you can grab the list of markets avaiable to show on the facility by getting the Facility Id and use /combinedSets."
+        },
+        {
+          "info": {
+            "name": "Please use the showToFacility Endpoint instead, this is the old version - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/showDeclarationToFacility",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<p>Options for this call are set via the JSON payload. If the facility has multiple members, then all underwriters must be included in the payload, even if you are not showing the contract to them. Note that the leader must write their line before you can show to agreement parties. When showing to the leader, set the \"valueIsLeaderLineGuidance\" key to true. This will mark the \"value\" key-pair as line guidance for the declaration. If this key is not set, \"value\" will be taken as the percentage of"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Documents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "An endpoint that can fetch any document that the user is allowed to see",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/documents/:docID",
+            "params": [
+              {
+                "name": "docID",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "<pre>This endpoint returns specified risk documents (names start with IC) which the user can see.</pre> <p/> <pre>Additionally, it can fetch shared documents visible to all users on the Whitespace Platform.</pre> <p/> <pre>Commonly-useful shared documents include (a) RWDefinedData, which contains the full list of Defined Data tags by contract heading along with all tag validation rules, and details of alternate tag name sets; and (b) Corporate-_COMPANYID_, which contains the full public details "
+        },
+        {
+          "info": {
+            "name": "Get the list of approved carriers, if it exists - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/documents/corporateApprovedCarriers/getAll"
+          },
+          "docs": "In organisations where the <b>Approved (Re)Insurer List</b> has been activated, calling systems should only offer underwriters on the list to brokers as potential recipients for showing a risk. <p/>If the list has not been created, or is set to enabled = false, all (re)insurers are deemed suitable."
+        },
+        {
+          "info": {
+            "name": "Set a broking organisation's list of approved carriers - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/documents/corporateApprovedCarriers/saveAndPropagate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Users making this call MUST HAVE Admin permission. Note that each time this endpoint is called, the payload replaces <b>ALL</b> of the existing approved carrier data. It should therefore always be called with a complete list of approved carriers, not just the ones to be updated. As such, we recommend calling the /documents/corporateApprovedCarriers/getAll endpoint first to retrieve the existing approved carrier list, and then building the POST payload using that array."
+        },
+        {
+          "info": {
+            "name": "Get line guidance documents for a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/documents/getLineGuidanceForRoot/:rootID",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique root ID of the risk, excluding any :: suffixes"
+              }
+            ]
+          },
+          "docs": "Get line guidance documents for a risk"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Endorsements",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all endorsements for a Risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/endorsements/:rootID",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ]
+          },
+          "docs": "Get all endorsements for a Risk"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Export",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Returns a pdf file of the risk Contract.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/export/pdf/:riskID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "ICFEB57650-EB06-4D89-8004-C0A175B54D44::FO",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<p>If the risk is verticalised then a zip archive file is returned containing each version.</p> <p>Note that this endpoint is $ROOT/export/pdf, <b>not</b> $ROOT/api/export/pdf because it is run on separate resources from the main platform endpoints.</p> <p> If inline attachments are part of the contract they will be included in the export. <p> Using POST with a blank payload {} will return an export with default settings. If you want a more customised version see the schema for the options.</p>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Labels",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets an array of labels for the risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/labels/:root_or_label_ID",
+            "params": [
+              {
+                "name": "root_or_label_ID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The first part of the riskID, starting IC and stopping before any '::' delimiters. NEW in 2.20 - You can not add the same label multiple times on the same risk."
+              }
+            ]
+          },
+          "docs": "Gets an array of labels for the risk"
+        },
+        {
+          "info": {
+            "name": "Adds a label to a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/labels/:root_or_label_ID",
+            "params": [
+              {
+                "name": "root_or_label_ID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The first part of the riskID, starting IC and stopping before any '::' delimiters"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The payload covers the label text and team"
+        },
+        {
+          "info": {
+            "name": "Delete a label from a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://sandbox.whitespace.co.uk/api/labels/:root_or_label_ID",
+            "params": [
+              {
+                "name": "root_or_label_ID",
+                "value": "IC7B4C4ECF-5340-4A88-B5BE-A4ECE8859B61::LBL::BLACKROBOT::AUTOAPIJENKINS201021::High-Priority::2021-11-23::08:36:55",
+                "type": "path",
+                "description": "The full document ID for the label document"
+              }
+            ]
+          },
+          "docs": "Delete a label from a risk"
+        },
+        {
+          "info": {
+            "name": "A list of frequently used labels to prompt the user§",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/labels/suggested"
+          },
+          "docs": "A list of frequently used labels to prompt the user§"
+        },
+        {
+          "info": {
+            "name": "A list of all labels applied to risks for the team",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/labels/teamLabels"
+          },
+          "docs": "A list of all labels applied to risks for the team"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Lines",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get both written and signed line documents for a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/lines/:rootID/combinedSets",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The root ID of the risk, stopping before the :: suffix"
+              }
+            ]
+          },
+          "docs": "Get both written and signed line documents for a risk"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Lookup",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "check whether a line item heading maps to one from the enumerated MRC Heading list",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/lookup/check/:heading",
+            "params": [
+              {
+                "name": "heading",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "<p>The Platform uses Original Heading for the text to display to the user, and holds a Name Variation and MRC Heading for unambiguous identification.</p> <p>Try this endpoint with values such as Rate, Company, LossLimit, NoSuchHeading.</p> <p>In the 'maps to' case, the headings are shown both as the Title Case enumerated value (e.g. LimitOfLiability) and the multi-word display value (e.g. Limit of Liability).</p>"
+        },
+        {
+          "info": {
+            "name": "get the enumerated list of MRC headings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/lookup/headings"
+          },
+          "docs": "get the enumerated list of MRC headings"
+        },
+        {
+          "info": {
+            "name": "list the headings associated with a specific endorsement section",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/lookup/endorsementHeadingsInSection/:section",
+            "params": [
+              {
+                "name": "section",
+                "value": "",
+                "type": "path",
+                "description": "The section - RiskAndEndorsementIdentificationDetails, ContractChanges, EndorsementData, Information, ContractAdministrationAndAdvisory"
+              }
+            ]
+          },
+          "docs": "list the headings associated with a specific endorsement section"
+        },
+        {
+          "info": {
+            "name": "list the headings associated with a specific section",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/lookup/headingsInSection/:section",
+            "params": [
+              {
+                "name": "section",
+                "value": "",
+                "type": "path",
+                "description": "The section - RiskDetails, Information, SecurityDetails, SubscriptionAgreement, FiscalAndRegulatory, BrokerRemunerationAndDeductions"
+              }
+            ]
+          },
+          "docs": "list the headings associated with a specific section"
+        },
+        {
+          "info": {
+            "name": "a list of prepared name variations for MRC Headings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/lookup/namevariations"
+          },
+          "docs": "a list of prepared name variations for MRC Headings"
+        },
+        {
+          "info": {
+            "name": "Retrieve data on an individual identified by an email address",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/lookup/person/:email",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "path",
+                "description": "the email of the person to be searched for"
+              }
+            ]
+          },
+          "docs": "Retrieve data on an individual identified by an email address"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "MIReport",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Fetches the MI Report after a preparatory call to /mireport/prepare",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/mireport/fetch",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<p>The MI Report data is prepared by a call to /mireport/prepare to ensure it is up to date. As such, /mireport/prepare should be called before each call to /mireport/fetch unless those are made in quick succession.</p> <p><b>Tall</b> format puts each underwriter's line on a separate line, and <b>Wide</b> format puts them all one the same line.</p> <p>Note that this endpoint is $ROOT/mireport/fetch, <b>not</b> $ROOT/api/mireport/fetch because it is run on separate resources from the main platfor"
+        },
+        {
+          "info": {
+            "name": "Prepares the MI Report data for a subsequent call to /mireport/fetch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/mireport/prepare",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<p>The MI Report data is prepared by a call to /mireport/prepare to ensure it is up to date. As such, /mireport/prepare should be called before each call to /mireport/fetch unless those are made in quick succession.</p> <p>Note that this endpoint is $ROOT/mireport/prepare, <b>not</b> $ROOT/api/mireport/prepare because it is run on separate resources from the main platform endpoints.</p>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Overview",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Fetch documents of certain types related to a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/overview/:rootID",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The first part of the riskID, starting IC and stopping before any '::' delimiters"
+              }
+            ]
+          },
+          "docs": "<p>This endpoint returns an array where each item is a different document and therefore has different contents from the one before it.</p> <p>The document types included are as listed below. All of them have schemas you can find at the bottom of the page. Note that this is not every  document. It is a set which we have found convenient to present together to give background information on a risk. Note particularly that it does not include the RWPlacing contract wording document.</p> <ul> <li>RWC"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Owner",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets the owner of the risk. Calls from broker accounts also get the risk owner for each carrier that has one set.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/owner/:rootID",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique root ID of the risk"
+              }
+            ]
+          },
+          "docs": "Gets the owner of the risk. Calls from broker accounts also get the risk owner for each carrier that has one set."
+        },
+        {
+          "info": {
+            "name": "Assign the ownership of the risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/owner/:rootID",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique root ID of the risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Can only assign an owner for your organisation''s side of the risk"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Questionnaire",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets a list of answered Questions in the risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/v23.09/data/questionnaire/:riskID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ]
+          },
+          "docs": "Get a list of Questions with their Answers from the questionnaire associated with the risk. NOTE this only returns questions which have been answered. As such, this call is intended for integrators looking to extract data from the questionnaire, while the questionnaire/answer endpoint is more suitable for answering outstanding questions."
+        },
+        {
+          "info": {
+            "name": "Gets a list of Questions in the risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/questionnaire/:riskID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854",
+                "type": "path",
+                "description": "The unique ID of the Risk."
+              }
+            ]
+          },
+          "docs": "Get a full list of Questions that have been added to a risk/template''s questionnaire. This list includes Questions that do not yet have answers, and provides information about the rules/validations applying to a Question. As such, this call is intended for integrators looking to use the questionnaire/answer endpoint to add answers via API, while the v23.09/data/questionnaire call is more suitable for extracting data."
+        },
+        {
+          "info": {
+            "name": "Add Answers to a set of questions - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/questionnaire/:riskID/answer",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique ID of the risk/template"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GET /questionnaire endpoint OR go via /risks/{riskID} to obtain a list of questions available on the risk/template. This call is then used to add answers to the relevant questions. You need to add all the answers in one payload. NOTE that because some questions are dependent on others being answered in a specific way, some of the answers added might not appear in the UI until the parent questions have been answered appropriately."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Risks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a Risk in JMRC format",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ]
+          },
+          "docs": "Get a Risk in JMRC format"
+        },
+        {
+          "info": {
+            "name": "Edits one line item in the risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/editLineItem",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Edits one line item in the risk"
+        },
+        {
+          "info": {
+            "name": "Edits multiple line items at the same time on a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/editMultipleLineItems",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Edits multiple line items at the same time on a risk"
+        },
+        {
+          "info": {
+            "name": "The Underwriter takes a Quotation Request and starts preparing an Underwriter Quotation - Underwriter Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/changeDraftNowQuoteInPreparation",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC8F2D09C8-A220-4DD6-9E14-77AFF7A617AC::QR2",
+                "type": "path",
+                "description": "The unique ID of the risk, starting IC and expected to end ::QRx where x is 1, 2, 3 etc"
+              }
+            ]
+          },
+          "docs": "No payload is required for this endpoint"
+        },
+        {
+          "info": {
+            "name": "Clones an existing risk as a new draft, setting UMR and Insured - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/cloneDraft",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "<p>The unique ID of the risk, starting with IC and having parts delimited by '::'. <b>NEW</b> in release 2.20 - If a template is in multiple teams, the channel field is mandatory in order to choose which team a risk is cloned to. Please make sure to use a channel that the template is in, otherwise it will return an error."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Clones an existing risk as a new draft, setting UMR and Insured - Broker Only"
+        },
+        {
+          "info": {
+            "name": "Called by the Underwriter to decline a quote request - Underwriter Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/declineQuoteRequest",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC8F2D09C8-A220-4DD6-9E14-77AFF7A617AC::QR2",
+                "type": "path",
+                "description": "The unique ID of the risk, starting IC and expected to end ::QRx where x is 1, 2, 3 etc"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Called by the Underwriter to decline a quote request - Underwriter Only"
+        },
+        {
+          "info": {
+            "name": "Creates a firm order risk from a draft - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/draftToFirmOrder",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854",
+                "type": "path",
+                "description": "The unique ID of the risk, starting IC and stopping before any '::' delimiters"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "No payload is required for this endpoint"
+        },
+        {
+          "info": {
+            "name": "Details of the follower carriers on an endorsement",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/endorsementFollowers",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC4E49E958-870A-41B3-B60B-B5AAC51F48A5::SIGNED::EN1",
+                "type": "path",
+                "description": "The unique ID of the endorsement"
+              }
+            ]
+          },
+          "docs": "Details of the follower carriers on an endorsement"
+        },
+        {
+          "info": {
+            "name": "get extended data about the state of a risk, adding, for instance, written and signed lines to the risk itself",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/getExtendedMRC",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ]
+          },
+          "docs": "get extended data about the state of a risk, adding, for instance, written and signed lines to the risk itself"
+        },
+        {
+          "info": {
+            "name": "Gets the line item by index, or all line items for a specified heading",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/lineitem/:mrcHeading",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mrcHeading",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "The final parameter can be a numeric index, or a specific heading such as Period, Premium etc. <p/> The endpoint /api/lookup/headings gives list of the available headings. <p/> Note that the API returns an array as there could be more than one line item with the chosen heading."
+        },
+        {
+          "info": {
+            "name": "The broker converts a quoted risk into a firm order - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/markAsFirmOrder",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the risk, starting IC and having parts delimited by '::'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "An empty payload of {} is required for this endpoint"
+        },
+        {
+          "info": {
+            "name": "The underwriter sets or unsets the indicative flag for an Underwriter Quotation ::UQx",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/markAsIndicative",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the risk, starting IC and having parts delimited by '::'. This must be an underwriter quotation, so the riskID will end UQx where x is 1, 2..."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The underwriter sets or unsets the indicative flag for an Underwriter Quotation ::UQx"
+        },
+        {
+          "info": {
+            "name": "Sends a Firm Order/Bindable Quote risk to a carrier for a Written Line - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/requestWrittenLineSets",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "The unique ID of the risk, starting IC and having parts delimited by '::'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<p>The payload covers various options which the broker can set, including the percentage range for the Written Line and the Stamp to be used. Multiple carriers can be approached with one endpoint call.</p>"
+        },
+        {
+          "info": {
+            "name": "The Underwriter sends an Underwriter Quotation back to the Broker - Underwriter Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/showQuoteToBroker",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC8F2D09C8-A220-4DD6-9E14-77AFF7A617AC::MU71BA6F2F-FFD1-4A92-86AC-5277FEAF3012::UQ4",
+                "type": "path",
+                "description": "The unique ID of the risk, starting IC and expected to end ::UQx where x is 1, 2, 3 etc"
+              }
+            ]
+          },
+          "docs": "No payload is required for this endpoint"
+        },
+        {
+          "info": {
+            "name": "Shows a draft risk to an underwriter for quoting - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/showToLeadUnderwriter",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The root ID of the risk, starting IC and stopping before any '::' delimiters. The POST payload has several optional parameters -- 'userId' specifies the uniqueID of a specific user to show the draft to, 'messages' includes a broker's message with the contract, and 'attachments' identifies attachments to show."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Shows a draft risk to an underwriter for quoting - Broker Only"
+        },
+        {
+          "info": {
+            "name": "Sign the written lines on a Firm Order, promoting the risk to signed status - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/signSets",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "ICEB56176E-D379-4B23-BD18-64EC5C841573::FO",
+                "type": "path",
+                "description": "The unique ID of the risk's firm order, starting with IC and having parts delimited by '::FO'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<p>The payload must include one written line set identifying the line or lines written by an underwriter, along with the percentage of the risk signed to that line. This set can include a section ID reference, and multiple sets may be written so long as the total percentage written does not exceed 100%.</p>"
+        },
+        {
+          "info": {
+            "name": "Update the Signed Lines on a Signed Risk - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/reSignSets",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "ICEB56176E-D379-4B23-BD18-64EC5C841573::SIGNED",
+                "type": "path",
+                "description": "The unique ID of the signed risk, starting with IC and having parts delimited by '::SIGNED'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The payload must include one signed line set -- i.e docs ending with ::SILS -- identifying the line or lines written by an underwriter, along with the percentage of the risk signed to that line. This set can include a section ID reference, and multiple sets may be written. Total of signed lines cannot exceed total of written lines or 100%."
+        },
+        {
+          "info": {
+            "name": "Writes a line to the risk - Underwriter Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/writeLine",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO::TOMYUNDERWRITING::MARINE",
+                "type": "path",
+                "description": "The unique ID of the risk's firm order, starting with IC and having parts delimited by '::FO::{COMPANYID}::{TEAMID}'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<p>The payload must include one stamp detailed as line percentage, year and stamp ID, with references. It can optionally include section ID references, multiple stamps, and details of line conditions or subjectivities.</p>"
+        },
+        {
+          "info": {
+            "name": "Creates a draft risk using a simplified input format - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/newDraft",
+            "params": [
+              {
+                "name": "teamChannel",
+                "value": "",
+                "type": "query",
+                "description": "The team channel where the new Draft Risk is to be created. This string always takes the format \"company_DEPARTMENT\" and a full list of available channels for a user can be seen in the response to a GET request to /api/user/myDetails. This value is the equivalent of selecting a Team in the \"Create for Team\" dropdown box when creating a new Risk in the web UI"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a draft risk using a simplified input format - Broker Only"
+        },
+        {
+          "info": {
+            "name": "Get a list of documents associated with a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/root/:rootID",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The root ID of the risk, stopping before the :: suffix"
+              }
+            ]
+          },
+          "docs": "Get a list of documents associated with a risk"
+        },
+        {
+          "info": {
+            "name": "returns documents of a certain type for a risk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:rootID/related/:type",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The root ID of the risk, stopping before the :: suffix"
+              },
+              {
+                "name": "type",
+                "value": "RWComment",
+                "type": "path",
+                "description": "The document type to be fetched, for instance RWComment, RWLineGuidanceSet, RWWrittenLineSet, RWSignedLineSet"
+              }
+            ]
+          },
+          "docs": "returns documents of a certain type for a risk"
+        },
+        {
+          "info": {
+            "name": "Create a new risk from a full JMRC - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/save",
+            "params": [
+              {
+                "name": "UMR",
+                "value": "B123123123123",
+                "type": "query",
+                "description": "Unique market reference"
+              },
+              {
+                "name": "insuranceType",
+                "value": "",
+                "type": "query",
+                "description": "Type of insurance"
+              },
+              {
+                "name": "contractType",
+                "value": "",
+                "type": "query",
+                "description": "Type of contract"
+              },
+              {
+                "name": "insuredName",
+                "value": "",
+                "type": "query",
+                "description": "Name of the insured"
+              },
+              {
+                "name": "teamChannel",
+                "value": "lloydsbroker_AVIATION",
+                "type": "query",
+                "description": "Whitespace team channel name"
+              },
+              {
+                "name": "placementType",
+                "value": "",
+                "type": "query",
+                "description": "decides whether a risk or template is created"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new risk from a full JMRC - Broker Only"
+        },
+        {
+          "info": {
+            "name": "Show an endorsement to underwriters - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:EndorsementID/showEndorsement",
+            "params": [
+              {
+                "name": "EndorsementID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO::EN1",
+                "type": "path",
+                "description": "The unique ID of the Endorsement"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Show an endorsement to underwriters - Broker Only"
+        },
+        {
+          "info": {
+            "name": "Accept an endorsement as an underwriter - Underwriter Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:EndorsementID/acceptEndorsement",
+            "params": [
+              {
+                "name": "EndorsementID",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the endorsement, starting IC and having parts delimited by '::'. This must be an endorsement, so the riskID will end ENx where x is 1, 2..."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Accept an endorsement as an underwriter - Underwriter Only"
+        },
+        {
+          "info": {
+            "name": "Change the name of the risk - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/changeRiskName/:rootID",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique root ID of the risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Risk name can only be changed if the risk has not been shown to any markets."
+        },
+        {
+          "info": {
+            "name": "Create an editable draft from a quote - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:quoteID/createDraftFromQuote",
+            "params": [
+              {
+                "name": "quoteID",
+                "value": "ICD77B5FD4-0790-42B9-BC53-65242FB96558::MU438E3843-63ED-47AD-9059-11E6FD1D000D::UQ1",
+                "type": "path",
+                "description": "The unique document ID of the quote, starting IC and ending ::UQx, where x is the number of the quote in order of quotes recieved, ie. 1, 2, 3 etc"
+              }
+            ]
+          },
+          "docs": "Broker accounts only. Duplicates an underwriter''s quote as a new editable draft under the same risk. This is only possible for risks that have not yet progressed to the firm order stage."
+        },
+        {
+          "info": {
+            "name": "Edit an attribute of a line item -- that is, one contract heading and its associated text -- such as locking the text to prevent further editing, or adding a page break",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/lineItemAttributes",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique  ID of the risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Edit an attribute of a line item -- that is, one contract heading and its associated text -- such as locking the text to prevent further editing, or adding a page break"
+        },
+        {
+          "info": {
+            "name": "Returns any information entered by the underwriter into a quote's 'Quote Details' panel. Underwriters are not required to use this panel when quoting, so some (or all) information may be blank.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/getQuoteDetails",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "ICCFD2A903-08B1-4E52-BD9B-57268B9723F8::MU999AF919-3FDB-49F2-B4C5-D42614B02E70::UQ1",
+                "type": "path",
+                "description": "The unique ID of the quote, ending in ::UQ# (where"
+              }
+            ]
+          },
+          "docs": "Returns any information entered by the underwriter into a quote's 'Quote Details' panel. Underwriters are not required to use this panel when quoting, so some (or all) information may be blank."
+        },
+        {
+          "info": {
+            "name": "Edit and Save Quote Details - Underwriter Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/saveQuoteDetails",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the quote in preparation, starting IC and having parts delimited by ::, ending with UQ# where '#' is 1,2,3 etc"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Can edit the quote reference, any subjectivites/line conditions, notes, and the quote''s validity period, as well as indicate line stamps to use when writing and/or add button stamps"
+        },
+        {
+          "info": {
+            "name": "Creates a Bindable Quote - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/createBindableQuote",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854",
+                "type": "path",
+                "description": "The unique ID of the source risk document, starting IC"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Bindable Quotes can be created from a risk at either the Draft or Quoted stage"
+        },
+        {
+          "info": {
+            "name": "Self-approve one of your contracts flagged for internal review. NOTE You must have the 'Self Approver' role enabled for this API call to work.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/selfApproveSecondApproval",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "The unique ID of the risk, starting IC and having parts delimited by '::'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Self-approve one of your contracts flagged for internal review. NOTE You must have the 'Self Approver' role enabled for this API call to work."
+        },
+        {
+          "info": {
+            "name": "Duplicate an existing draft contract under the same risk overview - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/duplicateDraft",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854",
+                "type": "path",
+                "description": "The unique ID of the draft"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint requires the ID of the draft to duplicate as well as an empty {} payload."
+        },
+        {
+          "info": {
+            "name": "Delete contract headings from a risk.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/changeHeadings",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "The unique ID of the risk, starting IC and having parts delimited by '::'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "To delete one or more contract headings, use the Delete array in the request and leave the Insert and Modify arrays blank. Please note that certain headings, such as UMR, cannot be deleted."
+        },
+        {
+          "info": {
+            "name": "Declines a firm order - Underwriter Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/declineFirmOrder",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "ICEB90F9F2-7B58-41FD-9160-528350E53EFE::FO::TOMYUNDERWRITING::ALL",
+                "type": "path",
+                "description": "The full unique ID of the firm order, ending in ::FO::{companyId}::{teamId}. Please make sure that the companyId and teamId are correct and relevant for the team you are declining for, as a broker may send a firm order on the same contract to multiple teams and/or Whitespace corporate accounts at your organisation."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "An underwriter may only decline a firm order before adding a written line."
+        },
+        {
+          "info": {
+            "name": "Withdraw a firm order from an underwriter - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/withdrawFirmOrder",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "ICEB90F9F2-7B58-41FD-9160-528350E53EFE::FO",
+                "type": "path",
+                "description": "The unique ID of the firm order, starting with 'IC' and ending in '::FO'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retract a request for a written line. A firm order can only be withdrawn before the underwriter writes a line."
+        },
+        {
+          "info": {
+            "name": "Sets the vertical terms for a specific heading on a risk. This operation can only be performed on contracts at the firm order or bindable quote stages - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/saveVerticalLines",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sets the vertical terms for a specific heading on a risk. This operation can only be performed on contracts at the firm order or bindable quote stages - Broker Only"
+        },
+        {
+          "info": {
+            "name": "Mark a quote recieved from an underwriter as NTU (Not Taken Up) - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/notTakeUpQuotation",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Mark a quote recieved from an underwriter as NTU (Not Taken Up) - Broker Only"
+        },
+        {
+          "info": {
+            "name": "Reverts a risk from signed to unsigned - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/rollbackSigned",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854::SIGNED",
+                "type": "path",
+                "description": "The unique ID of the signed contract document, starting IC and ending in '::SIGNED'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Removes the 'signed' status from the contract's written lines, reverting the contract back to the written firm order stage. No other changes are made. It is NOT possible to roll back the signed status of a facility agreement contract once a declaration has been shown to it."
+        },
+        {
+          "info": {
+            "name": "Creates an endorsement - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/createEndorsement",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854::SIGNED",
+                "type": "path",
+                "description": "The unique ID of the Firm Order/Signed Risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Can only create an endorsement on a risk at the Signed or Firm Order stages. In the case of Firm Order, at least one line must have gone down. It is currently not possible to create Mid-Term Participant Change endorsements on risks with vertical terms."
+        },
+        {
+          "info": {
+            "name": "Deletes a Draft Contract - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/deleteDraft",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854",
+                "type": "path",
+                "description": "The unique ID of the Draft."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deletes a Draft Contract - Broker Only"
+        },
+        {
+          "info": {
+            "name": "Merge the data from a risk with the text, data and other material from a template, preserving all the risk''s data while replacing all its other content - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/applyTemplate",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "You need the ID and current revision number of both the risk and the template you are trying to merge. You can fetch the revision number of a risk with /risks/{riskID} and check the ._rev field. Can only be done on a risk stage that has not been shown to underwriters."
+        },
+        {
+          "info": {
+            "name": "Reject an underwriter''s line written with Line Conditions or Subjectivities - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/rejectWrittenLine/:writtenLineSetID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "The unique ID of the Firm Order"
+              },
+              {
+                "name": "writtenLineSetID",
+                "value": "IC8BEBB532-E007-453C-9A6F-EC227AEF6B85::FO::TOMYUNDERWRITING::ALL::WRLS",
+                "type": "path",
+                "description": "The unique ID of the RWWrittenLineSet which can be retrieved from /combinedSets"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "You need to provide the ID of the Firm Order as well the ID of the underwriter''s line (RWWrittenLineSet ID). This can be fetched from /combinedSets, /getExtendedRisk"
+        },
+        {
+          "info": {
+            "name": "Accepts an underwriter''s line with Line Conditions or Subjectivities - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/acceptWrittenLine/:writtenLineSetID",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "The unique  ID of the Firm Order"
+              },
+              {
+                "name": "writtenLineSetID",
+                "value": "IC8BEBB532-E007-453C-9A6F-EC227AEF6B85::FO::TOMYUNDERWRITING::ALL::WRLS",
+                "type": "path",
+                "description": "The unique ID of the RWWrittenLineSet which can be retrieved from /combinedSets"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "You need to provide the ID of the Firm Order as well the ID of the underwriter''s line (RWWrittenLineSet ID). This can be fetched from /combinedSets, /getExtendedRisk."
+        },
+        {
+          "info": {
+            "name": "Create a Contract Correction - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/createContractCorrection",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854::FO",
+                "type": "path",
+                "description": "The unique ID of the Firm Order or Signed Risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "A Contract Correction can only be started at the Signed stage or at Firm Order if at least one written line is present and no line requests are outstanding. Other outstanding Actions will prevent correction, including (but not limited to) a line written with a subjectivity response that has not been agreed/rejected, an incomplete endorsement, an outstanding line removal request, and other unresolved contract-altering issues."
+        },
+        {
+          "info": {
+            "name": "Edit an attribute of the entire contract. Currently limited to text-locking options - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/contractAttributes",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique ID of the risk"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<ul> <li>lockAll - lock all text and tagged data</li> <li>lockTextonly - lock normal text but allow tagged data to be edited</li> <li>lockAllTemplate - Template Only - locks all text and tagged data, can only be removed by a Template Manager, same locking is applied to any risks cloned from the template</li> <li>lockTextOnlyTemplate - Template Only - lock normal text but allow tagged data to be editable, can only be removed by a Template Manager, same locking is applied to any risks cloned from "
+        },
+        {
+          "info": {
+            "name": "Set the teams that a template is visible to - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/setTemplateChannels",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The unique ID of the template"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Share or unshare a template with other teams. The user can share templates with teams that they are not a member of. NOTE that this does not create a copy of the shared template, it opens the shared template to multiple user teams, so any changes made by users in other teams will affect all users."
+        },
+        {
+          "info": {
+            "name": "Send a Quote back to the broker wihout making any alterations to the Quote Request received - Underwriter only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/quoteOnRequest",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::QR1",
+                "type": "path",
+                "description": "The unique ID of the Quote Request"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This call allows an underwriter to return a Quote to the originating broker, provided that it is not necessary to make any changes to the broker''s Quote Request. If changes are required, then use /changeDraftNowQuoteInPreparation to create an editable quote document, edit that document, and then use /showQuoteToBroker to return the edited document as a Quote."
+        },
+        {
+          "info": {
+            "name": "Deletes a Draft Endorsement - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/deleteEndorsement",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854::FO::EN1",
+                "type": "path",
+                "description": "The unique ID of the Endorsement"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deletes a specified endorsement. NOTE it is only possible to delete a endorsement if it has not been shared with any carriers."
+        },
+        {
+          "info": {
+            "name": "Create a new risk/template using the Contract Library",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/bodapi/risks/from",
+            "params": [
+              {
+                "name": "UMR",
+                "value": "B123123123123",
+                "type": "query",
+                "description": "Unique market reference (required if creating a risk, but optional for a template)"
+              },
+              {
+                "name": "insuranceType",
+                "value": "",
+                "type": "query",
+                "description": "Type of insurance"
+              },
+              {
+                "name": "contractType",
+                "value": "",
+                "type": "query",
+                "description": "Type of contract"
+              },
+              {
+                "name": "mode",
+                "value": "",
+                "type": "query",
+                "description": "Is this a facility agreement?"
+              },
+              {
+                "name": "insuredName",
+                "value": "",
+                "type": "query",
+                "description": "Name of the insured"
+              },
+              {
+                "name": "teamChannel",
+                "value": "lloydsbroker_AVIATION",
+                "type": "query",
+                "description": "Whitespace team channel name"
+              },
+              {
+                "name": "placementType",
+                "value": "",
+                "type": "query",
+                "description": "Is the contract a template or a risk?"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Uses blockIDs (The IDs of line items in the contract Library) to create a new risk or template. Currently you can grab these blockIDs by going through the process to create the contract in the UI Contract Library. Just before you publish it, you also get access to the 'API Call Preview' button which opens a window showing the exact payload needed to perform the same creation via API."
+        },
+        {
+          "info": {
+            "name": "Add or edit a heading in a risk using a lineitem from the Clause Library",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/editLineItemWithBB",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Similar to the /editLineItem call except you use the bodleyID of the library line item rather than fill out the details of the line item yourself"
+        },
+        {
+          "info": {
+            "name": "Record an off-platform line - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/recordLine",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO",
+                "type": "path",
+                "description": "The unique ID of the Firm Order or Bindable Quote"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<p>You can use this call to record a line for an off-platform company on 'FullContracts' OR for an off-platform team of a live company on an off-platform contract.</p> <p>You can use an existing stamp or, for an off-platform carrier, create a new stamp yourself. If you want to use an existing stamp for an off-platform carrier, you can grab the list of existing stamps by calling /documents/{docID}, where docID in this case is Extra-{companyId}.</p> <p>Always set saveStamps as False.</p> <p>There "
+        },
+        {
+          "info": {
+            "name": "Forwards a quote as a new quote request - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/forwardAsQuoteRequest",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "ICD57AF686-6EB7-4D6B-A43A-5978F2C2681F::MU999AF919-3FDB-49F2-B4C5-D42614B02E70::UQ1",
+                "type": "path",
+                "description": "The ID of the quote to forward. The POST payload has several optional parameters -- 'userId' specifies the uniqueID of a specific user to show the draft to, 'messages' includes a broker''s message with the contract, and 'attachments' identifies attachments to share with the request."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Forwards a quote as a new quote request - Broker Only"
+        },
+        {
+          "info": {
+            "name": "Set the roles of carriers on a Endorsement - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/setEndorsementFollowerRoles",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::SIGNED::EN1",
+                "type": "path",
+                "description": "The unique ID of the Endorsement"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "A role assigned to a carrier cannot be changed once they have been shown the endorsement. Only carriers who have added a line on the firm order can be assigned a role, but all those carriers must have a role assigned."
+        },
+        {
+          "info": {
+            "name": "Set the agreement template for an endorsement - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/setEndorsementFollowerTemplate",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::SIGNED::EN1",
+                "type": "path",
+                "description": "The unique ID of the endorsement"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Choose between GUA - Marine (GUAStampA), GUA - Non Marine (GUAStampB), AVS100B - Aviation (AVS100B) and non-GUA (NonGUA). Can only be set once the Endorsement has been assigned a Leader."
+        },
+        {
+          "info": {
+            "name": "Complete a Endorsement and bind any notify parties to it - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/risks/:riskID/completeEndorsement",
+            "params": [
+              {
+                "name": "riskID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57::SIGNED::EN1",
+                "type": "path",
+                "description": "The unique ID of the Endorsement"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint can only be used once the Leader and any agreement parties on the endorsement (if they exist) have agreed to it. The normal payload accompanying the endorsement ID is just a blank object, but it can be used to share attachments with notify parties."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sections",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Saves an array of section identifiers for the risk - Broker Only",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/sections/:rootID/save",
+            "params": [
+              {
+                "name": "rootID",
+                "value": "IC213DA609-D6B5-4A05-86B8-3FD91E861F57",
+                "type": "path",
+                "description": "The first part of the riskID, starting IC and stopping before any '::' delimiters"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Called by the broker in specifying the sections that apply. Note that the data can be fetched via /api/documents/$RootID::MS or alongside other data via /api/overview/$RootID"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Shared",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List of all companies operating on the platform, with teams and users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/shared/corporate"
+          },
+          "docs": "<p>Note that the users' email addresses are removed for reasons of data protection.</p> <p>This list can be loaded and cached for reference purposes, with a periodic refresh.</p>"
+        },
+        {
+          "info": {
+            "name": "Returns the full list of corporate data in a compressed format",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/shared/compressedCorporate",
+            "headers": [
+              {
+                "name": "Accept-Encoding",
+                "value": "deflate"
+              }
+            ]
+          },
+          "docs": "<p>Please note that to perform the compression, the API call requires the Accept-Encoding header with the value 'deflate'.</p> <p>This list can be loaded and cached for reference purposes, with a periodic refresh.</p>"
+        },
+        {
+          "info": {
+            "name": "List of values for the state of a member",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/shared/corporate/memberStates"
+          },
+          "docs": "List of values for the state of a member"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Summary",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "returns batches of risk summaries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/summary",
+            "params": [
+              {
+                "name": "last",
+                "value": "IC467868DE-2E64-4828-913B-A5789191CF3B",
+                "type": "query",
+                "description": "The rootID for the last document returned by the previous call"
+              },
+              {
+                "name": "from",
+                "value": "2021-11-22%2006:37:49",
+                "type": "query",
+                "description": "The date for the last document returned by the previous call"
+              }
+            ]
+          },
+          "docs": "<p>This endpoint returns 60 risks at a time.  Without parameters it will return the most recently changed risks.  The <b>last</b> and <b>from</b> query string parameters enable calls to page through all risks.</p>"
+        },
+        {
+          "info": {
+            "name": "returns batches of risk summaries using filters in the POST payload",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sandbox.whitespace.co.uk/api/summary",
+            "params": [
+              {
+                "name": "last",
+                "value": "IC467868DE-2E64-4828-913B-A5789191CF3B",
+                "type": "query",
+                "description": "The rootID for the last document returned by the previous call"
+              },
+              {
+                "name": "from",
+                "value": "2021-11-22%2006:37:49",
+                "type": "query",
+                "description": "The date for the last document returned by the previous call"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<p>This endpoint returns 60 risks at a time.  Without parameters it will return the most recently changed risks.  The <b>last</b> and <b>from</b> query string parameters enable calls to page through all risks.</p>"
+        },
+        {
+          "info": {
+            "name": "returns summaries for all 'pinned' risks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/summary/pinned"
+          },
+          "docs": "returns summaries for all 'pinned' risks"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "User",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List of all colleagues on the Corporate for the user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/user/colleagues"
+          },
+          "docs": "<p>Note adding e.g. /Live to the URL lists those in a particular state"
+        },
+        {
+          "info": {
+            "name": "List of all colleagues on the Corporate for the user in a particular state",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/user/colleagues/:state",
+            "params": [
+              {
+                "name": "state",
+                "value": "Live",
+                "type": "path",
+                "description": "Live, Draft, Suspended etc"
+              }
+            ]
+          },
+          "docs": "List of all colleagues on the Corporate for the user in a particular state"
+        },
+        {
+          "info": {
+            "name": "gets information about the logged-in user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/user/myDetails"
+          },
+          "docs": "gets information about the logged-in user"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Version",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Version message for the latest build of the API library",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sandbox.whitespace.co.uk/api/version"
+          },
+          "docs": "Version message for the latest build of the API library"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

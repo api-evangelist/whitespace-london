@@ -12,42 +12,37 @@ server:
   name: whitespace-platform
   transport: http
   url: null
-  auth: >-
-    HTTP bearer JWT service token issued out of band by Whitespace Support and restricted to
-    allowlisted IPs — see authentication/whitespace-london-authentication.yml. Any MCP server
-    would have to carry a per-organisation service token; there is no self-serve credential.
-notes: >-
-  Whitespace publishes NO Model Context Protocol server. This file is an API Evangelist
-  CANDIDATE tool projection over the published OpenAPI — a design for what an agent surface on
-  the Whitespace Platform API would look like, grounded operation-by-operation in the real spec.
-  Every source_operation below is a verbatim method + path from
-  openapi/whitespace-london-platform-openapi.yml; the specification declares no operationIds, so
-  operations are addressed by method and path (see overlays/ for the operationIds API Evangelist
-  assigns). Tool inputs are the real path/query parameters and request bodies of those
-  operations. Agent risk classification per operation lives in
-  agentic-access/whitespace-london-agentic-access.yml — note that most write operations here are
-  legally consequential acts in a subscription insurance market (binding cover, signing a
-  contract), which is why they are modelled as high-consequence.
+  auth: HTTP bearer JWT service token issued out of band by Whitespace Support and restricted to allowlisted
+    IPs — see authentication/whitespace-london-authentication.yml. Any MCP server would have to carry
+    a per-organisation service token; there is no self-serve credential.
+notes: Whitespace publishes NO Model Context Protocol server. This file is an API Evangelist CANDIDATE
+  tool projection over the published OpenAPI — a design for what an agent surface on the Whitespace Platform
+  API would look like, grounded operation-by-operation in the real spec. Every source_operation below
+  is a verbatim method + path from openapi/whitespace-london-platform-openapi.yml; the specification declares
+  no operationIds, so operations are addressed by method and path (see overlays/ for the operationIds
+  API Evangelist assigns). Tool inputs are the real path/query parameters and request bodies of those
+  operations. Agent risk classification per operation lives in agentic-access/whitespace-london-agentic-access.yml
+  — note that most write operations here are legally consequential acts in a subscription insurance market
+  (binding cover, signing a contract), which is why they are modelled as high-consequence.
 tools:
 - name: whoami
   description: Get the calling user, their organisation, teams and channels.
   source_operation: GET /api/user/myDetails
   category: identity
 - name: list_risk_summaries
-  description: >-
-    List batches of risk summaries the caller can see; optionally filtered by an updated-since
+  description: List batches of risk summaries the caller can see; optionally filtered by an updated-since
     date or a POST filter payload.
   source_operation: GET /api/summary
   alternate_operation: POST /api/summary
   category: discovery
-  inputs: [from]
+  inputs:
+  - from
 - name: get_risk
   description: Get a risk in JMRC (JSON Market Reform Contract) format.
   source_operation: GET /api/risks/{riskID}
   category: contract
 - name: get_extended_mrc
-  description: >-
-    Get the extended state of a risk — contract, questionnaire, written line sets, signed line
+  description: Get the extended state of a risk — contract, questionnaire, written line sets, signed line
     sets, endorsement followers and provenance.
   source_operation: GET /api/risks/{riskID}/getExtendedMRC
   category: contract
@@ -64,14 +59,12 @@ tools:
   source_operation: GET /api/v23.09/data/{riskID}
   category: data
 - name: get_defined_data_by_tagset
-  description: >-
-    Get tagged contract data using an alternative tagset — currently ACORDGPM, the ACORD Global
+  description: Get tagged contract data using an alternative tagset — currently ACORDGPM, the ACORD Global
     Reinsurance and Large Commercial tag family.
   source_operation: GET /api/v23.09/data/{riskID}/tagset/{tagset}
   category: data
 - name: verify_defined_data
-  description: >-
-    Validate a Defined Data payload before writing it. Whitespace recommends calling this first
+  description: Validate a Defined Data payload before writing it. Whitespace recommends calling this first
     because an unacceptable payload returns 500 on the write.
   source_operation: POST /api/v23.09/data/{riskID}/verify
   category: data
@@ -85,8 +78,7 @@ tools:
   source_operation: GET /api/activities/{rootID}/full
   category: audit
 - name: filter_activities
-  description: >-
-    Fetch all activity visible to the user matching a specific activity type and optional date
+  description: Fetch all activity visible to the user matching a specific activity type and optional date
     range. Requires exactly one activity string; call the help endpoint for the vocabulary.
   source_operation: POST /api/activities/filter
   helper_operation: GET /api/activities/filter/help
@@ -100,8 +92,7 @@ tools:
   source_operation: GET /api/lookup/check/{heading}
   category: reference
 - name: list_corporates
-  description: >-
-    List every organisation on the platform with its teams, users and channels — the directory
+  description: List every organisation on the platform with its teams, users and channels — the directory
     used to resolve companyIDs, teamIDs and SUMO UserIDs.
   source_operation: GET /api/shared/corporate
   category: reference
@@ -152,15 +143,13 @@ tools:
   category: bind
   consequence: binding
 - name: write_line
-  description: >-
-    Write a line to the risk — the underwriter's binding commitment to insure a percentage of the
-    contract. Underwriter only.
+  description: Write a line to the risk — the underwriter's binding commitment to insure a percentage
+    of the contract. Underwriter only.
   source_operation: POST /api/risks/{riskID}/writeLine
   category: bind
   consequence: binding
 - name: sign_sets
-  description: >-
-    Sign the written lines on a firm order, promoting the risk to signed status. Broker only.
+  description: Sign the written lines on a firm order, promoting the risk to signed status. Broker only.
     This finalises the contract.
   source_operation: POST /api/risks/{riskID}/signSets
   category: bind
@@ -183,14 +172,16 @@ tools:
 coverage:
   rest_operations_total: 121
   tools_projected: 30
-  note: >-
-    A deliberate subset covering identity, discovery, contract read, Defined Data, audit,
-    reference lookup, documents and the placing lifecycle. The remaining operations (label
-    management, questionnaire editing, facility and declaration handling, contract corrections,
-    off-platform lines, MI reporting) are catalogued in the OpenAPI and could be projected the
-    same way.
+  note: A deliberate subset covering identity, discovery, contract read, Defined Data, audit, reference
+    lookup, documents and the placing lifecycle. The remaining operations (label management, questionnaire
+    editing, facility and declaration handling, contract corrections, off-platform lines, MI reporting)
+    are catalogued in the OpenAPI and could be projected the same way.
 event_surface:
-  note: >-
-    An MCP server for Whitespace would be incomplete without the queue surface — integrations are
-    typically initiated from the Azure Service Bus activity queue rather than by polling REST. See
-    asyncapi/whitespace-london-queues-asyncapi.yml.
+  note: An MCP server for Whitespace would be incomplete without the queue surface — integrations are
+    typically initiated from the Azure Service Bus activity queue rather than by polling REST. See asyncapi/whitespace-london-queues-asyncapi.yml.
+deployment:
+  mode: none
+  verified: derived
+  tools: 30
+  checked: '2026-08-12'
+  source: catalog MCP census
