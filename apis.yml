@@ -28,6 +28,19 @@ tags:
 - Reinsurance
 - Property and Casualty
 - Insurtech
+- Brokers
+- Underwriting
+- Placing Platform
+- London Market
+- Lloyd's of London
+- ACORD
+- Market Infrastructure
+tags_raw:
+- Insurance
+- United Kingdom
+- Reinsurance
+- Property and Casualty
+- Insurtech
 - Broker
 - Underwriting
 - Placing Platform
@@ -62,6 +75,15 @@ apis:
   humanURL: https://apidocs.whitespace.co.uk/
   baseURL: https://sandbox.whitespace.co.uk/
   tags:
+  - Insurance
+  - Placing
+  - Risks
+  - Quotes
+  - Bind
+  - Endorsements
+  - Defined Data
+  - ACORD
+  tags_raw:
   - Insurance
   - Placing
   - Risks
