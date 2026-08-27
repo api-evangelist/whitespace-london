@@ -52,49 +52,16 @@ created: '2026-07-25'
 modified: '2026-07-25'
 specificationVersion: '0.23'
 apis:
-- aid: whitespace-london:whitespace-platform-api
-  name: Whitespace Platform API
-  description: >-
-    The Whitespace Platform API is a REST/JSON API over the full London-market subscription
-    placing lifecycle, publicly described by an OpenAPI 3.0.0 document covering 113 endpoints
-    across Risks, Data, Attachments, Documents, Activities, Comments, Labels, Lookup,
-    Endorsements, Lines, Questionnaire, Summary, User and MI Report. It genuinely exposes
-    QUOTE (quoteOnRequest, saveQuoteDetails, getQuoteDetails, showQuoteToBroker,
-    declineQuoteRequest, markAsIndicative, notTakeUpQuotation) and BIND (createBindableQuote,
-    draftToFirmOrder, markAsFirmOrder, writeLine, recordLine, requestWrittenLineSets,
-    acceptWrittenLine, signSets, reSignSets) and ISSUE of the contract document
-    (getExtendedMRC, export/pdf/{riskID}, documents/{docID}), plus post-bind endorsement
-    handling. It does NOT cover FNOL or claims — Whitespace is a placing platform, not a
-    claims system. The embedded Defined Data API (/api/v22.04/data and /api/v23.09/data)
-    returns and verifies structured contract values tagged against MRC headings and an
-    alternative ACORDGPM tagset. Documented servers are the Sandbox, Tess, Beta and Staging
-    environments; production access is arranged separately with Whitespace Support.
-    Authentication is HTTP bearer JWT using a service token issued by Whitespace Support to a
-    contracted organisation, restricted to allowlisted IP addresses and expiring within one
-    year — there is no self-serve key.
+- aid: whitespace-london:whitespace-london-activities-api
+  name: Whitespace Activities API
+  description: The Activities API from Whitespace — 4 operation(s) for activities.
   humanURL: https://apidocs.whitespace.co.uk/
   baseURL: https://sandbox.whitespace.co.uk/
   tags:
-  - Insurance
-  - Placing
-  - Risks
-  - Quotes
-  - Bind
-  - Endorsements
-  - Defined Data
-  - ACORD
-  tags_raw:
-  - Insurance
-  - Placing
-  - Risks
-  - Quote
-  - Bind
-  - Endorsements
-  - Defined Data
-  - ACORD
+  - Activities
   properties:
   - type: OpenAPI
-    url: openapi/whitespace-london-platform-openapi.yml
+    url: openapi/whitespace-london-activities-api-openapi.yml
   - type: APIReference
     url: https://swagger.whitespace.co.uk/
   - type: Documentation
@@ -112,7 +79,768 @@ apis:
   - type: Documentation
     url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
   - type: Documentation
-    url: https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-attachments-api
+  name: Whitespace Attachments API
+  description: The Attachments API from Whitespace — 7 operation(s) for attachments.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Attachments
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-attachments-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-bind-notify-parties-api
+  name: Whitespace Bind Notify Parties API
+  description: The Bind Notify Parties API from Whitespace — 1 operation(s) for bind notify parties.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Bind Notify Parties
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-bind-notify-parties-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-comments-api
+  name: Whitespace Comments API
+  description: The Comments API from Whitespace — 2 operation(s) for comments.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Comments
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-comments-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-customer-api
+  name: Whitespace Customer API
+  description: The Customer API from Whitespace — 2 operation(s) for customer.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Customer
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-customer-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-data-api
+  name: Whitespace Data API
+  description: The Data API from Whitespace — 6 operation(s) for data.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Data
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-data-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-documents-api
+  name: Whitespace Documents API
+  description: The Documents API from Whitespace — 4 operation(s) for documents.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-documents-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-endorsements-api
+  name: Whitespace Endorsements API
+  description: The Endorsements API from Whitespace — 1 operation(s) for endorsements.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Endorsements
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-endorsements-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-export-api
+  name: Whitespace Export API
+  description: The Export API from Whitespace — 1 operation(s) for export.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Export
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-export-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-internal-broker-note-api
+  name: Whitespace Internal Broker Note API
+  description: The Internal Broker Note API from Whitespace — 1 operation(s) for internal broker note.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Internal Broker Note
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-internal-broker-note-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-labels-api
+  name: Whitespace Labels API
+  description: The Labels API from Whitespace — 3 operation(s) for labels.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Labels
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-labels-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-lines-api
+  name: Whitespace Lines API
+  description: The Lines API from Whitespace — 1 operation(s) for lines.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Lines
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-lines-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-lookup-api
+  name: Whitespace Lookup API
+  description: The Lookup API from Whitespace — 6 operation(s) for lookup.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Lookup
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-lookup-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-mireport-api
+  name: Whitespace MI Report API
+  description: The MIReport API from Whitespace — 2 operation(s) for mireport.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - MIReport
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-mireport-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-overview-api
+  name: Whitespace Overview API
+  description: The Overview API from Whitespace — 1 operation(s) for overview.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Overview
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-overview-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-owner-api
+  name: Whitespace Owner API
+  description: The Owner API from Whitespace — 1 operation(s) for owner.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Owner
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-owner-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-questionnaire-api
+  name: Whitespace Questionnaire API
+  description: The Questionnaire API from Whitespace — 3 operation(s) for questionnaire.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Questionnaire
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-questionnaire-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-risks-api
+  name: Whitespace Risks API
+  description: The Risks API from Whitespace — 55 operation(s) for risks.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Risks
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-risks-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-sections-api
+  name: Whitespace Sections API
+  description: The Sections API from Whitespace — 1 operation(s) for sections.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Sections
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-sections-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-shared-api
+  name: Whitespace Shared API
+  description: The Shared API from Whitespace — 3 operation(s) for shared.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Shared
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-shared-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-show-declaration-to-facility-api
+  name: Whitespace Show Declaration to Facility API
+  description: >-
+    The Show Declaration to Facility API from Whitespace — 2 operation(s) for show declaration to facility.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Show Declaration to Facility
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-show-declaration-to-facility-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-summary-api
+  name: Whitespace Summary API
+  description: The Summary API from Whitespace — 2 operation(s) for summary.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Summary
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-summary-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-user-api
+  name: Whitespace User API
+  description: The User API from Whitespace — 3 operation(s) for user.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - User
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-user-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
+- aid: whitespace-london:whitespace-london-version-api
+  name: Whitespace Version API
+  description: The Version API from Whitespace — 1 operation(s) for version.
+  humanURL: https://apidocs.whitespace.co.uk/
+  baseURL: https://sandbox.whitespace.co.uk/
+  tags:
+  - Version
+  properties:
+  - type: OpenAPI
+    url: openapi/whitespace-london-version-api-openapi.yml
+  - type: APIReference
+    url: https://swagger.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Getting_Started_with_the_Whitespace_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Obtaining_and_Using_a_Service_Token_for_the_API.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Refresh_Token_Guide_v1.0.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/How_does_API_versioning_work.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/An_Introduction_to_Defined_Data.pdf
+  - type: Documentation
+    url: https://apidocs.whitespace.co.uk/Defined%20Data%20API%20and%20JSON%20Notes.pdf
+  - type: Documentation
+    url: >-
+      https://apidocs.whitespace.co.uk/JMRC%20ACORD%20Specification%20V0.5%20-%20Defined%20Data.pdf
   - type: Documentation
     url: https://apidocs.whitespace.co.uk/Queues_and_the_Whitespace_Platform_v1.2.2.pdf
   - type: Documentation
