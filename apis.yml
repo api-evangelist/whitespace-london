@@ -858,6 +858,9 @@ apis:
   - type: Documentation
     url: https://apidocs.whitespace.co.uk/Integrating_with_Whitespace_via_Queues_3.1.pdf
 common:
+- type: CapabilityMap
+  url: capabilities/whitespace-london-capability-edges.yml
+  name: Whitespace Business Capability Map
 - type: AgenticAccess
   url: agentic-access/whitespace-london-agentic-access.yml
 - type: DomainSecurity

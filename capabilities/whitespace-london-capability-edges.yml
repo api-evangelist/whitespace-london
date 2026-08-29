@@ -1,0 +1,36 @@
+slug: whitespace-london
+provider: Whitespace
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Insurance
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Endorsements
+  spec_file: whitespace-london-endorsements-api-openapi.yml
+  capability_id: BC-2140.20
+  capability_id_l1: BC-2140
+  capability_name: Policy Endorsement & Mid-Term Adjustment
+  confidence: 0.8
+  evidence: '"Get all endorsements for a Risk"; vendor: "sign and endorse fully digital subscription-market
+    contracts"'
+  reason: The operation retrieves endorsements against an in-force/placed contract, which is the endorsement
+    and mid-term adjustment capability. Only one operation, so some residual ambiguity, but the vendor
+    description explicitly names endorsing contracts.
+- tag: Lines
+  spec_file: whitespace-london-lines-api-openapi.yml
+  capability_id: BC-2130.40
+  capability_id_l1: BC-2130
+  capability_name: Underwriting Decision & Authority Management
+  confidence: 0.7
+  evidence: '"Get both written and signed line documents for a risk"; schemas "RWQuotedLine, RWSignedLineSet"'
+  reason: Written and signed lines are the underwriters' commitments of capacity/share on a subscription-market
+    risk — i.e. acceptance and binding decisions. Quoted line and signed line set schemas support the
+    underwriting decision reading; only one read operation, so 0.7.
