@@ -1,0 +1,95 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Sections API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Sections
+paths:
+  /api/sections/{rootID}/save:
+    post:
+      summary: Saves an array of section identifiers for the risk - Broker Only
+      description: Called by the broker in specifying the sections that apply. Note that the data can be fetched via /api/documents/$RootID::MS or alongside other data via /api/overview/$RootID
+      tags:
+      - Sections
+      parameters:
+      - in: path
+        name: rootID
+        schema:
+          type: string
+        required: true
+        description: The first part of the riskID, starting IC and stopping before any '::' delimiters
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      requestBody:
+        description: JMRC object
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  index:
+                    type: number
+                    example: 2
+                    description: index, starting at 1, to set the order of the sections
+                  multiSectionId:
+                    type: string
+                    example: '2'
+                    description: numeric title for the section, for when space is short
+                  multiSectionName:
+                    type: string
+                    example: Cargo
+                    description: textual title for the section
+            examples:
+              normal:
+                value:
+                - index: 1
+                  multiSectionId: '1'
+                  multiSectionName: Hull
+                - index: 2
+                  multiSectionId: '2'
+                  multiSectionName: Cargo
+                - index: 3
+                  multiSectionId: '3'
+                  multiSectionName: Liability
+      responses:
+        '200':
+          description: Successful response contains document id and revision
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: the document ID for the section document, being $RootID::MS
+                      example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57::MS
+                    rev:
+                      type: string
+                      description: the revision for the section document
+                      example: 1-98bbeb9b566269e39f14a2f59bc489c2
+                    ok:
+                      type: boolean
+                      description: true if the data was saved
+                      example: true
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

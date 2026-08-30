@@ -1,0 +1,358 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Overview API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Overview
+paths:
+  /api/overview/{rootID}:
+    get:
+      summary: Fetch documents of certain types related to a risk
+      description: <p>This endpoint returns an array where each item is a different document and therefore has different contents from the one before it.</p> <p>The document types included are as listed below. All of them have schemas you can find at the bottom of the page. Note that this is not every  document. It is a set which we have found convenient to present together to give background information on a risk. Note particularly that it does not include the RWPlacing contract wording document.</p> <ul> <li>RWComment</li> <li>RWAttachment</li> <li>RWAttentionWanted</li> <li>RWMultiSectionStorer</li> <li>RWActivity</li> <li>RWEndorsementFollower</li> <li>RWFacilityGuidance</li> <li>RWLineGuidanceSet</li> <li>RWWrittenLineSet</li> <li>RWSignedLineSet</li> <li>RWSubjectivityResponse</li> <li>RWNoCoverGivenLine</li> <li>RWRiskAuthorisationState</li> <li>RWBindableQuoteGuidance</li> <li>RWQuotedLine</li> <li>RWQuotedFacilityGuidance</li> <li>RWBrokerMessage</li> <li>RWMRCValidationResults</li> <li>RWCorrectionDetails</li></ul>
+      tags:
+      - Overview
+      parameters:
+      - in: path
+        name: rootID
+        schema:
+          type: string
+        required: true
+        description: The first part of the riskID, starting IC and stopping before any '::' delimiters
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      responses:
+        '200':
+          description: An array of different documents. In the example, covering 10 documents of 3 types - RWActivity, RWComment and RWLineGuidanceSet
+          content:
+            application/json:
+              example:
+              - _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::ACTI::D17C4952-E11C-4749-82E2-330AD0A61963
+                _rev: 1-00aec4db8d4ffdc572e0420f9c86a0c7
+                activity: Changed or Added a Line item
+                channels:
+                - ajc_ALL
+                createdAt: '2022-07-26 15:24:56'
+                hardcodedActivity: Changed or Added a Line item
+                linkedArchiveID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::ARCH::070CF1D2-F77E-4E96-A550-3F3DB97D2FFD
+                parentDocID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD
+                provenance:
+                  dataHash: 0d6bf1d2c152e82fd7ec2da279e184b139004afe63ac95038e659142fa79dcb2
+                  provHash: 8d478c73fbd5f4329d4749d5dce3cd5b7b9815c228cf24e78280f44134953283
+                  system: LaVAPI
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  version: 2022-07-24@19:09:13
+                  writtenAt: '2022-07-26 15:24:56'
+                type: RWActivity
+                userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+              - RWLineGuidanceSet:
+                  _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::PALERMO::ALL::LGUS
+                  _rev: 1-ff3c7d4f9225a61c6e8a58a32a7a466e
+                  associatedPlacingID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO
+                  channels:
+                  - ajc_ALL
+                  - palermo_ALL
+                  contents:
+                  - conditionsEnabled: true
+                    maxString: '75'
+                    minString: '75'
+                    sectionIdentifiers: []
+                    suggestedStamps: []
+                  createdAt: '2022-07-26 15:27:53'
+                  provenance:
+                    dataHash: be626bd5e1c9e20948ab0dade64df03591168c26d91e86b52e6adbd70bc2c3cd
+                    provHash: e6b2be3c5b086314e5eebb36c4ccd27101a8f2846354d2a5e358b7614ab89226
+                    system: LaVAPI
+                    userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                    version: 2022-07-24@19:09:13
+                    writtenAt: '2022-07-26 15:27:53'
+                  sections: []
+                  type: RWLineGuidanceSet
+                  updatedAt: '2022-07-26 15:27:53'
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                _attachments: null
+                _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::ACTI::6C905B38-271B-480E-A6FB-E503E5D3B996
+                _rev: 1-81a33222e6be51ba5ec534b5ffb9325d
+                activity: Requested a Line
+                apnsData:
+                  channels:
+                  - palermo_ALL
+                  data:
+                    docId: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD
+                  dataForEmail:
+                    riskInformation:
+                    - Herisson Estates Inc
+                    - ' B0999JC2607221624'
+                    userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  subscriptionRootID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD
+                  subtitle: AJC Broking Ltd
+                  title: Requested a Line
+                channels:
+                - palermo_ALL
+                - ajc_ALL
+                createdAt: '2022-07-26 15:27:53'
+                hardcodedActivity: Requested a Line
+                linkedArchiveID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::ARCH::46CD90A5-229C-4658-8921-0B0CFCADBB09
+                parentDocID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO
+                provenance:
+                  dataHash: 531970f2cfd0a06f2d0671fb3574a6fe5b38e885a84ecc057864d4c8f3658263
+                  provHash: f6d0062e3f5ebf0de4bba5be3a6b8fa3afdfdbd6ce97bf027034a82c456b946f
+                  system: LaVAPI
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  version: 2022-07-24@19:09:13
+                  writtenAt: '2022-07-26 15:27:53'
+                type: RWActivity
+                userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+              - _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::CATANIA::ALL::LGUS
+                _rev: 1-ac2936f3ead9ff5a2a44d88bde7565dc
+                associatedPlacingID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO
+                channels:
+                - ajc_ALL
+                - catania_ALL
+                contents:
+                - conditionsEnabled: true
+                  maxString: '60'
+                  minString: '60'
+                  sectionIdentifiers: []
+                  suggestedStamps: []
+                createdAt: '2022-07-26 15:27:23'
+                provenance:
+                  dataHash: 1c2cb2c9e2fc0608ceeb828d2e9c8f5ca360bd30049bdb9ffb615edf75bb0396
+                  provHash: 067470f7f84ba0e585839af7ebbec3c7ef9bf83652c9ffdcba045303b209bbdc
+                  system: LaVAPI
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  version: 2022-07-24@19:09:13
+                  writtenAt: '2022-07-26 15:27:23'
+                sections: []
+                type: RWLineGuidanceSet
+                updatedAt: '2022-07-26 15:27:23'
+                userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+              - _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::CHAT::BEE53B85-0157-449B-A4AD-F5E3B1B1F5DD
+                _rev: 1-8c92b1c59f4f813520d40cb8461dd721
+                apnsData:
+                  body: Will you be ok to renew this risk in time?
+                  category: NEW_COMMENT
+                  channels:
+                  - catania_ALL
+                  data:
+                    docId: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD
+                  dataForEmail:
+                    riskInformation:
+                    - Herisson Estates Inc
+                    - ' B0999JC2607221624'
+                    userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  subscriptionRootID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD
+                  subtitle: AJC Broking Ltd
+                  title: New Chat Message
+                associatedRootID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD
+                channels:
+                - ajc_ALL
+                - catania_ALL
+                comment: Will you be ok to renew this risk in time?
+                createdAt: '2022-07-29 15:44:14'
+                provenance:
+                  dataHash: d43eea5dab4556ea06e9650be9669c2be11078838c78bf2bfc3acd9b0dd16e21
+                  provHash: abd50ead134a63c1f49f4c42aff2c95f03139bacd261a6fb5598b95ebf2d266d
+                  system: LaVAPI
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  version: 2022-07-28@19:08:59
+                  writtenAt: '2022-07-29 15:44:14'
+                type: RWComment
+                updatedAt: '2022-07-29 15:44:14'
+                user: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+              - _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::ACTI::11BFBFC4-D663-4B86-BFEF-2C19ADAC45F6
+                _rev: 1-1f0d82b320fbe562ec893c206e333f22
+                activity: Marked as Firm Order
+                channels:
+                - ajc_ALL
+                createdAt: '2022-07-26 15:24:42'
+                hardcodedActivity: Marked as Firm Order
+                linkedArchiveID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::ARCH::18AD4677-3177-499F-A99A-123F56C18E3F
+                parentDocID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO
+                provenance:
+                  dataHash: 7d7a73dddb68d085c616914684ee7a075d3c85621af52773c984e10efb828cf2
+                  provHash: a85e0958b6fd296222ea9d9b57835f6abfef94b182b37093b3f22078707ddce8
+                  system: LaVAPI
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  version: 2022-07-24@19:09:13
+                  writtenAt: '2022-07-26 15:24:42'
+                type: RWActivity
+                userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+              - _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::ACTI::A209A563-B198-4922-BBF9-A407703A6BF2
+                _rev: 1-0124dde9bbebbda28fa5fd4d9a2173f3
+                activity: Changed or Added a Line item
+                channels:
+                - ajc_ALL
+                createdAt: '2022-07-26 15:25:17'
+                hardcodedActivity: Changed or Added a Line item
+                linkedArchiveID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::ARCH::0F28E02A-53D5-4975-84F9-4D2DFDE244E0
+                parentDocID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO
+                provenance:
+                  dataHash: 04ced1c60495413c2b91b85e75b4a026151428dcc63f15ef2e4b78023755171f
+                  provHash: eec1c9e581e19145815ce45838873fb917c78022961d728d012d5c55918308db
+                  system: LaVAPI
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  version: 2022-07-24@19:09:13
+                  writtenAt: '2022-07-26 15:25:17'
+                type: RWActivity
+                userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+              - _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::ACTI::8DDE658C-8933-448C-B96C-0000D19F22E9
+                _rev: 1-547faa478608fe315a42345c6fa2d8a5
+                activity: Vertical Terms Updated
+                channels:
+                - ajc_ALL
+                createdAt: '2022-07-26 15:25:47'
+                hardcodedActivity: Vertical Terms Updated
+                linkedArchiveID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::ARCH::7B31F6C8-B7DB-4C6E-8FF8-4B5FBF4D4FD7
+                parentDocID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO
+                provenance:
+                  dataHash: d189e3064d5aada96c104b8fd8e57c0f16aaeb205915f8435a0a64c080667f24
+                  provHash: f5676b222493864d7f7b0dc6f7cf23841c3589450e4f6af72f6919f877fefde5
+                  system: LaVAPI
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  version: 2022-07-24@19:09:13
+                  writtenAt: '2022-07-26 15:25:47'
+                type: RWActivity
+                userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+              - RWLineGuidanceSet:
+                  _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::CATANIA::ALL::LGUS
+                  _rev: 1-ac2936f3ead9ff5a2a44d88bde7565dc
+                  associatedPlacingID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO
+                  channels:
+                  - ajc_ALL
+                  - catania_ALL
+                  contents:
+                  - conditionsEnabled: true
+                    maxString: '60'
+                    minString: '60'
+                    sectionIdentifiers: []
+                    suggestedStamps: []
+                  createdAt: '2022-07-26 15:27:23'
+                  provenance:
+                    dataHash: 1c2cb2c9e2fc0608ceeb828d2e9c8f5ca360bd30049bdb9ffb615edf75bb0396
+                    provHash: 067470f7f84ba0e585839af7ebbec3c7ef9bf83652c9ffdcba045303b209bbdc
+                    system: LaVAPI
+                    userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                    version: 2022-07-24@19:09:13
+                    writtenAt: '2022-07-26 15:27:23'
+                  sections: []
+                  type: RWLineGuidanceSet
+                  updatedAt: '2022-07-26 15:27:23'
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::ACTI::82A4AF14-80B8-4157-877B-98289EBAD3D7
+                _rev: 1-50b9c5a18c60c64da1fcbe29d5b5865b
+                activity: Requested a Line
+                apnsData:
+                  channels:
+                  - catania_ALL
+                  data:
+                    docId: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD
+                  dataForEmail:
+                    riskInformation:
+                    - Herisson Estates Inc
+                    - ' B0999JC2607221624'
+                    userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  subscriptionRootID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD
+                  subtitle: AJC Broking Ltd
+                  title: Requested a Line
+                channels:
+                - catania_ALL
+                - ajc_ALL
+                createdAt: '2022-07-26 15:27:23'
+                hardcodedActivity: Requested a Line
+                linkedArchiveID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::ARCH::0C9EF8A7-976D-4EFE-B77A-E9F0B7DB0419
+                parentDocID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO
+                provenance:
+                  dataHash: ff9eee622c6d667688b7a3cd822dbb66cd38c3c634be883ce912799051446d42
+                  provHash: 91930b9d55335cd960eb952cb77a361e78e926b3cdaea24167f11caa30476763
+                  system: LaVAPI
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  version: 2022-07-24@19:09:13
+                  writtenAt: '2022-07-26 15:27:23'
+                type: RWActivity
+                userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                verticalVisibility: AllStamps
+              - _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::ACTI::711B20C4-3C34-42C3-869D-AE3F89B0CE92
+                _rev: 1-ccf85a7ab63486305396226732e17e31
+                activity: Cloned From Risk
+                channels:
+                - ajc_ALL
+                clonedFromID: IC8E23AF1C-8EC5-44DB-BB88-0CE3C623D256
+                clonedFromInsuredName: Heat Wave Estates Inc
+                clonedFromUMR: ' B0999JC2007221235'
+                createdAt: '2022-07-26 15:24:30'
+                hardcodedActivity: Cloned From Risk
+                linkedArchiveID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::ARCH::7F2CE95F-99F3-420A-AA66-15449B8FB3C4
+                parentDocID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD
+                provenance:
+                  dataHash: a111552f3e845cf0faea2d88a504cb6122568e70282cde818e745cf8495f2106
+                  provHash: 98ac343c66f989a208bfc4e2a9f40dbce30490ee14d3fe9022743902f5dcf577
+                  system: LaVAPI
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  version: 2022-07-24@19:09:13
+                  writtenAt: '2022-07-26 15:24:30'
+                type: RWActivity
+                userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+              - _id: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO::PALERMO::ALL::LGUS
+                _rev: 1-ff3c7d4f9225a61c6e8a58a32a7a466e
+                associatedPlacingID: ICB78D9EBB-F2FB-4633-AAA7-7667AE5A4FFD::FO
+                channels:
+                - ajc_ALL
+                - palermo_ALL
+                contents:
+                - conditionsEnabled: true
+                  maxString: '75'
+                  minString: '75'
+                  sectionIdentifiers: []
+                  suggestedStamps: []
+                createdAt: '2022-07-26 15:27:53'
+                provenance:
+                  dataHash: be626bd5e1c9e20948ab0dade64df03591168c26d91e86b52e6adbd70bc2c3cd
+                  provHash: e6b2be3c5b086314e5eebb36c4ccd27101a8f2846354d2a5e358b7614ab89226
+                  system: LaVAPI
+                  userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                  version: 2022-07-24@19:09:13
+                  writtenAt: '2022-07-26 15:27:53'
+                sections: []
+                type: RWLineGuidanceSet
+                updatedAt: '2022-07-26 15:27:53'
+                userID: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: the common parts of a document
+                  properties:
+                    _id:
+                      type: string
+                      description: unique document id
+                      example: IC2C2C364A-F483-48F3-A927-05BC703CFCE3::CHAT::901F20D1-6BC8-46C6-BAA4-92B64507D7A2
+                    _rev:
+                      type: string
+                      example: 1-141df67df9e5eaacd0830c65e47a0bf9
+                    createdAt:
+                      type: string
+                      example: '2021-08-04T15:18:02.000Z'
+                    updatedAt:
+                      type: string
+                      example: '2021-08-04T15:18:02.000Z'
+                    type:
+                      type: string
+                      example: RWComment
+                      description: RWComment in all cases
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

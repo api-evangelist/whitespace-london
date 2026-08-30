@@ -1,0 +1,1394 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Data API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Data
+paths:
+  /api/v22.04/data/{riskID}:
+    get:
+      summary: Gets all Defined Data for a Risk.
+      description: <div>This endpoint returns the Defined Data for a risk. NOTE that this is the old version, new integrators please use v23.09.</div>
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk
+        example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+      tags:
+      - Data
+      responses:
+        '200':
+          description: the defined data document, containing metadata, multiSectionDefinition and definedData
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefinedData'
+              examples:
+                Simple Case:
+                  description: an example with a small number of obvious tags
+                  value:
+                    metadata:
+                      documentRevision: 4-f33624e96b21035db9a370901c961e74
+                      userID: MUB6A6C9F9-61C1-49EA-8C44-28EEAB3226F5
+                      env: apitest
+                      tagSet: Whitespace
+                      version: '22.04'
+                      fetchedAt: '2022-05-27 13:35:24'
+                      documentID: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+                    multiSectionDefinition: []
+                    definedData:
+                    - value: B0999MT2705110219
+                      tag: Broker_Reference
+                      mrcHeading: UMR
+                      originalHeading: UMR
+                      name: DefinedData0
+                      parentID: Page:C09BF702-7E21-4200-AA41-0EDADF934635
+                      lineItemIndex: 1
+                    - value: Acme Widgets Inc
+                      tag: Insured_Name
+                      mrcHeading: Insured
+                      originalHeading: INSURED
+                      name: DefinedData0
+                      parentID: Page:AB9B8D46-D6BC-442E-A01A-65E2F34096DF
+                      lineItemIndex: 3
+                    - value: 1 January 2022
+                      tag: Inception_Date
+                      mrcHeading: Period
+                      originalHeading: PERIOD
+                      name: DefinedData3
+                      parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      lineItemIndex: 5
+                    - value: 31 December 2022
+                      tag: Expiry_Date
+                      mrcHeading: Period
+                      originalHeading: PERIOD
+                      name: DefinedData2
+                      parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      lineItemIndex: 5
+                    - value: 00.01 am
+                      tag: Expiry_Time
+                      mrcHeading: Period
+                      originalHeading: PERIOD
+                      name: DefinedData1
+                      parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      lineItemIndex: 5
+                    - value: 00.01 am
+                      tag: Inception_Time
+                      mrcHeading: Period
+                      originalHeading: PERIOD
+                      name: DefinedData1
+                      parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      lineItemIndex: 5
+                    - value: Local Standard Time
+                      tag: Time_Qualifier
+                      mrcHeading: Period
+                      originalHeading: PERIOD
+                      name: DefinedData0
+                      parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      lineItemIndex: 5
+                    - originalHeading: PLACING DATA
+                      mrcHeading: Information
+                      tag: Instruction_Type
+                      value: Insurance
+                      controlled: true
+                      parentID: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+                Sectioned Case:
+                  description: an example with different periods for the Hull and Cargo sections
+                  value:
+                    metadata:
+                      documentID: ICE46B12E0-1C2B-46A5-AFC5-60445CEE40B9
+                      documentRevision: 8-cef176382e9f01c8007843b32d935876
+                      env: apitest
+                      version: '22.04'
+                      fetchedAt: '2022-05-27 14:18:03'
+                      userID: MUB6A6C9F9-61C1-49EA-8C44-28EEAB3226F5
+                      tagSet: Whitespace
+                    definedData:
+                    - parentID: Page:C09BF702-7E21-4200-AA41-0EDADF934635
+                      mrcHeading: UMR
+                      tag: Broker_Reference
+                      value: B0999MT2705111325
+                      lineItemIndex: 1
+                      name: DefinedData0
+                      originalHeading: UMR
+                    - parentID: Page:AB9B8D46-D6BC-442E-A01A-65E2F34096DF
+                      mrcHeading: Insured
+                      tag: Insured_Name
+                      value: Sectioned Widgets Inc
+                      lineItemIndex: 3
+                      originalHeading: INSURED
+                      name: DefinedData0
+                    - parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      sectionIDs:
+                      - '1'
+                      mrcHeading: Period
+                      value: 1 January 2022
+                      tag: Inception_Date
+                      lineItemIndex: 5
+                      originalHeading: PERIOD
+                      name: DefinedData3
+                    - parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      sectionIDs:
+                      - '1'
+                      mrcHeading: Period
+                      tag: Expiry_Date
+                      value: 31 December 2022
+                      lineItemIndex: 5
+                      originalHeading: PERIOD
+                      name: DefinedData2
+                    - parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      sectionIDs:
+                      - '1'
+                      mrcHeading: Period
+                      value: 00.01 am
+                      tag: Expiry_Time
+                      lineItemIndex: 5
+                      name: DefinedData1
+                      originalHeading: PERIOD
+                    - parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      sectionIDs:
+                      - '1'
+                      mrcHeading: Period
+                      tag: Inception_Time
+                      value: 00.01 am
+                      lineItemIndex: 5
+                      name: DefinedData1
+                      originalHeading: PERIOD
+                    - parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      sectionIDs:
+                      - '1'
+                      mrcHeading: Period
+                      value: Local Standard Time
+                      tag: Time_Qualifier
+                      lineItemIndex: 5
+                      originalHeading: PERIOD
+                      name: DefinedData0
+                    - parentID: Page:4C782AB9-72D4-413D-BB54-3CFAE0CAD679
+                      sectionIDs:
+                      - '2'
+                      mrcHeading: Period
+                      tag: Inception_Date
+                      value: 1 February 2022
+                      lineItemIndex: 5
+                      name: DefinedData4
+                      originalHeading: PERIOD
+                    - parentID: Page:4C782AB9-72D4-413D-BB54-3CFAE0CAD679
+                      sectionIDs:
+                      - '2'
+                      mrcHeading: Period
+                      value: 28 February 2022
+                      tag: Expiry_Date
+                      lineItemIndex: 5
+                      name: DefinedData5
+                      originalHeading: PERIOD
+                    - parentID: Page:4C782AB9-72D4-413D-BB54-3CFAE0CAD679
+                      sectionIDs:
+                      - '2'
+                      mrcHeading: Period
+                      tag: Expiry_Time
+                      value: 00.01 am
+                      lineItemIndex: 5
+                      name: DefinedData6
+                      originalHeading: PERIOD
+                    - parentID: Page:4C782AB9-72D4-413D-BB54-3CFAE0CAD679
+                      sectionIDs:
+                      - '2'
+                      mrcHeading: Period
+                      value: 00.01 am
+                      tag: Inception_Time
+                      lineItemIndex: 5
+                      name: DefinedData6
+                      originalHeading: PERIOD
+                    - parentID: Page:4C782AB9-72D4-413D-BB54-3CFAE0CAD679
+                      sectionIDs:
+                      - '2'
+                      mrcHeading: Period
+                      value: Local Standard Time
+                      tag: Time_Qualifier
+                      lineItemIndex: 5
+                      name: DefinedData7
+                      originalHeading: PERIOD
+                    - parentID: ICE46B12E0-1C2B-46A5-AFC5-60445CEE40B9
+                      sectionIDs:
+                      - '1'
+                      mrcHeading: Information
+                      controlled: true
+                      value: B0999MT2705111325_01
+                      tag: Broker_Contract_Section_Reference
+                      originalHeading: PLACING DATA
+                    - parentID: ICE46B12E0-1C2B-46A5-AFC5-60445CEE40B9
+                      sectionIDs:
+                      - '2'
+                      mrcHeading: Information
+                      controlled: true
+                      tag: Broker_Contract_Section_Reference
+                      value: B0999MT2705111325_02
+                      originalHeading: PLACING DATA
+                    - parentID: ICE46B12E0-1C2B-46A5-AFC5-60445CEE40B9
+                      mrcHeading: Information
+                      originalHeading: PLACING DATA
+                      controlled: true
+                      value: Insurance
+                      tag: Insurance_Type
+                    multiSectionDefinition:
+                    - sectionName: Hull
+                      sectionID: '1'
+                    - sectionName: Cargo
+                      sectionID: '2'
+                Tabular Data:
+                  description: an example with a table of insured addresses in the Interest heading
+                  value:
+                    multiSectionDefinition: []
+                    metadata:
+                      env: apitest
+                      fetchedAt: '2022-05-27 14:41:19'
+                      version: '22.04'
+                      tagSet: Whitespace
+                      documentID: IC10400763-38A3-4E60-8E53-BBB96F7B4B6E
+                      documentRevision: 5-ce8a405a629a01249f5940ec5aa4526a
+                      userID: MUB6A6C9F9-61C1-49EA-8C44-28EEAB3226F5
+                    definedData:
+                    - parentID: Page:C09BF702-7E21-4200-AA41-0EDADF934635
+                      mrcHeading: UMR
+                      originalHeading: UMR
+                      tag: Broker_Reference
+                      lineItemIndex: 1
+                      name: DefinedData0
+                      value: B0999MT2705111324
+                    - parentID: Page:AB9B8D46-D6BC-442E-A01A-65E2F34096DF
+                      mrcHeading: Insured
+                      originalHeading: INSURED
+                      tag: Insured_Name
+                      lineItemIndex: 3
+                      name: DefinedData0
+                      value: Tabular Widgets Inc
+                    - parentID: Page:EB65EE6D-5AC2-4B7B-BD3D-0BB62E54930E
+                      mrcHeading: Interest
+                      originalHeading: INTEREST
+                      tag: Insured_Item_Number_and_Street
+                      lineItemIndex: 6
+                      name: DefinedDataTable0:0
+                      value: 1700 Main Street
+                    - parentID: Page:FEB0900C-6C49-477A-B2C6-2FA7F57E966F
+                      mrcHeading: Interest
+                      originalHeading: INTEREST
+                      tag: Insured_Item_Number_and_Street
+                      lineItemIndex: 6
+                      name: DefinedDataTable0:1
+                      value: 1800 Second Avenue
+                    - parentID: Page:EB65EE6D-5AC2-4B7B-BD3D-0BB62E54930E
+                      mrcHeading: Interest
+                      originalHeading: INTEREST
+                      tag: Insured_Item_City_Name
+                      lineItemIndex: 6
+                      name: DefinedDataTable0:2
+                      value: Des Moines
+                    - parentID: Page:FEB0900C-6C49-477A-B2C6-2FA7F57E966F
+                      mrcHeading: Interest
+                      originalHeading: INTEREST
+                      tag: Insured_Item_City_Name
+                      lineItemIndex: 6
+                      name: DefinedDataTable0:3
+                      value: Omaha
+                    - parentID: Page:EB65EE6D-5AC2-4B7B-BD3D-0BB62E54930E
+                      mrcHeading: Interest
+                      originalHeading: INTEREST
+                      tag: Insured_Item_Country_Subentity
+                      lineItemIndex: 6
+                      name: DefinedDataTable0:4
+                      value: Iowa
+                    - parentID: Page:FEB0900C-6C49-477A-B2C6-2FA7F57E966F
+                      mrcHeading: Interest
+                      originalHeading: INTEREST
+                      tag: Insured_Item_Country_Subentity
+                      lineItemIndex: 6
+                      name: DefinedDataTable0:5
+                      value: Nebraska
+                    - parentID: Page:EB65EE6D-5AC2-4B7B-BD3D-0BB62E54930E
+                      mrcHeading: Interest
+                      originalHeading: INTEREST
+                      tag: Insured_Item_Postal_Code
+                      lineItemIndex: 6
+                      name: DefinedDataTable0:6
+                      value: '50304'
+                    - parentID: Page:FEB0900C-6C49-477A-B2C6-2FA7F57E966F
+                      mrcHeading: Interest
+                      originalHeading: INTEREST
+                      tag: Insured_Item_Postal_Code
+                      lineItemIndex: 6
+                      name: DefinedDataTable0:7
+                      value: '68022'
+                    - parentID: Page:EB65EE6D-5AC2-4B7B-BD3D-0BB62E54930E
+                      mrcHeading: Interest
+                      originalHeading: INTEREST
+                      tag: Insured_Item_Coverage_Limit_Amount
+                      lineItemIndex: 6
+                      name: DefinedDataTable0:8
+                      value: USD 1,000,000
+                    - parentID: Page:FEB0900C-6C49-477A-B2C6-2FA7F57E966F
+                      mrcHeading: Interest
+                      originalHeading: INTEREST
+                      tag: Insured_Item_Coverage_Limit_Amount
+                      lineItemIndex: 6
+                      name: DefinedDataTable0:9
+                      value: USD 800,000
+                    - controlled: true
+                      originalHeading: PLACING DATA
+                      tag: Instruction_Type
+                      mrcHeading: Information
+                      value: Insurance
+                      parentID: IC10400763-38A3-4E60-8E53-BBB96F7B4B6E
+                Signed Lines Data:
+                  description: an example with the written and signed lines data shown as 'controlled' values
+                  value:
+                    multiSectionDefinition: []
+                    metadata:
+                      userID: MUB6A6C9F9-61C1-49EA-8C44-28EEAB3226F5
+                      fetchedAt: '2022-05-27 14:44:02'
+                      documentRevision: 1-9040f0615d52afdcebbe7d46aedfb89d
+                      version: '22.04'
+                      documentID: ICF42A7472-3CFE-4722-A59C-678A60FACD53::SIGNED
+                      tagSet: Whitespace
+                      env: apitest
+                    definedData:
+                    - controlled: true
+                      tag: Instruction_Type
+                      parentID: ICF42A7472-3CFE-4722-A59C-678A60FACD53
+                      mrcHeading: Information
+                      originalHeading: PLACING DATA
+                      value: Insurance
+                    - controlled: true
+                      tag: Insurer_Identification
+                      mrcHeading: InsurersWrittenLine
+                      value: '5679'
+                      originalHeading: WRITTEN LINES
+                      parentID: STB08B9750-CADF-4E86-B778-FECB7A6A4FA2
+                      sectionIDs: []
+                    - controlled: true
+                      tag: Insurer_Identification_Agency
+                      mrcHeading: InsurersWrittenLine
+                      value: Lloyd's Syndicate Number
+                      originalHeading: WRITTEN LINES
+                      parentID: STB08B9750-CADF-4E86-B778-FECB7A6A4FA2
+                      sectionIDs: []
+                    - mrcHeading: InsurersWrittenLine
+                      controlled: true
+                      tag: Written_Line_Percentage
+                      phType: Percentage
+                      value: 100%
+                      originalHeading: WRITTEN LINES
+                      parentID: STB08B9750-CADF-4E86-B778-FECB7A6A4FA2
+                      sectionIDs: []
+                    - mrcHeading: InsurersWrittenLine
+                      tag: Written_Date_Time
+                      controlled: true
+                      value: '2022-05-27 01:10:13'
+                      originalHeading: WRITTEN LINES
+                      parentID: STB08B9750-CADF-4E86-B778-FECB7A6A4FA2
+                      sectionIDs: []
+                    - mrcHeading: InsurersWrittenLine
+                      tag: Signed_Line_Percentage
+                      controlled: true
+                      phType: Percentage
+                      value: 100%
+                      originalHeading: WRITTEN LINES
+                      parentID: STB08B9750-CADF-4E86-B778-FECB7A6A4FA2
+                      sectionIDs: []
+                    - mrcHeading: InsurersWrittenLine
+                      tag: Insurer_Contract_Reference
+                      controlled: true
+                      value: TESTING05231
+                      originalHeading: WRITTEN LINES
+                      parentID: STB08B9750-CADF-4E86-B778-FECB7A6A4FA2::0
+                      sectionIDs: []
+                    - mrcHeading: InsurersWrittenLine
+                      controlled: true
+                      tag: Insurer_Contract_Reference_Risk_Codes
+                      value: '955'
+                      originalHeading: WRITTEN LINES
+                      parentID: STB08B9750-CADF-4E86-B778-FECB7A6A4FA2::0
+                      sectionIDs: []
+                    - controlled: true
+                      mrcHeading: InsurersWrittenLine
+                      tag: Line_To_Stand_Indicator
+                      value: Line To Stand
+                      originalHeading: WRITTEN LINES
+                      parentID: STB08B9750-CADF-4E86-B778-FECB7A6A4FA2
+                      sectionIDs: []
+                    - controlled: true
+                      tag: Year_Of_Account
+                      mrcHeading: InsurersWrittenLine
+                      value: '2022'
+                      originalHeading: WRITTEN LINES
+                      parentID: STB08B9750-CADF-4E86-B778-FECB7A6A4FA2
+                      sectionIDs: []
+    post:
+      summary: Sets risk data through the Defined Data mechanism
+      description: <div>The payload needs the metadata from a previous GET, a multiSectionDefinition array which can be empty, and a definedData array with the values to be updated.</div> <p>You can NOT have an empty string as a value for a tag, please use ??? as the placeholder instead.</p>
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk
+        example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+      tags:
+      - Data
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Single Value:
+                description: Update just one tagged item
+                value:
+                  metadata:
+                    documentRevision: 5-d5e0cc635b2d8ce4c07a7c9eda10baea
+                    userID: MUB6A6C9F9-61C1-49EA-8C44-28EEAB3226F5
+                    env: apitest
+                    tagSet: Whitespace
+                    version: '22.04'
+                    fetchedAt: '2022-05-27 13:35:24'
+                    documentID: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+                  multiSectionDefinition: []
+                  definedData:
+                  - value: Acme Widgets Incorporated
+                    tag: Insured_Name
+                    mrcHeading: Insured
+                    originalHeading: INSURED
+                    name: DefinedData0
+                    parentID: Page:AB9B8D46-D6BC-442E-A01A-65E2F34096DF
+                    lineItemIndex: 3
+              Sectioned Value:
+                description: Update two items in one section
+                value:
+                  metadata:
+                    documentRevision: 8-cef176382e9f01c8007843b32d935876
+                  definedData:
+                  - parentID: Page:4C782AB9-72D4-413D-BB54-3CFAE0CAD679
+                    sectionIDs:
+                    - '2'
+                    mrcHeading: Period
+                    tag: Inception_Date
+                    value: 1 March 2022
+                    lineItemIndex: 5
+                    name: DefinedData4
+                    originalHeading: PERIOD
+                  - parentID: Page:4C782AB9-72D4-413D-BB54-3CFAE0CAD679
+                    sectionIDs:
+                    - '2'
+                    mrcHeading: Period
+                    value: 31 March 2022
+                    tag: Expiry_Date
+                    lineItemIndex: 5
+                    name: DefinedData5
+                    originalHeading: PERIOD
+                  multiSectionDefinition: []
+              Using ACORD Tags:
+                description: Update items using ACORD Tags
+                value:
+                  metadata:
+                    documentRevision: 19-72f8cb0c5521b85e229be1d2c23bbc24
+                  definedData:
+                  - tag: ACORDGPM:InsuredAddressNumberAndStreet
+                    originalHeading: 'INSURED ADDRESS:'
+                    mrcHeading: PrincipalAddress
+                    parentID: Page:6F87933A-9E25-4EB9-AFE1-16159B326411
+                    name: DefinedData0
+                    lineItemIndex: 4
+                    value: 1404 First Avenue
+                  - mrcHeading: PrincipalAddress
+                    tag: ACORDGPM:InsuredAddressCityName
+                    originalHeading: 'INSURED ADDRESS:'
+                    parentID: Page:6F87933A-9E25-4EB9-AFE1-16159B326411
+                    name: DefinedData1
+                    lineItemIndex: 4
+                    value: Des Moines
+                  - mrcHeading: PrincipalAddress
+                    tag: ACORDGPM:InsuredAddressCountrySubEntity
+                    originalHeading: 'INSURED ADDRESS:'
+                    parentID: Page:6F87933A-9E25-4EB9-AFE1-16159B326411
+                    name: DefinedData2
+                    lineItemIndex: 4
+                    value: Omaha
+                  - mrcHeading: PrincipalAddress
+                    originalHeading: 'INSURED ADDRESS:'
+                    tag: ACORDGPM:InsuredAddressZipOrPostCode
+                    parentID: Page:6F87933A-9E25-4EB9-AFE1-16159B326411
+                    name: DefinedData3
+                    lineItemIndex: 4
+                    value: '50304'
+                  - mrcHeading: PrincipalAddress
+                    originalHeading: 'INSURED ADDRESS:'
+                    tag: ACORDGPM:InsuredAddressCountry
+                    parentID: Page:6F87933A-9E25-4EB9-AFE1-16159B326411
+                    name: DefinedData4
+                    lineItemIndex: 4
+                    value: United States
+                  multiSectionDefinition: []
+            schema:
+              $ref: '#/components/schemas/DefinedData'
+      responses:
+        '200':
+          description: A confirmation of the saved data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: the document id of the updated risk
+                    example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+                  rev:
+                    type: string
+                    description: the revision of the risk
+                    example: 6-50cb52029b9542862e014c296db45ae6
+                  ok:
+                    type: boolean
+                    description: true if the data was saved
+                    example: true
+        '500':
+          description: The data was not acceptable. We recommend calling the /api/v22.04/data/$RiskID/verify POST endpoint first which will report any errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  reason:
+                    type: string
+                    example: Something went wrong.
+  /api/v22.04/data/{riskID}/tagset/{tagset}:
+    get:
+      summary: Gets all Defined Data for a Risk using an alternate tagset
+      description: <div>This endpoint returns the Defined Data for a risk</div>
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk
+        example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+      - in: path
+        name: tagset
+        schema:
+          type: string
+        required: true
+        description: An alternative tagset to the default. Currently supported ACORDGPM
+        example: ACORDGPM
+      tags:
+      - Data
+      responses:
+        '200':
+          description: the defined data document, containing metadata, multiSectionDefinition and definedData
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefinedData'
+              examples:
+                ACORDGPM:
+                  description: note that some of the tag values have a prefix of ACORDGPM and a suffix without underscores
+                  value:
+                    metadata:
+                      documentRevision: 7-9e4693f54fa3c7181a3e60ed317c51cb
+                      fetchedAt: '2022-05-27 15:16:35'
+                      tagSet: ACORDGPM
+                      version: '22.04'
+                      env: apitest
+                      userID: MUB6A6C9F9-61C1-49EA-8C44-28EEAB3226F5
+                      documentID: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+                    multiSectionDefinition: []
+                    definedData:
+                    - parentID: Page:C09BF702-7E21-4200-AA41-0EDADF934635
+                      value: B0999MT2705110219
+                      lineItemIndex: 1
+                      tag: ACORDGPM:BrokerContractReference
+                      originalHeading: UMR
+                      mrcHeading: UMR
+                      name: DefinedData0
+                    - parentID: Page:AB9B8D46-D6BC-442E-A01A-65E2F34096DF
+                      value: Acme Widgets Incorporated
+                      lineItemIndex: 3
+                      originalHeading: INSURED
+                      tag: ACORDGPM:InsuredName
+                      mrcHeading: Insured
+                      name: DefinedData0
+                    - value: 1 January 2022
+                      parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      lineItemIndex: 5
+                      originalHeading: PERIOD
+                      mrcHeading: Period
+                      tag: ACORDGPM:InceptionDate
+                      name: DefinedData3
+                    - value: 31 December 2022
+                      parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      lineItemIndex: 5
+                      tag: ACORDGPM:ExpiryDate
+                      mrcHeading: Period
+                      originalHeading: PERIOD
+                      name: DefinedData2
+                    - value: 00.01 am
+                      parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      lineItemIndex: 5
+                      tag: ACORDGPM:ExpiryTime
+                      mrcHeading: Period
+                      originalHeading: PERIOD
+                      name: DefinedData1
+                    - parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      value: 00.01 am
+                      lineItemIndex: 5
+                      originalHeading: PERIOD
+                      mrcHeading: Period
+                      tag: ACORDGPM:InceptionTime
+                      name: DefinedData1
+                    - value: Local Standard Time
+                      parentID: Page:D9056331-440A-4120-B8AF-37C7B9C91E72
+                      lineItemIndex: 5
+                      tag: ACORDGPM:TimeQualifier
+                      originalHeading: PERIOD
+                      mrcHeading: Period
+                      name: DefinedData0
+                    - parentID: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+                      value: Insurance
+                      tag: ACORDGPM:InstructionType
+                      mrcHeading: Information
+                      controlled: true
+                      originalHeading: PLACING DATA
+  /api/v22.04/data/{riskID}/verify:
+    post:
+      summary: Verifies the risk data to check that it is acceptable for the update POST
+      description: <div>This endpoint describes any problems with the data that is intended to be sent to POST /api/v22.04/data/$RiskID.</div> <div>It just does a verify, it <b>does not</b> save any data.</div>
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk
+        example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+      tags:
+      - Data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DefinedData'
+      responses:
+        '200':
+          description: An array of problems with the data. If an empty array, the data is acceptable
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      description: what is wrong with the data
+                      example: tags do not match input.
+                    datapoints:
+                      type: array
+                      items:
+                        type: object
+                        description: the Data Point, containing a flat representation of each data value
+                        properties:
+                          value:
+                            type: string
+                            description: the defined data value
+                            example: Acme Widgets Inc
+                          tag:
+                            type: string
+                            description: the tag that identifies the use of the data item
+                            example: Insured_Name
+                          mrcHeading:
+                            type: string
+                            description: the heading (from a fixed list) within the JMRC where the data item was located
+                            example: Insured
+                          originalHeading:
+                            type: string
+                            description: the heading visible to the user within the JMRC where the data item was located
+                            example: INSURED
+                          name:
+                            type: string
+                            description: the name of the defined data item's placeholder within the JMRC data
+                            example: DefinedData0
+                          parentID:
+                            type: string
+                            description: a code that links set of data tags within a heading
+                            example: Page:AB9B8D46-D6BC-442E-A01A-65E2F34096DF
+                          sectionIDs:
+                            type: array
+                            items:
+                              type: string
+                              description: section ID which links to the items in the multiSectionDefinition array
+                              example: '2'
+                          lineItemIndex:
+                            type: number
+                            description: the numerical index of the JMRC line item where the data item was located
+                            example: 3
+                          controlled:
+                            type: boolean
+                            description: if included as true, indicates an item created through a controlled process, such as Written or Signed Line values
+                            example: true
+  /api/v23.09/data/{riskID}:
+    get:
+      summary: Gets all tagged data for a risk using the default Whitespace Defined Data tagset.
+      description: <p>This endpoint returns the Defined Data for a risk.</p> <p>This data now includes several items of implicit information retrieved and tagged by the endpoint itself, including these new Controlled tags -- Agreement_Party_Role, Participation_Basis, Premium_Discount_Indicator, Subjectivity_Indicator, Subjectivity_Due_Date, Subjectivity_Condition, Subjectivity_Terms, Section_Reference, Insurer_Identification_Pseudonym, Reinsurer_Identification_Pseudonym, Insurer_Identification_Split_Percentage, Reinsurer_Identification_Split_Percentage, Placing_Broker_Unique_Identifier, Placing_Broker_Unique_Identifier_Agency, Premium_Split_Type, Deductible_Or_Excess_Indicator, Other_Intermediary_Unique_Identifier_Type.</p> <p>These implicit data tags are labelled with the term Controlled to clearly identify them.</p> <p>For consistency''s sake please use the same version of the different Data API calls when working with the same information -- i.e., use 23.09 POST calls if you used 23.09 calls to GET the data. </p>
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk
+        example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+      tags:
+      - Data
+      responses:
+        '200':
+          description: The Defined Data document, containing metadata, multiSectionDefinition and definedData
+          content:
+            application/json:
+              example:
+                multiSectionDefinition: []
+                definedData:
+                - originalHeading: TYPE
+                  name: DefinedData0
+                  mrcHeading: ContractType
+                  value: Liability
+                  section: RiskDetails
+                  parentID: Page:11CA845D-3CAB-4757-B66C-F09AB85A3587
+                  lineItemIndex: 5
+                  tag: Insurance_Type
+                - originalHeading: TYPE
+                  name: DefinedData1
+                  mrcHeading: ContractType
+                  section: RiskDetails
+                  lineItemIndex: 5
+                  parentID: Page:11CA845D-3CAB-4757-B66C-F09AB85A3587
+                  value: Excess of Loss
+                  tag: Reinsurance_Type
+                - originalHeading: TYPE
+                  name: DefinedData2
+                  mrcHeading: ContractType
+                  value: Surplus
+                  lineItemIndex: 5
+                  parentID: Page:E0468BA0-493E-432E-B9F6-3BDD06284B3A
+                  section: RiskDetails
+                  tag: Reinsurance_Type
+                - originalHeading: OTHER AGREEMENT PARTIES FOR CONTRACT CHANGES, FOR PART TWO GUA CHANGES ONLY
+                  name: DefinedData0
+                  sectionIDs:
+                  - '1'
+                  mrcHeading: OtherAgreementPartiesForContractChangesForPart2GUAChangesOnly
+                  value: Parties
+                  lineItemIndex: 25
+                  section: SubscriptionAgreement
+                  parentID: Page:C4F8DBB8-975F-4749-9B95-E1F6ACC9EA6A
+                  tag: Agreement_Party_Code
+                - originalHeading: OTHER AGREEMENT PARTIES FOR CONTRACT CHANGES, FOR PART TWO GUA CHANGES ONLY
+                  name: DefinedData0
+                  sectionIDs:
+                  - '1'
+                  mrcHeading: OtherAgreementPartiesForContractChangesForPart2GUAChangesOnly
+                  value: Parties
+                  section: SubscriptionAgreement
+                  lineItemIndex: 25
+                  parentID: Page:C4F8DBB8-975F-4749-9B95-E1F6ACC9EA6A
+                  tag: Agreement_Party_Name
+                - originalHeading: OTHER AGREEMENT PARTIES FOR CONTRACT CHANGES, FOR PART TWO GUA CHANGES ONLY
+                  sectionIDs:
+                  - '1'
+                  name: DefinedData0
+                  mrcHeading: OtherAgreementPartiesForContractChangesForPart2GUAChangesOnly
+                  value: Parties
+                  lineItemIndex: 25
+                  parentID: Page:C4F8DBB8-975F-4749-9B95-E1F6ACC9EA6A
+                  section: SubscriptionAgreement
+                  tag: Agreement_Party_Pseudonym
+                - originalHeading: OTHER AGREEMENT PARTIES FOR CONTRACT CHANGES, FOR PART TWO GUA CHANGES ONLY
+                  name: DefinedData1
+                  sectionIDs:
+                  - '2'
+                  mrcHeading: OtherAgreementPartiesForContractChangesForPart2GUAChangesOnly
+                  section: SubscriptionAgreement
+                  lineItemIndex: 25
+                  value: contract
+                  parentID: Page:8CB15A3C-03B6-4CDF-AFE7-5D3E5ACA061B
+                  tag: Agreement_Party_Code
+                - originalHeading: AGREEMENT PARTIES FOR CONTRACT CHANGES, FOR THEIR PROPORTION ONLY
+                  name: DefinedData0
+                  mrcHeading: AgreementPartiesForContractChangesForTheirProportionOnly
+                  section: SubscriptionAgreement
+                  value: None
+                  parentID: Page:60450131-897C-40B9-B6CF-7B8530B614C1
+                  lineItemIndex: 26
+                  tag: Agreement_Party_Name
+                - controlled: true
+                  originalHeading: AGREEMENT PARTIES FOR CONTRACT CHANGES, FOR THEIR PROPORTION ONLY
+                  mrcHeading: AgreementPartiesForContractChangesForTheirProportionOnly
+                  section: SubscriptionAgreement
+                  lineItemIndex: 26
+                  parentID: Page:60450131-897C-40B9-B6CF-7B8530B614C1
+                  phType: DefinedData
+                  tag: Agreement_Party_Role
+                  value: Agreement Party for their proportion only
+                - controlled: true
+                  originalHeading: OTHER AGREEMENT PARTIES FOR CONTRACT CHANGES, FOR PART TWO GUA CHANGES ONLY
+                  mrcHeading: OtherAgreementPartiesForContractChangesForPart2GUAChangesOnly
+                  value: Other Agreement Parties for Part 2 GUA
+                  lineItemIndex: 25
+                  parentID: Page:C4F8DBB8-975F-4749-9B95-E1F6ACC9EA6A
+                  section: SubscriptionAgreement
+                  tag: Agreement_Party_Role
+                  phType: DefinedData
+                - controlled: true
+                  originalHeading: OTHER AGREEMENT PARTIES FOR CONTRACT CHANGES, FOR PART TWO GUA CHANGES ONLY
+                  mrcHeading: OtherAgreementPartiesForContractChangesForPart2GUAChangesOnly
+                  section: SubscriptionAgreement
+                  value: Other Agreement Parties for Part 2 GUA
+                  parentID: Page:8CB15A3C-03B6-4CDF-AFE7-5D3E5ACA061B
+                  lineItemIndex: 25
+                  tag: Agreement_Party_Role
+                  phType: DefinedData
+                - controlled: true
+                  originalHeading: TYPE
+                  mrcHeading: ContractType
+                  value: Liability
+                  lineItemIndex: 5
+                  parentID: Page:11CA845D-3CAB-4757-B66C-F09AB85A3587
+                  phType: DefinedData
+                  tag: Insurance_Type
+                  section: RiskDetails
+                - controlled: true
+                  originalHeading: Unique Market Reference
+                  mrcHeading: UMR
+                  value: 0999
+                  section: RiskDetails
+                  parentID: IC928EB731-2EE9-434A-B96C-C04A5073F8F0
+                  tag: Placing_Broker_Unique_Identifier
+                - controlled: true
+                  originalHeading: Unique Market Reference
+                  mrcHeading: UMR
+                  section: RiskDetails
+                  value: Lloyd's of London
+                  parentID: IC928EB731-2EE9-434A-B96C-C04A5073F8F0
+                  tag: Placing_Broker_Unique_Identifier_Agency
+                metadata:
+                  version: '23.09'
+                  env: apitest
+                  userID: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+                  documentID: IC928EB731-2EE9-434A-B96C-C04A5073F8F0
+                  documentRevision: 1-ba7e8d200a332be540cc9ff3f6186a74
+                  fetchedAt: '2023-11-23 12:15:53'
+                  tagSet: Whitespace
+              schema:
+                $ref: '#/components/schemas/DefinedData'
+    post:
+      summary: Sets tagged data in the risk through the Defined Data system.
+      description: <div>The payload needs the metadata from a previous GET, a multiSectionDefinition array which can be empty, and a definedData array with the values to be updated.</div> <p>You can NOT have an empty string as a value for a tag, please use ??? as the placeholder instead.</p>
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk.
+        example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+      tags:
+      - Data
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Single Value:
+                description: Update just one tagged item.
+                value:
+                  metadata:
+                    tagSet: Whitespace
+                    documentRevision: 2-f19731b1229504652807f093a8179dbf
+                    env: apitest
+                    fetchedAt: '2023-11-27 10:51:29'
+                    documentID: ICA18B8998-6A42-45EF-BD9F-F8F58B182B99::DR2
+                    version: '23.09'
+                    userID: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+                  definedData:
+                  - originalHeading: PERIOD
+                    value: 31 August 2022
+                    phType: Date
+                    mrcHeading: Period
+                    name: DefinedData1
+                    tag: Expiry_Date
+                    parentID: Page:17D6A8C3-4C32-4E5D-AD1D-0A7321C66535
+                    lineItemIndex: 4
+                    section: RiskDetails
+                  multiSectionDefinition: []
+              Sectioned Value:
+                description: Update two items in one section.
+                value:
+                  multiSectionDefinition:
+                  - sectionID: '1'
+                    sectionName: Section 1
+                  - sectionID: '2'
+                    sectionName: Section 2
+                  metadata:
+                    userID: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+                    documentRevision: 6-c2eaa7364159f055a8f03a4c113735a1
+                    env: apitest
+                    tagSet: Whitespace
+                    fetchedAt: '2023-11-27 14:10:18'
+                    documentID: ICF189285B-7E27-4AE8-8E1B-5907F7BB9E2F::FO
+                    version: '23.09'
+                  definedData:
+                  - parentID: Page:9FA04CFC-EE83-45F5-BD50-9581A63DE206
+                    sectionIDs:
+                    - '1'
+                    originalHeading: PREMIUM
+                    tag: Premium_Amount
+                    name: DefinedData0
+                    value: USD 1,000,000
+                    lineItemIndex: 12
+                    mrcHeading: Premium
+                    section: RiskDetails
+                    phType: Amount
+                  - parentID: Page:6DFDA36F-2D1F-4ABC-8870-BCACB484A613
+                    sectionIDs:
+                    - '2'
+                    originalHeading: PREMIUM
+                    tag: Premium_Amount
+                    name: DefinedData1
+                    phType: Amount
+                    mrcHeading: Premium
+                    lineItemIndex: 12
+                    section: RiskDetails
+                    value: USD 2,000
+                  - parentID: ICF189285B-7E27-4AE8-8E1B-5907F7BB9E2F::FO
+                    originalHeading: Contract Type
+                    tag: Insurance_Type
+                    value: Insurance
+                    mrcHeading: ContractType
+                    controlled: true
+                    section: RiskDetails
+                  - parentID: ICF189285B-7E27-4AE8-8E1B-5907F7BB9E2F::FO
+                    originalHeading: Unique Market Reference
+                    tag: Placing_Broker_Unique_Identifier
+                    mrcHeading: UMR
+                    value: '1312'
+                    controlled: true
+                    section: RiskDetails
+                  - parentID: ICF189285B-7E27-4AE8-8E1B-5907F7BB9E2F::FO
+                    originalHeading: Unique Market Reference
+                    tag: Placing_Broker_Unique_Identifier_Agency
+                    mrcHeading: UMR
+                    value: Lloyd's of London
+                    controlled: true
+                    section: RiskDetails
+                  - parentID: ICF189285B-7E27-4AE8-8E1B-5907F7BB9E2F
+                    originalHeading: SECTIONS
+                    tag: Section_Reference
+                    mrcHeading: ContractSections
+                    value: B13123123_2
+                    controlled: true
+                    section: RiskDetails
+                  - parentID: ICF189285B-7E27-4AE8-8E1B-5907F7BB9E2F
+                    originalHeading: SECTIONS
+                    tag: Section_Reference
+                    value: B13123123_1
+                    mrcHeading: ContractSections
+                    controlled: true
+                    section: RiskDetails
+              Using ACORD Tags:
+                description: Update items using the ACORD tagset.
+                value:
+                  definedData:
+                  - originalHeading: Contract Type
+                    mrcHeading: ContractType
+                    parentID: ICA18B8998-6A42-45EF-BD9F-F8F58B182B99::DR1
+                    tag: Insurance_Type
+                    controlled: true
+                    section: RiskDetails
+                    value: Insurance
+                  - originalHeading: Unique Market Reference
+                    mrcHeading: UMR
+                    parentID: ICA18B8998-6A42-45EF-BD9F-F8F58B182B99::DR1
+                    tag: ACORDGPM:BrokerIdentification
+                    controlled: true
+                    section: RiskDetails
+                    value: '1312'
+                  - originalHeading: Unique Market Reference
+                    mrcHeading: UMR
+                    parentID: ICA18B8998-6A42-45EF-BD9F-F8F58B182B99::DR1
+                    tag: ACORDGPM:BrokerIdentificationAgency
+                    value: Lloyd's of London
+                    section: RiskDetails
+                    controlled: true
+                  metadata:
+                    userID: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+                    tagSet: ACORDGPM
+                    fetchedAt: '2023-11-27 10:01:02'
+                    documentID: ICA18B8998-6A42-45EF-BD9F-F8F58B182B99::DR1
+                    env: apitest
+                    documentRevision: 2-c29f73fcf3a9a415087fbd279a4d1fc2
+                    version: '23.09'
+                  multiSectionDefinition: []
+            schema:
+              $ref: '#/components/schemas/DefinedData'
+      responses:
+        '200':
+          description: A confirmation of the saved data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The document ID of the updated risk.
+                    example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+                  rev:
+                    type: string
+                    description: The revision number of the risk.
+                    example: 6-50cb52029b9542862e014c296db45ae6
+                  ok:
+                    type: boolean
+                    description: True if the data was saved
+                    example: true
+        '500':
+          description: The data was not acceptable. We recommend calling the /api/v23.09/data/$RiskID/verify POST endpoint first which will report errors more clearly.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  reason:
+                    type: string
+                    example: Something went wrong.
+  /api/v23.09/data/{riskID}/tagset/{tagset}:
+    get:
+      summary: Gets all tagged data for a risk using an alternate set of data tags.
+      description: <div>This endpoint returns the Defined Data for a risk using tag field names that are not the default Whitespace tags.</div>
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk
+        example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+      - in: path
+        name: tagset
+        schema:
+          type: string
+        required: true
+        description: An alternative tagset to the default. Currently supported -- ACORDGPM
+        example: ACORDGPM
+      tags:
+      - Data
+      responses:
+        '200':
+          description: The Defined Data document, containing metadata, multiSectionDefinition and definedData
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefinedData'
+              examples:
+                ACORDGPM:
+                  description: Note that some of the tag values in the ACORDGPM tagset have a prefix of ACORDGPM and a suffix without underscores
+                  value:
+                    definedData:
+                    - originalHeading: Contract Type
+                      mrcHeading: ContractType
+                      parentID: ICA18B8998-6A42-45EF-BD9F-F8F58B182B99::DR1
+                      tag: Insurance_Type
+                      controlled: true
+                      section: RiskDetails
+                      value: Insurance
+                    - originalHeading: Unique Market Reference
+                      mrcHeading: UMR
+                      parentID: ICA18B8998-6A42-45EF-BD9F-F8F58B182B99::DR1
+                      tag: ACORDGPM:BrokerIdentification
+                      controlled: true
+                      section: RiskDetails
+                      value: '1312'
+                    - originalHeading: Unique Market Reference
+                      mrcHeading: UMR
+                      parentID: ICA18B8998-6A42-45EF-BD9F-F8F58B182B99::DR1
+                      tag: ACORDGPM:BrokerIdentificationAgency
+                      value: Lloyd's of London
+                      section: RiskDetails
+                      controlled: true
+                    metadata:
+                      userID: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+                      tagSet: ACORDGPM
+                      fetchedAt: '2023-11-27 10:01:02'
+                      documentID: ICA18B8998-6A42-45EF-BD9F-F8F58B182B99::DR1
+                      env: apitest
+                      documentRevision: 2-c29f73fcf3a9a415087fbd279a4d1fc2
+                      version: '23.09'
+                    multiSectionDefinition: []
+  /api/v23.09/data/{riskID}/verify:
+    post:
+      summary: Verifies the data payload to check that it will be accepted by an update POST, and explains errors in detail.
+      description: <div>This endpoint describes any problems with a data payload that is to be sent to the POST /api/v23.09/data/$RiskID call.</div> <div>Unlike an update POST operation, it provides verbose error descriptions rather than a simple failure notification. <div>Please note that this call is solely for verification, it <b>does not</b> save any data.</div>
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk
+        example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+      tags:
+      - Data
+      requestBody:
+        content:
+          application/json:
+            example:
+              metadata:
+                tagSet: Whitespace
+                documentRevision: 2-f19731b1229504652807f093a8179dbf
+                env: apitest
+                fetchedAt: '2023-11-27 10:51:29'
+                documentID: ICA18B8998-6A42-45EF-BD9F-F8F58B182B99::DR2
+                version: '23.09'
+                userID: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+              definedData:
+              - originalHeading: PERIOD
+                value: 41 August 2022
+                phType: Date
+                mrcHeading: Period
+                name: DefinedData1
+                tag: Expiry_Date
+                parentID: Page:17D6A8C3-4C32-4E5D-AD1D-0A7321C66535
+                lineItemIndex: 4
+                section: RiskDetails
+              multiSectionDefinition: []
+            schema:
+              $ref: '#/components/schemas/DefinedData'
+      responses:
+        '200':
+          description: An array of all problems encountered when attempting to process the data. If this array is empty, the data will be accepted correctly if sent to a POST update.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      description: Problems encountered while processing the data
+                      example: Tags do not match input.
+                    datapoints:
+                      type: array
+                      items:
+                        type: object
+                        description: The data point, containing a flat representation of each data value
+                        properties:
+                          value:
+                            type: string
+                            description: The value to be tagged as data
+                            example: Acme Widgets Inc
+                          tag:
+                            type: string
+                            description: The defined data tag that identifies the purpose of the value
+                            example: Insured_Name
+                          mrcHeading:
+                            type: string
+                            description: The standard Lloyd's MRC name for the contract heading that the data item falls under
+                            example: Insured
+                          originalHeading:
+                            type: string
+                            description: The contract heading that the data item falls under as displayed in the contract
+                            example: INSURED
+                          name:
+                            type: string
+                            description: The name of the placeholder used to locate the precise position of the data item in the contract text
+                            example: DefinedData0
+                          parentID:
+                            type: string
+                            description: The reference identifying the page (or group) of data tags under a contract heading that the data item is part of
+                            example: Page:AB9B8D46-D6BC-442E-A01A-65E2F34096DF
+                          sectionIDs:
+                            type: array
+                            items:
+                              type: string
+                              description: The section ID which links to the items in the multiSectionDefinition array
+                              example: '2'
+                          lineItemIndex:
+                            type: number
+                            description: The numerical index specifying the position in the document of the contract heading containing the data item
+                            example: 3
+                          controlled:
+                            type: boolean
+                            description: When true, this flag indicates that the data item was created through a controlled process, for example Written Line or Signed Line percentages
+                            example: true
+              example:
+              - error: The tag Expiry_Date did not pass validation.
+                datapoints:
+                - tag: Expiry_Date
+                  lineItemIndex: 4
+                  value: 41 August 2022
+                  originalHeading: PERIOD
+                  name: DefinedData1
+                  phType: Date
+                  mrcHeading: Period
+                  parentID: Page:17D6A8C3-4C32-4E5D-AD1D-0A7321C66535
+                  section: RiskDetails
+components:
+  schemas:
+    DefinedData:
+      type: object
+      properties:
+        metadata:
+          type: object
+          description: metadata for the risk from which the defined data is taken
+          properties:
+            documentRevision:
+              type: string
+              example: 5-d5e0cc635b2d8ce4c07a7c9eda10baea
+              description: this must be sent to the update POST endpoint
+            userID:
+              type: string
+              example: MUB6A6C9F9-61C1-49EA-8C44-28EEAB3226F5
+              description: the user who requested the data
+            env:
+              type: string
+              example: apitest
+              description: the environment from which the data came, to avoid confusion of sandbox versus production
+            tagSet:
+              type: string
+              example: Whitespace
+              description: by default Whitespace, but for instance ACORDCDR if called with the tagset option
+            version:
+              type: string
+              example: '22.04'
+              description: currently 22.04, to allow for a future new format
+            fetchedAt:
+              type: string
+              example: '2022-05-27T13:35:24.000Z'
+              description: date and time the data was fetched
+            documentID:
+              type: string
+              example: IC442C1B93-DE19-4A52-A1D6-E3A4B47C4F6C
+              description: the risk ID
+        multiSectionDefinition:
+          type: array
+          items:
+            type: object
+            properties:
+              sectionName:
+                type: string
+                description: the name of the section
+                example: Hull
+              sectionID:
+                type: string
+                description: the number of the section starting from 1
+                example: '2'
+        contractHeadigs:
+          type: array
+          items:
+            type: object
+            properties:
+              lineItemIndex:
+                type: number
+                description: the numerical index of the JMRC line item
+                example: 3
+              mrcHeading:
+                type: string
+                description: the name of the heading
+                example: contractType
+              originalHeading:
+                type: string
+                description: the name of the heading as it will appear on the frontend
+                example: 'TYPE:'
+              section:
+                type: string
+                example: RiskDetails
+                descritpion: the section the heading is in
+        definedData:
+          type: array
+          items:
+            type: object
+            description: <div>The Data Point, containing a flat representation of each data value</div> <div>The version described is for the v22.04 release of Defined Data, accessed as /api/v22.04/data/$RiskID. It is a flat structure which repeats mrcHeading, originalHeading and lineItemIndex when the data is in the same line item of the risk. Within that, parentID is used to group related data values, to cover sectioned data or the rows of a table. </div> <div>We have versioned this as v22.04 to preserve it should a later format be required by our customers. Later versions will have vYY.MM instead.</div>
+            properties:
+              value:
+                type: string
+                description: the defined data value
+                example: Acme Widgets Inc
+              tag:
+                type: string
+                description: the tag that identifies the use of the data item
+                example: Bad_Tag_Value
+              mrcHeading:
+                type: string
+                description: the heading (from a fixed list) within the JMRC where the data item was located
+                example: Insured
+              originalHeading:
+                type: string
+                description: the heading visible to the user within the JMRC where the data item was located
+                example: INSURED
+              name:
+                type: string
+                description: the name of the defined data item's placeholder within the JMRC data
+                example: DefinedData0
+              parentID:
+                type: string
+                description: a code that links set of data tags within a heading
+                example: Page:AB9B8D46-D6BC-442E-A01A-65E2F34096DF
+              sectionIDs:
+                type: array
+                items:
+                  type: string
+                  description: section ID which links to the items in the multiSectionDefinition array
+                  example: '2'
+              vertical:
+                type: object
+                description: Info on any vertical if the tag is part of verticalised heading
+                properties:
+                  assignedCarrierPrefixes:
+                    type: array
+                    description: the channel prefixes of any carriers assigned to this vertical term
+                    items:
+                      type: string
+                      example: whitesails
+                  id:
+                    type: string
+                    example: V5A67D1D7-918D-4FEF-8B32-AF85A1B7F5A0_2
+                    description: id of the vertical term
+              lineItemIndex:
+                type: number
+                description: the numerical index of the JMRC line item where the data item was located
+                example: 3
+              controlled:
+                type: boolean
+                description: if included as true, indicates an item created through a controlled process as opposed to a broker manually tagging, such as Written or Signed Line values
+                example: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

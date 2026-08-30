@@ -1,0 +1,444 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Show Declaration to Facility API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Show Declaration to Facility
+paths:
+  /api/declarations/{riskID}/showToFacility/{facilityID}:
+    post:
+      summary: Sends a firm order declaration to a facility - Broker Only
+      description: This is the new endpoint for showing a Firm Order or Bindable Quoteto a Facility. It has better error handling and you no longer are required to send in information for sections that you are not showing. You also no longer need to use valueIsLeaderLineGuidance, as by default it will use the given line guidance for the leader. As before you can grab the list of markets avaiable to show on the facility by getting the Facility Id and use /combinedSets.
+      tags:
+      - Show Declaration to Facility
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the Firm Order or Bindable Quote that you want to show to the Facility
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO
+      - in: path
+        name: facilityID
+        schema:
+          type: string
+        required: true
+        description: The root ID of the facility you are showing to
+        example: ICE82100B0-2D8B-4DD5-883E-B3D2AC98DA81
+      requestBody:
+        description: Data specifying the filters to be applied
+        required: true
+        content:
+          application/json:
+            examples:
+              Leader with Followers:
+                description: Showing to the leader in a facility with one or more followers. (Please note the "Message" object is optional.)
+                value:
+                  declarationID: IC3972977E-4C37-4404-BF49-FC337528D3CB::FO
+                  facilityID: ICE82100B0-2D8B-4DD5-883E-B3D2AC98DA81
+                  sections:
+                  - carriers:
+                      offlineacquinex_ALL:
+                        role: leader
+                        show: true
+                        value: '6'
+                      offlineallianzglobal_ALL:
+                        role: agreementParty
+                        show: false
+                        value: '6'
+                      offlineallianzuk_ALL:
+                        role: agreementParty
+                        show: false
+                        value: '6'
+                      tomyunderwriting_ALL:
+                        role: agreementParty
+                        show: false
+                        ownerMemberID: MU999AF919-3FDB-49F2-B4C5-D42614B02E70
+                        value: '7'
+                    leader: false
+                    autoCascade: true
+                  messages: []
+                  stampVisibility: OwnStampOnly
+                  _rev: 1-c11c5f27d3602e85309717a21084bb2f
+              Sectioned Declaration to Sectioned Facility:
+                description: Showing seperate sections on a declaration to a multi section facility
+                value:
+                  declarationID: IC36CC1CFA-EF65-40B6-8120-576BC8081E43::FO
+                  facilityID: ICD77B5FD4-0790-42B9-BC53-65242FB96558
+                  sections:
+                  - carriers:
+                      tomyunderwriting_ALL:
+                        role: leader
+                        show: true
+                        ownerMemberID: MU999AF919-3FDB-49F2-B4C5-D42614B02E70
+                        value: '100'
+                    leader: false
+                    autoCascade: false
+                    orderToFacility: '100'
+                    sectionID: '1'
+                    facilitySectionID: '1'
+                  - carriers:
+                      tomyunderwriting_ALL:
+                        role: leader
+                        show: true
+                        ownerMemberID: MU999AF919-3FDB-49F2-B4C5-D42614B02E70
+                        value: '100'
+                    leader: false
+                    autoCascade: false
+                    orderToFacility: '100'
+                    sectionID: '2'
+                    facilitySectionID: '2'
+                  attachments: []
+                  messages: []
+                  stampVisibility: AllStamps
+                  _rev: 3-0cdff721f029e535d3a6d4d9b9a0fcce
+            schema:
+              type: object
+              properties:
+                _rev:
+                  type: string
+                  description: the revision number of the declaration
+                  example: 1-de9bba4cb8ea75572af90209683166c6
+                declarationID:
+                  type: string
+                  description: The ID of the declaration firm order
+                  example: IC9BCF6396-725E-477D-A864-B98BDB240150::FO
+                FacilityID:
+                  type: string
+                  description: The root ID of the facility agreement
+                  example: IC1326C845-9E83-4636-A3F2-D6488881AE8D
+                attachments:
+                  type: array
+                  items:
+                    type: string
+                  example: []
+                sections:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      carriers:
+                        type: object
+                        properties:
+                          tomyunderwriting_ALL:
+                            type: object
+                            properties:
+                              role:
+                                type: string
+                                description: role, i.e "leader" or "agreementParty"
+                                example: leader
+                                enums:
+                                - leader
+                                - agreementParty
+                                - notifyParty
+                                - nonNotifyParty
+                              show:
+                                type: boolean
+                                description: whether to show to carrier or not
+                                example: true
+                              suggestedStampIDs:
+                                type: array
+                                items:
+                                  type: string
+                                example: []
+                              value:
+                                type: string
+                                description: a percentage value, as per call description above
+                                example: '75'
+                          raji_AVIATION:
+                            type: object
+                            properties:
+                              role:
+                                type: string
+                                description: role, i.e "leader" or "agreementParty"
+                                example: agreementParty
+                              show:
+                                type: boolean
+                                description: whether to show to carrier or not
+                                example: false
+                              suggestedStampIDs:
+                                type: array
+                                items:
+                                  type: string
+                                example: []
+                              value:
+                                type: string
+                                description: a percentage value, as per call description above
+                                example: '25'
+                      leader:
+                        type: boolean
+                        example: false
+                        description: Whether you want the leader of this Facility to be the overall contract/section leader
+                      autoCascade:
+                        type: boolean
+                        description: Set Auto-Cascade to true or false when showing to leader
+                        example: false
+                      sectionID:
+                        type: string
+                        example: '1'
+                        description: The sectionID of the risk to show to the Facility
+                      facilitySectionID:
+                        type: string
+                        example: '1'
+                        description: The sectionID of the Facility you want to show to
+      responses:
+        '200':
+          description: successfully showed Declaration. Multiple doucments will be affected as a result so the response will show all of them
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ID of the affected document
+                      example: IC482AE651-226A-4D5B-9F04-7ACEAB8377F9::FO
+                    rev:
+                      type: string
+                      example: 7-910378b8f2fdfc1093ee630ef3ef9810
+                      description: the new revision of the affected document
+  /api/showDeclarationToFacility:
+    post:
+      summary: Please use the showToFacility Endpoint instead, this is the old version - Broker Only
+      description: <p>Options for this call are set via the JSON payload. If the facility has multiple members, then all underwriters must be included in the payload, even if you are not showing the contract to them. Note that the leader must write their line before you can show to agreement parties. When showing to the leader, set the "valueIsLeaderLineGuidance" key to true. This will mark the "value" key-pair as line guidance for the declaration. If this key is not set, "value" will be taken as the percentage of the facility line.
+      tags:
+      - Show Declaration to Facility
+      requestBody:
+        description: Data specifying the filters to be applied
+        required: true
+        content:
+          application/json:
+            examples:
+              Leader Only:
+                description: Showing to a leader-only facility. (Please note the "Message" object is optional.)
+                value:
+                  declarationID: IC97799647-4496-4760-B594-02AC726B0D7E::FO
+                  facilityID: ICAAA8E1C7-07AB-49DE-B18C-58CB7661B0E8
+                  sections:
+                  - carriers:
+                      tomyunderwriting_ALL:
+                        role: leader
+                        show: true
+                        suggestedStampIDs: []
+                        valueIsLeaderLineGuidance: true
+                        value: '100'
+                    leader: false
+                  messages:
+                  - channel: tomyunderwriting_ALL
+                    elements:
+                    - text: Please Agree
+                      index: 0
+                    greeting: Hello
+                    closing: ''
+                  _rev: 5-41117d3f92c39a4b7a957bbd627008e2
+              Leader with Followers:
+                description: Showing to the leader in a facility with one or more followers. (Please note the "Message" object is optional.)
+                value:
+                  declarationID: IC97799647-4496-4760-B594-02AC726B0D7E::FO
+                  facilityID: ICE82100B0-2D8B-4DD5-883E-B3D2AC98DA81
+                  sections:
+                  - carriers:
+                      offlineacquinex_ALL:
+                        role: notifyParty
+                        show: false
+                        suggestedStampIDs: []
+                        value: '12'
+                      offlineallianzglobal_ALL:
+                        role: agreementParty
+                        show: false
+                        suggestedStampIDs: []
+                        value: '12'
+                      offlineallianzuk_ALL:
+                        role: agreementParty
+                        show: false
+                        suggestedStampIDs: []
+                        value: '12'
+                      tomyunderwriting_ALL:
+                        role: leader
+                        show: true
+                        suggestedStampIDs: []
+                        valueIsLeaderLineGuidance: true
+                        value: '50'
+                    leader: false
+                  _rev: 7-27ece7da2a8b88e1c46ea2fbd4f129f1
+              Sectioned Facility:
+                description: Showing to section 1 in a leader-only facility. NOTE even though you aren''t showing to section 2 of the facility, you still need to provide the information and set show to false.
+                value:
+                  declarationID: ICC002A9C1-89C9-4B00-9807-4453DFA80853::FO
+                  facilityID: ICD77B5FD4-0790-42B9-BC53-65242FB96558
+                  sections:
+                  - carriers:
+                      tomyunderwriting_ALL:
+                        role: leader
+                        show: true
+                        value: '100'
+                    leader: false
+                    facilitySectionID: '1'
+                  - carriers:
+                      tomyunderwriting_ALL:
+                        role: leader
+                        show: false
+                    leader: false
+                    facilitySectionID: '2'
+                  attachments: []
+                  _rev: 16-f9a515436bfd93678c1f91b82b2fb737
+              Sectioned Declaration:
+                description: Showing section 1 of a multi-section risk to a facility
+                value:
+                  declarationID: IC3394C8E3-6413-4F7D-95A1-050C77D23839::FO
+                  facilityID: ICD1C4677F-B1AF-44C6-814A-0C81A761A0A6
+                  sections:
+                  - carriers:
+                      tomyunderwriting_ALL:
+                        role: leader
+                        show: true
+                        value: '100'
+                      whitesails_MARINE:
+                        role: agreementParty
+                        show: false
+                        value: '10'
+                    leader: true
+                    sectionID: '1'
+                  - carriers:
+                      tomyunderwriting_ALL:
+                        role: leader
+                        show: false
+                      whitesails_MARINE:
+                        role: agreementParty
+                        show: false
+                    leader: false
+                    sectionID: '2'
+                  messages: []
+                  stampVisibility: AllStamps
+                  _rev: 5-8c535aa2b11e954021a3e982caa00fac
+            schema:
+              type: object
+              properties:
+                _rev:
+                  type: string
+                  description: the revision number of the declaration
+                  example: 1-de9bba4cb8ea75572af90209683166c6
+                declarationID:
+                  type: string
+                  description: The ID of the declaration firm order
+                  example: IC9BCF6396-725E-477D-A864-B98BDB240150::FO
+                FacilityID:
+                  type: string
+                  description: The root ID of the facility agreement
+                  example: IC1326C845-9E83-4636-A3F2-D6488881AE8D
+                attachments:
+                  type: array
+                  items:
+                    type: string
+                  example: []
+                sections:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      carriers:
+                        type: object
+                        properties:
+                          tomyunderwriting_ALL:
+                            type: object
+                            properties:
+                              role:
+                                type: string
+                                description: role, i.e "leader" or "agreementParty"
+                                example: leader
+                                enums:
+                                - leader
+                                - agreementParty
+                                - notifyParty
+                                - nonNotifyParty
+                              show:
+                                type: boolean
+                                description: whether to show to carrier or not
+                                example: true
+                              suggestedStampIDs:
+                                type: array
+                                items:
+                                  type: string
+                                example: []
+                              value:
+                                type: string
+                                description: a percentage value, as per call description above
+                                example: '75'
+                              valueIsLeaderLineGuidance:
+                                type: boolean
+                                description: Whether you want to show the leader their line guidance either as the literal percentage value listed (true), or as a percentage of the leader''s facility line (false). For example if the leader line on the facility is 80% and you show this dec with a value of 50, then if this field is true, the line guidance will be shown as 50% to the leader, but if not then the line guidance to the leader will be 50% of 80%, or 40%.
+                          raji_AVIATION:
+                            type: object
+                            properties:
+                              role:
+                                type: string
+                                description: role, i.e "leader" or "agreementParty"
+                                example: agreementParty
+                              show:
+                                type: boolean
+                                description: whether to show to carrier or not
+                                example: false
+                              suggestedStampIDs:
+                                type: array
+                                items:
+                                  type: string
+                                example: []
+                              value:
+                                type: string
+                                description: a percentage value, as per call description above
+                                example: '25'
+                      leader:
+                        type: boolean
+                        example: false
+                        description: Whether you want the leader of this Facility to be the overall contract/section leader
+                      autoCascade:
+                        type: boolean
+                        description: Set Auto-Cascade to true or false when showing to leader
+                        example: false
+                      sectionID:
+                        type: string
+                        example: '1'
+                        description: The sectionID of the risk to show to the Facility
+                      facilitySectionID:
+                        type: string
+                        example: '1'
+                        description: The sectionID of the Facility you want to show to
+      responses:
+        '200':
+          description: successfully showed Declaration. Multiple doucments will be affected as a result so the response will show all of them
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ID of the affected document
+                      example: IC482AE651-226A-4D5B-9F04-7ACEAB8377F9::FO
+                    rev:
+                      type: string
+                      example: 7-910378b8f2fdfc1093ee630ef3ef9810
+                      description: the new revision of the affected document
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

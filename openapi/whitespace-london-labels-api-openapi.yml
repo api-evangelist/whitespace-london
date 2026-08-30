@@ -1,0 +1,197 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Labels API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Labels
+paths:
+  /api/labels/{root_or_label_ID}:
+    delete:
+      summary: Delete a label from a risk
+      tags:
+      - Labels
+      parameters:
+      - in: path
+        name: root_or_label_ID
+        schema:
+          type: string
+        required: true
+        description: The full document ID for the label document
+        example: IC7B4C4ECF-5340-4A88-B5BE-A4ECE8859B61::LBL::BLACKROBOT::AUTOAPIJENKINS201021::High-Priority::2021-11-23::08:36:55
+      responses:
+        '200':
+          description: A confirmation of the deletion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                    description: true if the label was deleted
+                  id:
+                    type: string
+                    description: The full document ID for the label document
+                    example: IC7B4C4ECF-5340-4A88-B5BE-A4ECE8859B61::LBL::BLACKROBOT::AUTOAPIJENKINS201021::High-Priority::2021-11-23::08:36:55
+                  rev:
+                    type: string
+                    description: the revision for the document
+                    example: 2-4412b4f96247795da30b19250bbf5e00
+    get:
+      summary: Gets an array of labels for the risk
+      tags:
+      - Labels
+      parameters:
+      - in: path
+        name: root_or_label_ID
+        schema:
+          type: string
+        required: true
+        description: The first part of the riskID, starting IC and stopping before any '::' delimiters. NEW in 2.20 - You can not add the same label multiple times on the same risk.
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      responses:
+        '200':
+          description: An array of label documents for the risk
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RWLabel'
+    post:
+      summary: Adds a label to a risk
+      description: The payload covers the label text and team
+      tags:
+      - Labels
+      parameters:
+      - in: path
+        name: root_or_label_ID
+        schema:
+          type: string
+        required: true
+        description: The first part of the riskID, starting IC and stopping before any '::' delimiters
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channel:
+                  description: the team channel for the label
+                  example: carrier_MARINECASUALTY
+                  type: string
+                title:
+                  description: the text of the label
+                  example: High Priority
+                  type: string
+      responses:
+        '200':
+          description: Response for adding a label succesfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: the document ID for the added label
+                    example: IC7B4C4ECF-5340-4A88-B5BE-A4ECE8859B61::LBL::BLACKROBOT::AUTOAPIJENKINS201021::High-Priority::2021-11-23::08:36:55
+                  rev:
+                    type: string
+                    description: the revision for the document
+                    example: 1-9eb01c8b711503293b57aafa63aa70c4
+                  ok:
+                    type: boolean
+                    description: true if the labels was saved
+                    example: true
+  /api/labels/suggested:
+    get:
+      summary: A list of frequently used labels to prompt the user§
+      tags:
+      - Labels
+      responses:
+        '200':
+          description: array of label strings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: High Priority
+  /api/labels/teamLabels:
+    get:
+      summary: A list of all labels applied to risks for the team
+      tags:
+      - Labels
+      responses:
+        '200':
+          description: An array of label documents across multiple risk
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RWLabel'
+components:
+  schemas:
+    RWLabel:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: the unique id of the label document
+          example: IC7B4C4ECF-5340-4A88-B5BE-A4ECE8859B61::LBL::BLACKROBOT::AUTOAPIJENKINS201021::High-Priority::2021-11-23::08:36:55
+        _rev:
+          type: string
+          description: the revision number of the document
+          example: 1-9eb01c8b711503293b57aafa63aa70c4
+        channels:
+          type: array
+          items:
+            type: string
+            description: channels for teams able to see the document
+            example: carrier_MARINECASUALTY
+        companyID:
+          type: string
+          description: the ID of the company
+          example: BLACKROBOT
+        createdAt:
+          type: string
+          description: the date and time the document was created
+          example: '2021-11-23 08:36:55'
+        rootID:
+          type: string
+          description: the rootID of the related risk
+          example: IC7B4C4ECF-5340-4A88-B5BE-A4ECE8859B61
+        teamID:
+          type: string
+          description: the ID of the team
+          example: AUTOAPIJENKINS201021
+        title:
+          type: string
+          description: the text of the label
+          example: High Priority
+        type:
+          type: string
+          description: the type of document
+          example: RWLabel
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

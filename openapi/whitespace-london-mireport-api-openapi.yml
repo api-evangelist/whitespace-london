@@ -1,0 +1,132 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform MI Report API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: MIReport
+paths:
+  /mireport/fetch:
+    post:
+      summary: Fetches the MI Report after a preparatory call to /mireport/prepare
+      description: <p>The MI Report data is prepared by a call to /mireport/prepare to ensure it is up to date. As such, /mireport/prepare should be called before each call to /mireport/fetch unless those are made in quick succession.</p> <p><b>Tall</b> format puts each underwriter's line on a separate line, and <b>Wide</b> format puts them all one the same line.</p> <p>Note that this endpoint is $ROOT/mireport/fetch, <b>not</b> $ROOT/api/mireport/fetch because it is run on separate resources from the main platform endpoints.</p>
+      tags:
+      - MIReport
+      requestBody:
+        description: Options for the report layout
+        required: true
+        content:
+          application/json:
+            examples:
+              Tall CSV:
+                description: Tall format as CSV
+                value:
+                  filename: MIREPORT.csv
+                  layout: tall
+                  format: csv
+            schema:
+              properties:
+                filename:
+                  type: string
+                  description: the filename to be returned
+                  example: mireport_071122.csv
+                layout:
+                  type: string
+                  description: either tall or wide - see description above
+                  example: tall
+                format:
+                  type: string
+                  description: either xlsx or csv
+                  example: xlsx
+      responses:
+        '200':
+          description: The report format as text, either in XLSX or CSV format
+  /mireport/prepare:
+    post:
+      summary: Prepares the MI Report data for a subsequent call to /mireport/fetch
+      description: <p>The MI Report data is prepared by a call to /mireport/prepare to ensure it is up to date. As such, /mireport/prepare should be called before each call to /mireport/fetch unless those are made in quick succession.</p> <p>Note that this endpoint is $ROOT/mireport/prepare, <b>not</b> $ROOT/api/mireport/prepare because it is run on separate resources from the main platform endpoints.</p>
+      tags:
+      - MIReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: the payload can just be an empty object '{}'
+              properties: {}
+      responses:
+        '200':
+          description: an array of MI Report data for each risk that has changed since the last call to /mireport/fetch
+          content:
+            application/json:
+              example:
+              - riskUpdatedAt: '2022-07-22 14:37:19'
+                type: RWMIReport
+                status: Signed
+                docOwnerCompany: Blackpool Broking Ltd
+                title: Underscore Casualty 15:36:53
+                underwriterDetails:
+                - carrierTeamName: PALERMO Casualty
+                  carrierName: Palermo Insurance Inc
+                  isOffPlatform: 'No'
+                  content:
+                  - writtenLineStampedAt: '2022-07-22 14:37:17'
+                    leadUWFlag: 'Yes'
+                    impressions:
+                    - writtenLinePerc: '100'
+                      stamp: Lloyd's Underwriter Syndicate No. 1231 PAL,Lloyd's,1231
+                      ref: '42234234'
+                      signedLinePerc: '100'
+                  carrierCompanyID: PALERMO
+                  signed: '2022-07-22 14:37:19'
+                  carrierTeamID: CASUALTY
+                  firmOrder: '2022-07-22 14:37:16'
+                  quotationRequest: '2022-07-22 14:36:56'
+                  quotedByUnderwriter: '2022-07-22 14:36:58'
+                  riskID: IC469FC973-2E3F-4756-9DDB-C8B9651FC118::QR2
+                  underwriterName: Dave Ruggero
+                brokerage: 29.75%
+                periodTo: 17 March 2022
+                umr: B1740UWL211472000
+                rootID: IC469FC973-2E3F-4756-9DDB-C8B9651FC118
+                brokerTeam: BLACKPOOL Casualty
+                refreshRequired: false
+                dataVersion: 6
+                limit: USD 3,242,342
+                premiumAll: USD 324,324  (100%)
+                contractType: Open Market
+                premiumCCY: USD
+                riskCreatedAt: '2022-07-22 14:36:54'
+                brokerCompanyName: Blackpool Broking Ltd
+                _id: IC469FC973-2E3F-4756-9DDB-C8B9651FC118::MIREP::blackpool_CASUALTY
+                premium: 324,324
+                insured: Underscore Casualty 15:36:53
+                brokerTeamID: CASUALTY
+                channels:
+                - blackpool_CASUALTY
+                dataCount: 56
+                brokerCompanyID: BLACKPOOL
+                brokerName: SoVAPI User
+                periodFrom: 17 March 2021
+                createdAt: '2022-11-07 11:08:41'
+              schema:
+                type: array
+                items:
+                  type: object
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

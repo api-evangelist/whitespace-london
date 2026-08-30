@@ -1,0 +1,874 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Lines API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Lines
+paths:
+  /api/lines/{rootID}/combinedSets:
+    get:
+      tags:
+      - Lines
+      summary: Get both written and signed line documents for a risk
+      parameters:
+      - in: path
+        name: rootID
+        schema:
+          type: string
+        required: true
+        description: 'The root ID of the risk, stopping before the :: suffix'
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      responses:
+        '200':
+          description: An array of Written and SignedLineSet documents for the risk
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RWSignedLineSet'
+        '401':
+          $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+components:
+  schemas:
+    ExtendedMRC:
+      type: object
+      description: JSON returned by getExtendedMRC including the Risk and a broader range of data
+      properties:
+        createdAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        updatedAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        type:
+          type: string
+          example: RWPlacing
+          description: RWPlacing in all cases
+        control:
+          $ref: '#/components/schemas/RWPlacing/properties/control'
+        channels:
+          type: array
+          items:
+            type: string
+            example: ajc_ALL
+        MRCContract:
+          $ref: '#/components/schemas/RWPlacing/properties/MRCContract'
+        questionnaire:
+          type: object
+          properties:
+            questionnaire:
+              type: object
+              properties:
+                questions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tag:
+                        type: string
+                        example: Pension_Or_Benefits_Plan_Company_Sponsor
+                        description: name of the tag
+                      text:
+                        type: string
+                        example: Does the company sponsor any pension or benefits plan?
+                        description: The Question text
+                      id:
+                        type: string
+                        example: Pension or Benefits Plan - Company Sponsor
+                        description: the id of the question
+                      hidden:
+                        type: boolean
+                        example: true
+                        description: If the question is hidden or not, usually because the dependant question has not been answered
+                      table:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            tag:
+                              type: string
+                              example: Asset_Amount_Year
+                            text:
+                              type: string
+                              example: Year
+                        required:
+                        - tag
+                        - text
+                    required:
+                    - text
+                    - id
+                    - tag
+              required:
+              - questions
+          required:
+          - questionnaire
+        proposedEndorsementFollowers:
+          type: object
+          description: an object where the keys are the carrier team ids and the values are 'unchosen', 'leader', 'agreementParty', 'notifyParty', 'nonNotifyParty'
+          properties:
+            palermo_ALL:
+              description: as an example, the follower status for the Palermo All Risks team
+              type: string
+              example: leader
+        provenance:
+          type: object
+          description: Meta-data about the document to aid with auditing
+          properties:
+            version:
+              type: string
+              description: Version message of the platform system that created the document
+              example: 2022-04-11@15:04:48
+            dataHash:
+              type: string
+              description: Data hash of the activity document
+              example: 485241de4e5bfc76a0e2ef8bab79350c02d3aa06846fd2996cbf9fc9a7840eb0
+            system:
+              type: string
+              description: The internal name of the platform system
+              example: LavAPI
+            userID:
+              type: string
+              description: The user ID of the user whose action generated the document
+              example: MUB980AB60-1C96-4092-A1B4-B8FB183360D1
+            writtenAt:
+              type: string
+              description: The creation date of the document, in YYYY-MM-DD hh:mm:ss format
+              example: '2022-05-09T11:44:41.000Z'
+            provHash:
+              type: string
+              description: Provisioning hash of the document
+              example: 76a209a16d8b9214e7a33483d78718cc1a7e7aed7047282d2c94417404558e2d
+        accountDocID:
+          type: string
+          example: ''
+        writtenLineSets:
+          type: array
+          description: the written lines on the contract
+          items:
+            $ref: '#/components/schemas/RWWrittenLineSet'
+        signedLineSets:
+          type: array
+          description: the signed lines on the contract
+          items:
+            $ref: '#/components/schemas/RWSignedLineSet'
+        platformReferences:
+          type: object
+          description: document and revision of the risk
+          properties:
+            RiskID:
+              type: string
+              description: the document ID of the risk
+              example: IC08B5EC17-5486-4323-82FC-62CC8C410EA0::FO::EN1
+            Revision:
+              type: string
+              description: the revision of the risk
+              example: 4-b63141573da07d5316b7a2b4585fbd2b
+    RWQuotedLine:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::BQ1::TOMYUNDERWRITING::ALL::BQL
+          description: The unique ID of this document
+        _rev:
+          example: 1-087952cf08f44dae740c1c001e2d5ab2
+          type: string
+          description: The revision number of this document
+        channels:
+          type: array
+          items:
+            type: string
+            example: akhil_ALL
+            description: The team IDs of the users who can see the risk
+        createdAt:
+          type: string
+          example: '2024-02-21 15:05:47'
+          description: The creation time of this document
+        line:
+          type: array
+          items:
+            type: object
+            description: The data for the line (Signed/Written/Quoted)
+            properties:
+              version:
+                type: number
+                example: 1
+                description: Version number
+              sectionIdentifiers:
+                type: array
+                description: The section/s of the risk to which the line is attached
+                items:
+                  type: string
+                  example: '2'
+                  description: The ID number of the section
+              businessUnit:
+                type: string
+                example: Catania Insurers Ltd
+                description: The business unit of the underwriter who put down the line
+              stampedAt:
+                type: string
+                description: The date and time when the line was put down
+                example: '2019-10-01 09:31:43'
+              subjectivities:
+                type: array
+                description: Details of any subjectivities added by the underwriter
+                items:
+                  type: object
+                  properties:
+                    approvedStatus:
+                      type: string
+                      enum:
+                      - notYetResponded
+                      - accepted
+                      - rejected
+                      - deadlineExpired
+                      description: Current status of the broker's response to the underwriter's subjectivity
+                    deadline:
+                      type: string
+                      example: '1708560000.0'
+                      description: The deadline for accepting the subjectivity response in unix epoch time
+                    identifier:
+                      type: string
+                      example: 59F40DB9-557C-46F6-95A0-179270BD5A44
+                      description: The uniqueID of the subjectivity
+                    text:
+                      type: string
+                      example: Sample Subjectivity
+                      description: Text detailing the requirement of the subjectivity
+              subjectivityMode:
+                type: string
+                enum:
+                - unchosen
+                - holdingCover
+                - noCoverGiven
+                description: Whether this line provides cover whilst the subjectivity is being agreed
+              subjectivitiesDeadlineNotRequired:
+                type: string
+                description: Details of any Subjectivites with no deadlines
+              canUpdateConditions:
+                type: boolean
+                example: true
+                description: Can line conditions be updated?
+              stamperChannel:
+                type: string
+                description: The team channel of the underwriter who put down the line
+                example: catania_ALL
+              stamperEmail:
+                type: string
+                example: underwriter.messina@wspt.co.uk
+                description: The email address of the underwriter who put down the line
+              stamperName:
+                type: string
+                description: The name of the underwriter who put down the line
+                example: Charles Messina
+              role:
+                type: string
+                description: The facility participation role of the underwriter
+                enum:
+                - leader
+                - agreementParty
+                - notifyParty
+                - nonNotifyParty
+                - doesNotApply
+              contractArchiveID:
+                type: string
+                description: The unique ID of the archived version of the risk document at the moment the line was put down
+                example: IC9642312E-D0E2-46FE-8B08-9C3002C1DEC9::FO::CATANIA::ALL::ARCH::5A734DCC-98CC-4C41-A42F-3A43A5E44EE0
+              toStand:
+                type: boolean
+                description: Whether the underwriter has marked the line To Stand, i.e. it may not be signed down
+                example: true
+              impressions:
+                type: array
+                description: Each item in the array represents an inked stamp detailing the line being put down.
+                items:
+                  type: object
+                  properties:
+                    riskCodes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          code:
+                            type: string
+                            example: H3
+                            description: The risk code allocated to the written line
+                          index:
+                            type: string
+                            description: The index order of the risk code
+                            example: '0'
+                    signedLinePercentageString:
+                      type: string
+                      description: The line percentage signed by the broker, which may be less than the underwriter's written line for SignedLineSets
+                      example: '44.0272'
+                    writtenLinePercentageString:
+                      type: string
+                      description: The line percentage written by the underwriter
+                      example: '45'
+                    uwRefs:
+                      type: array
+                      items:
+                        type: string
+                        description: The reference code assigned by the underwriter, which in many stamp types is limited to 12 alphanumeric characters
+                        example: FHSDJFSDHFSD
+                    descriptions:
+                      type: array
+                      items:
+                        type: string
+                    tiltAngleString:
+                      type: string
+                      description: The display angle used when rendering the stamp on the screen or printed page, used to give the appearance of manually stamped paper
+                      example: '0.04264535201250923'
+                    yearOfAccount:
+                      type: string
+                      example: '2024'
+                      description: The year of account for the contract, if the stamp has been put down by the contract leader
+                    stamp:
+                      $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
+                    stampIdentifiers:
+                      type: array
+                      items:
+                        properties:
+                          category:
+                            type: string
+                            description: The originating market or other authority that the stamp is put down under
+                            example: LloydsSyndicate
+                          categoryNumber:
+                            type: string
+                            description: The unique identifier of the capacity in the market, for example a bureau market code, Lloyds Syndicate Number, DUNS number, or other identifier
+                            example: '1314'
+                          categoryExtra:
+                            type: string
+                            description: The three-letter pseudonym of the Lloyd's of London or Lloyd's Brussels Syndicates that the underwriter belongs to, if any
+                            example: ASC
+                          splitPercentage:
+                            type: string
+                            description: If the stamp has been marked by the underwrite as split, this lists the line percentage falling under this particular syndicate or capacity. Split stamps have a separate stampIdentifiers array for each syndicate, and the combined splitPercentage values of all arrays in the split totals 100%
+                            example: 82%
+                          pseudonymn:
+                            type: string
+                            description: the pseudonymn used to identify the stamp
+                          coverholder:
+                            type: boolean
+                            example: false
+                            description: Whether the stamp is for a consortium
+                    brexitData:
+                      type: array
+                      description: Defunct from version 2.18. This array used to appear if the line bore an EEA mirror stamp.
+                      items:
+                        type: object
+                        properties:
+                          stamp:
+                            $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
+                          references:
+                            type: array
+                            items:
+                              type: string
+                              description: The reference code assigned by the underwriter, which in many stamp types is limited to 12 alphanumeric characters
+                              example: FHSDJFSDHFSD
+                          descriptions:
+                            type: array
+                            items:
+                              type: string
+                              description: Any extra description added for the mirror stamp
+                              example: This is a Description
+                          customDescription:
+                            type: string
+                            example: Applying to EEA
+                            description: Text appearing at the top of the mirror stamp
+                          stampIdentifiers:
+                            type: array
+                            items:
+                              properties:
+                                category:
+                                  type: string
+                                  description: The originating market or other authority that the stamp is put down under
+                                  example: LloydsSyndicate
+                                categoryNumber:
+                                  type: string
+                                  description: The unique identifier of the capacity in the market, for example a bureau market code, Lloyds Syndicate Number, DUNS number, or other identifier
+                                  example: '1314'
+                                categoryExtra:
+                                  type: string
+                                  description: The three-letter pseudonym of the Lloyd''s of London or Lloyd''s Brussels Syndicates that the underwriter belongs to, if any
+                                  example: ASC
+                                splitPercentage:
+                                  type: string
+                                  description: If the stamp has been marked by the underwriter as split, this lists the line percentage falling under this particular syndicate or capacity. Split stamps have a separate stampIdentifiers array for each syndicate, and the combined splitPercentage values of all arrays in the split totals 100%
+                                  example: 82%
+                                pseudonymn:
+                                  type: string
+                                  description: The pseudonymn used to identify the stamp
+                                coverholder:
+                                  type: boolean
+                                  example: false
+                                  description: Whether the stamp is for a consortium
+                    mirrorStamps:
+                      type: array
+                      description: This array only appears if the line bears one or more mirror stamps
+                      items:
+                        type: object
+                        properties:
+                          stamp:
+                            $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
+                          references:
+                            type: array
+                            items:
+                              type: string
+                              description: The reference code assigned by the underwriter, which in many stamp types is limited to 12 alphanumeric characters
+                              example: FHSDJFSDHFSD
+                          descriptions:
+                            type: array
+                            items:
+                              type: string
+                              description: Any extra description added for the mirror stamp
+                              example: This is a Description
+                          customDescription:
+                            type: string
+                            example: Contiguous 48 States only
+                            description: Text appearing at the top of the mirror stamp
+                          stampIdentifiers:
+                            type: array
+                            items:
+                              properties:
+                                category:
+                                  type: string
+                                  description: The originating market or other authority that the stamp is put down under
+                                  example: LloydsSyndicate
+                                categoryNumber:
+                                  type: string
+                                  description: The unique identifier of the capacity in the market, for example a bureau market code, Lloyd''s Syndicate Number, DUNS number, or other identifier
+                                  example: '1314'
+                                categoryExtra:
+                                  type: string
+                                  description: The three-letter pseudonym of the Lloyd''s of London or Lloyd''s Brussels Syndicates that the underwriter belongs to, if any
+                                  example: ASC
+                                splitPercentage:
+                                  type: string
+                                  description: If the stamp has been marked by the underwriter as split, this lists the line percentage falling under this particular syndicate or capacity. Split stamps have a separate stampIdentifiers array for each syndicate, and the combined splitPercentage values of all arrays in the split totals 100%
+                                  example: 82%
+                                pseudonymn:
+                                  type: string
+                                  description: The pseudonymn used to identify the stamp
+                                coverholder:
+                                  type: boolean
+                                  example: false
+                                  description: Whether the stamp is for a consortium
+              contractHash:
+                type: string
+                example: 81b7151e30ba40f098ab50cc3828e5ff6f5a725dbb76910416f018d3ca23638a
+                description: A hash of the contract data to verify the text being agreed to
+              stamperUserID:
+                type: string
+                example: MUB6090366-B15D-4C2B-BA54-EABE5F638FDF
+                description: The unique User ID of the underwriter
+              conditionsEnabled:
+                description: Whether conditions were attached to the written line
+                type: boolean
+                example: true
+              mode:
+                type: string
+                example: quoted
+              associatedFacilityId:
+                type: string
+                example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
+                description: The unique ID of the facility agreement that the declaration is attached to
+              associatedFacilitySectionID:
+                type: string
+                example: '1'
+                description: The ID number of the section of the facility agreement that the declaration is attached to
+              validityPeriod:
+                type: string
+                example: 60 Days
+                description: The validity period of the quote in days (only for quoted lines)
+              lineConditions:
+                type: array
+                description: The set of line conditions added by the underwriter
+                items:
+                  type: string
+                  example: Line To stand
+              conditionsApproved:
+                type: boolean
+                description: Whether the added line conditions have been agreed to by the broker
+                example: true
+        provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+        type:
+          type: string
+          description: The named JMRC type descriptor for this document
+          example: RWQuotedLine
+        updatedAt:
+          type: string
+          description: The date and time that this document was last updated
+          example: '2024-02-21 15:05:47'
+        isOffline:
+          type: boolean
+          example: true
+          description: Whether the line is assigned to an offline carrier.
+        parentDocID:
+          type: string
+          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::BQ1::TOMYUNDERWRITING::ALL
+          description: The unique ID number of the related RWPlacing document
+      required:
+      - _id
+      - _rev
+      - channels
+      - createdAt
+      - line
+      - parentDocID
+      - provenance
+      - type
+      - updatedAt
+    CorporateDetail:
+      type: object
+      properties:
+        admins:
+          type: array
+          description: List of user emails for administrators at the company
+          items:
+            type: string
+            example: sarah.kay.blackpool@wspt.co.uk
+        updatedAt:
+          type: string
+          description: The date and time the company's details were last updated
+          example: '2020-02-24T15:32:50.000Z'
+        teams:
+          type: array
+          items:
+            type: object
+            properties:
+              teamId:
+                type: string
+                description: Team identifier using uppercase letters with no punctuation
+                example: MARINECARGO
+              secondApprovalReviewers:
+                type: array
+                items:
+                  type: string
+                  description: Deprecated (see permissions array below). This array will always be empty. Formerly held userIDs of users with Internal Reviewer permission
+                  example: '-'
+              secondApprovalSelfApprovers:
+                type: array
+                items:
+                  type: string
+                  description: Deprecated (see permissions array below). This array will always be empty. Formerly held userIDs of users with Self-Approver permission
+                  example: '-'
+              name:
+                type: string
+                description: The name of the team, usually relating to the class of business worked on
+                example: Marine Cargo
+              channel:
+                type: string
+                description: The system channel for the team, comprising a lowercase version of the company ID, followed by underscrore and the team id
+                example: blackpool_MARINECARGO
+              isInactive:
+                type: boolean
+                example: false
+                description: True if the team has been marked as inactive
+              classOfBusiness:
+                type: array
+                items:
+                  type: string
+                  example: Marine
+                  description: The class(es) of business that are associated with the team
+        createdAt:
+          type: string
+          description: Time and date of creation
+          example: '2020-02-24 15:32:50'
+        companyId:
+          type: string
+          description: Company identifier using uppercase letters with no punctuation
+          example: OFFLINEBRITISHMARINE
+        isTestOnly:
+          type: boolean
+          description: True if the company account is just a test account with no live database access
+          example: false
+        channels:
+          type: array
+          description: Array with just one item, shared channel
+          items:
+            type: string
+            description: The value 'shared'
+            example: shared
+        stamps:
+          type: array
+          description: For (re)insurers, lists the stamps they have set up on the system. Empty for brokers
+          items:
+            type: object
+            properties:
+              bureauMarket:
+                type: string
+                example: Lloyd's
+              bureauMarketCode:
+                type: string
+                example: '1444'
+              bureauSubMarket:
+                type: string
+                example: PSM1
+              businessUnit:
+                type: string
+                example: Lloyd's Syndicate No.1444
+              stampType:
+                type: string
+                example: lloyds
+              uniqueID:
+                type: string
+                example: ST1843A345-1F69-435D-84E9-187BB3DD0F23
+        buttonStamps:
+          type: object
+          properties:
+            active:
+              type: boolean
+              example: true
+              description: True if the button stamp is available for users to apply
+            bureauMarketCode:
+              type: string
+              example: 5307/5
+            companyName:
+              type: string
+              example: Tomy
+            iconOnStamp:
+              type: boolean
+              description: True if an icon of any type is shown on the stamp, icon type is specified by stampType
+              example: true
+            layout:
+              type: object
+              description: The placement of name, type, and code data on the button stamp, each appearing once across the bottom, center, and top slots of the stamp
+              properties:
+                bottom:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+                center:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+                top:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+            stampID:
+              type: string
+              example: BTN-BAB19551-5557-4E6B-888B-E3B1B6A0E982
+              description: The unique ID of the button stamp, which always starts with BTN
+            stampType:
+              type: string
+              description: The type of icon displayed on the stamp. Note that other indicates no icon
+              enum:
+              - lloyds
+              - brexit
+              - other
+        settings:
+          type: object
+          properties:
+            canViewOfflineTeams:
+              type: boolean
+              description: True if the broking organisation is configured to save off-platform lines
+              example: false
+            mandatoryAuthStages:
+              type: array
+              items:
+                type: string
+                description: The list of contract stages at which second approval is required before a contract can proceed
+                example: brFirmOrder
+            digitiseOnlyToTemplate:
+              type: boolean
+              example: true
+              description: True if the broking organisation can only digitise imported contract files as templates
+        isOffline:
+          type: boolean
+          description: True for company accounts that are offline placeholders for organisations not yet using the platform
+          example: false
+        _id:
+          type: string
+          description: Reference ID for this company document
+          example: Corporate-BLACKPOOL
+        _rev:
+          type: string
+          description: Currect revision ID for this document
+          example: 3-a1df22093d0dc2978b87f396be3cd2fa
+        name:
+          type: string
+          description: The name of the company
+          example: Blackpool Insurance Brokers Ltd
+        role:
+          type: string
+          description: The organisation's role on the platform, either 'broker' or 'underwriter'
+          example: underwriter
+        authorityDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              authority:
+                type: string
+                example: Lloyd's (Syndicate Number)
+              pseudonymn:
+                type: string
+                example: '131'
+              registrationNumber:
+                type: string
+                example: '12313'
+        members:
+          type: array
+          items:
+            type: object
+            description: A user on the platform
+            properties:
+              name:
+                type: string
+                description: the user's name
+                example: Sarah Kay
+              email:
+                type: string
+                description: <p>email address for the user</p> <p>Note that for Data Protection reasons, the email is removed from some outputs, such as the /api/shared/corporate list. In these cases it can be removed by a call to /api/documents/Corporate-{CompanyID}.</p>
+                example: sarah.kay.blackpool@wspt.co.uk
+              currentState:
+                type: string
+                description: Live, Draft, Suspended etc
+                example: Live
+              uniqueID:
+                type: string
+                description: Live, Draft, Suspended etc
+                example: MUDA8AF5A8-98DF-4EF2-B2B8-4E069EDB7E8C
+              allowReporting:
+                type: boolean
+                description: whether or not the user may run the management reports
+                example: true
+              isOffPlatform:
+                type: boolean
+                description: indicates the user is "off platform"s
+                example: false
+              teams:
+                type: array
+                items:
+                  type: string
+                  description: list of teams the user belongs to
+                example:
+                - blackpool_MARINEHULL
+                - blackpool_MARINECARGO
+        permissions:
+          type: object
+          properties:
+            secondApprovalReviewers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's members with Internal Reviewer permission
+            secondApprovalSelfApprovers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's Internal Reviewers who also have the Self Approver permission
+            templateManagers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's members who have the Template Manager permission. This permission is only available to broking organisations
+        channelPrefix:
+          type: string
+          description: A lowercase version of companyId used for the beginning of team channels
+          example: blackpool
+        provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+    RWSignedLineSet:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL::SILS
+          description: The unique ID of this document
+        _rev:
+          example: 1-087952cf08f44dae740c1c001e2d5ab2
+          type: string
+          description: The revision number of this document
+        channels:
+          type: array
+          items:
+            type: string
+            example: akhil_ALL
+            description: The team channel names of the users who can see the risk these signed lines relate to
+        createdAt:
+          type: string
+          example: '2024-02-21 15:05:47'
+          description: The creation time of this document in YYYY-MM-DD HH:MM:SS format
+        contents:
+          type: array
+          items:
+            $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
+        provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+        type:
+          type: string
+          description: The JMRC type name for this document. Always RWSignedLineSet
+          example: RWSignedLineSet
+        updatedAt:
+          type: string
+          example: '2024-02-21 15:05:47'
+          description: The date and time that this document was last updated in YYYY-MM-DD HH:MM:SS format
+        isOffline:
+          type: boolean
+          example: true
+          description: True if the stamp is associated with an offline (re)insurer
+        parentDocID:
+          type: string
+          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL
+          description: The unique ID of the related RWPlacing document
+      required:
+      - _id
+      - _rev
+      - channels
+      - createdAt
+      - line
+      - parentDocID
+      - provenance
+      - type
+      - updatedAt
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

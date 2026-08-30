@@ -1,0 +1,627 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Activities API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Activities
+paths:
+  /api/activities/{riskID}:
+    get:
+      summary: A list of the activity documents that describe the history of one specific document instance
+      description: This endpoint returns the activity associated with one specific version of a contract or another single document associated with a risk. In most cases, this will be less useful than GET /activities/{RootID}/full, which returns all the activities associated with a root risk.
+      tags:
+      - Activities
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the specific document/contract instance to retrieve the list of activity documents for
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: The data associated with an individual activity document. Note that other, activity-specific objects may be present in some cases
+                  properties:
+                    _id:
+                      type: string
+                      description: 'The ID of the activity document that this object summarises '
+                      example: IC70286F5F-9457-41D7-AE71-16222BECEF21::ACTI::CF3DD75F-AC80-4CEA-BD3E-3E307F17A8BD
+                    activity:
+                      type: string
+                      description: The live description of the action that created this document (which sometimes extends the "hardcodedActivity" value to be more explicit). For a list of activities please refer to the /activities/filter/help endpoint
+                      example: Created New Placement
+                    channels:
+                      type: array
+                      description: A list of the user channels associated with the action that generated this activity document
+                      items:
+                        type: string
+                        description: The name of each channel
+                        example: carrier_MARINECASUALTY
+                    _rev:
+                      type: string
+                      description: The system-generated version number of the activity document. The number before the - is generated sequentially, starting at 1
+                      example: 1-a302cd4445e3d12c33fdabf467e2789b
+                    userID:
+                      type: string
+                      description: The user ID of the user who took the action generating the activity document
+                      example: MUD38EC011-780A-42D3-94DA-FD9063F5DAF9
+                    hardcodedActivity:
+                      type: string
+                      description: The hardcoded description of the action that created this document (which is sometimes augmented by the "activity" value). For a full list of activities please refer to the /activities/filter/help endpoint
+                      example: Created New Placement
+                    provenance:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+                    parentDocID:
+                      type: string
+                      description: The ID of the risk or document that the activity document relates to
+                      example: IC70286F5F-9457-41D7-AE71-16222BECEF21
+                    type:
+                      type: string
+                      description: The internal system identifier for activity documents, which will always be RWActivity
+                      example: RWActivity
+                    createdAt:
+                      type: string
+                      description: The creation date of the activity document, in YYYY-MM-DD hh:mm:ss format
+                      example: '2022-05-09 11:44:41'
+                    apnsData:
+                      $ref: '#/components/schemas/RWComment/properties/apnsData'
+                    linkedArchiveID:
+                      type: string
+                      description: The archive copy of the risk or document that the action was applied to
+                      example: IC70286F5F-9457-41D7-AE71-16222BECEF21::ARCH::96C8C81A-C8B6-44AA-BF4C-03FE2812AF56
+        '401':
+          $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+  /api/activities/{rootID}/full:
+    get:
+      summary: A list of the activity documents that describe the full history of a root risk
+      description: This endpoint returns the activities that have been performed on all of the contract instances falling under a root risk and all of its associated attachments or other documents. The activity documents summarised by this endpoint record the complete history of that risk across its lifespan. To target one specific version of a contract, or one attachment, endorsement, or other document, use GET /activities/{RiskID}, or to target a specific activity type within a date range across all root risks visible to the user, use GET /activities/filter.
+      tags:
+      - Activities
+      parameters:
+      - in: path
+        name: rootID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of a root risk to retrieve the complete list of activity documents for
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/paths/~1api~1activities~1%7BriskID%7D/get/responses/200/content/application~1json/schema/items'
+        '401':
+          $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+  /api/activities/filter/help:
+    get:
+      tags:
+      - Activities
+      summary: A help file detailing use of the POST /activities/filter API
+      description: This call returns instructions on using the POST /activities/filter API to return a list of activity documents visible to the user, filtered by activity type and, optionally, date and time. The instructions include a list of the most commonly filtered activities. For a complete and fully up-to-date list of activities, please email support@whitespace.co.uk
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                messages:
+                - These are the most useful activities.
+                - The input to /activities/filter needs an exact match, including case, punctuation and whitespace.
+                - For a complete list email support@whitespace.co.uk
+                - The from input can be a date as 'YYYY-MM-DD' or 'YYYY-MM-DD hh:mm:ss', or 'N minutes / hours / days' to cover a timespan up to now
+                Sample input 1:
+                  from: '2019-11-29'
+                  activity: Signed Lines
+                  to: '2019-11-29 23:59:59'
+                Sample input 2:
+                  from: 2 hours
+                  activity: Quoted
+                Sample input 3:
+                  activity: Signed Lines
+                activities:
+                - Accepted a Quote
+                - Accepted a Quote Request
+                - Accepted on behalf of Buyer
+                - Added an Attachment
+                - Added an Attachment from a Subjectivity Response
+                - Changed or Added a Line item
+                - Created New Placement
+                - Declined Quote Request
+                - Line Written
+                - Offered Quote
+                - Placing Updated
+                - Quote Not Taken Up
+                - Quote Requested
+                - Quoted
+                - Requested a Line
+                - Sent to Broker
+                - Showed to Following Market
+                - Signed Lines
+                - Subjectivities/Line Conditions Accepted
+                - Subjectivities/Line Conditions Rejected
+        '401':
+          $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+  /api/activities/filter:
+    post:
+      tags:
+      - Activities
+      summary: Fetch a list of all activity visible to the user matching a specific activity type and optional date range
+      description: A parameter matching a single activity is required for this call, but the 'from' and 'to' parameters are optional, and take a date/time block in yyyy-mm-dd hh:mm:ss format. If the date parameters are missing, all visible activity documents matching the activity will be returned. Note that the 'from' parameter can instead accept a duration. If a duration is used, it is calculated backwards from the present time, and the 'to' parameter should be omitted. See GET /activities/filter/help for example payloads and a list of commonly requested activities.
+      requestBody:
+        description: Array of filter criteria
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                activity:
+                  type: string
+                  description: Only activity documents containing an activity key-pair with a value identical to this parameter will be returned by the call.
+                  example: Line Written
+                from:
+                  type: string
+                  description: Match documents no older than (a) a date/time in yyyy-mm-dd hh:mm:ss format, or (b) a period of time in minutes, hours, or days, e.g. 5 minutes, 18 hours, 365 days. If omitted, all matching documents in the database up to the 'to' parameter will be returned.
+                  example: '2019-11-29T23:59:59.000Z'
+                to:
+                  type: string
+                  description: Match documents no more recent than a date/time in yyyy-mm-dd hh:mm:ss format. If omitted, all matching documents up to the present time will be returned.
+                  example: '2022-07-31T23:59:59.000Z'
+      responses:
+        '200':
+          description: A list of activity document summary arrays
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RWActivity'
+        '401':
+          $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+components:
+  schemas:
+    ExtendedMRC:
+      type: object
+      description: JSON returned by getExtendedMRC including the Risk and a broader range of data
+      properties:
+        createdAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        updatedAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        type:
+          type: string
+          example: RWPlacing
+          description: RWPlacing in all cases
+        control:
+          $ref: '#/components/schemas/RWPlacing/properties/control'
+        channels:
+          type: array
+          items:
+            type: string
+            example: ajc_ALL
+        MRCContract:
+          $ref: '#/components/schemas/RWPlacing/properties/MRCContract'
+        questionnaire:
+          type: object
+          properties:
+            questionnaire:
+              type: object
+              properties:
+                questions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tag:
+                        type: string
+                        example: Pension_Or_Benefits_Plan_Company_Sponsor
+                        description: name of the tag
+                      text:
+                        type: string
+                        example: Does the company sponsor any pension or benefits plan?
+                        description: The Question text
+                      id:
+                        type: string
+                        example: Pension or Benefits Plan - Company Sponsor
+                        description: the id of the question
+                      hidden:
+                        type: boolean
+                        example: true
+                        description: If the question is hidden or not, usually because the dependant question has not been answered
+                      table:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            tag:
+                              type: string
+                              example: Asset_Amount_Year
+                            text:
+                              type: string
+                              example: Year
+                        required:
+                        - tag
+                        - text
+                    required:
+                    - text
+                    - id
+                    - tag
+              required:
+              - questions
+          required:
+          - questionnaire
+        proposedEndorsementFollowers:
+          type: object
+          description: an object where the keys are the carrier team ids and the values are 'unchosen', 'leader', 'agreementParty', 'notifyParty', 'nonNotifyParty'
+          properties:
+            palermo_ALL:
+              description: as an example, the follower status for the Palermo All Risks team
+              type: string
+              example: leader
+        provenance:
+          type: object
+          description: Meta-data about the document to aid with auditing
+          properties:
+            version:
+              type: string
+              description: Version message of the platform system that created the document
+              example: 2022-04-11@15:04:48
+            dataHash:
+              type: string
+              description: Data hash of the activity document
+              example: 485241de4e5bfc76a0e2ef8bab79350c02d3aa06846fd2996cbf9fc9a7840eb0
+            system:
+              type: string
+              description: The internal name of the platform system
+              example: LavAPI
+            userID:
+              type: string
+              description: The user ID of the user whose action generated the document
+              example: MUB980AB60-1C96-4092-A1B4-B8FB183360D1
+            writtenAt:
+              type: string
+              description: The creation date of the document, in YYYY-MM-DD hh:mm:ss format
+              example: '2022-05-09T11:44:41.000Z'
+            provHash:
+              type: string
+              description: Provisioning hash of the document
+              example: 76a209a16d8b9214e7a33483d78718cc1a7e7aed7047282d2c94417404558e2d
+        accountDocID:
+          type: string
+          example: ''
+        writtenLineSets:
+          type: array
+          description: the written lines on the contract
+          items:
+            $ref: '#/components/schemas/RWWrittenLineSet'
+        signedLineSets:
+          type: array
+          description: the signed lines on the contract
+          items:
+            $ref: '#/components/schemas/RWSignedLineSet'
+        platformReferences:
+          type: object
+          description: document and revision of the risk
+          properties:
+            RiskID:
+              type: string
+              description: the document ID of the risk
+              example: IC08B5EC17-5486-4323-82FC-62CC8C410EA0::FO::EN1
+            Revision:
+              type: string
+              description: the revision of the risk
+              example: 4-b63141573da07d5316b7a2b4585fbd2b
+    RWActivity:
+      type: object
+      description: The summary data associated with an individual activity document.
+      properties:
+        _id:
+          type: string
+          description: The RiskID of the activity document that this JSON object summarises
+          example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO::ACTI::CARRIER::MARINECASUALTY::LGUS
+        activity:
+          type: string
+          description: The live description of the action that created this document (which sometimes extends the "hardcodedActivity" value to be more explicit)
+          example: Requested a Line
+        apnsData:
+          type: object
+          $ref: '#/components/schemas/RWComment/properties/apnsData'
+        channels:
+          type: array
+          description: A list of the user channels associated with the action that generated this activity document
+          items:
+            type: string
+            description: The name of each channel
+            example: carrier_MARINECASUALTY
+        parentDocID:
+          type: string
+          description: The RiskID of the specific contract version associated with the activity document
+          example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57::FO
+        hardcodedActivity:
+          type: string
+          description: The hardcoded description of the action that created this document (which sometimes is augmented by the "activity" value)
+          example: Line Written
+        linkedArchiveID:
+          type: string
+          description: ID of the Archived document
+        RWSignedLineSet:
+          type: array
+          items:
+            type: object
+            description: The data for the signed line
+            properties:
+              sectionIdentifiers:
+                type: array
+                description: the sections of the risk to which the signed line is attached
+                items:
+                  type: object
+              businessUnit:
+                type: string
+                example: Catania Insurers Ltd
+                description: the business unit for the underwriter who put down the line
+              stampedAt:
+                type: string
+                description: The moment when the line was put down in YYYY-MM-DD hh:mm:ss format'
+                example: '2019-10-01 09:31:43'
+              subjectivities:
+                type: array
+                description: detail of any subjectivities added by the underwriter
+                items:
+                  type: object
+              stamperChannel:
+                type: string
+                description: channel for the underwriter who put down the line
+                example: catania_ALL
+              contractArchiveID:
+                type: string
+                description: the archive of the risk document at the moment the line was put down
+                example: IC9642312E-D0E2-46FE-8B08-9C3002C1DEC9::FO::CATANIA::ALL::ARCH::5A734DCC-98CC-4C41-A42F-3A43A5E44EE0
+              toStand:
+                type: boolean
+                description: true if the underwriter has put down the stamp To Stand, i.e. may not be signed down
+              impressions:
+                type: array
+                description: each item represents the use of an inked stamp to indicate the line being put down
+                items:
+                  type: object
+                  properties:
+                    riskCodes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          code:
+                            type: string
+                            example: H3
+                            description: the risk code allocated to the written line
+                          index:
+                            type: string
+                            description: the index order of the risk code
+                            example: '0'
+                    signedLinePercentageString:
+                      type: string
+                      description: the percentage signed by the broker, which may be less than the written line
+                      example: '44.0272'
+                    writtenLinePercentageString:
+                      type: string
+                      description: the percentage written by the underwriter
+                      example: '45'
+                    uwRefs:
+                      type: array
+                      items:
+                        type: string
+                        description: the code allocated by the underwriter, frequently limited to 12 letters and numbers
+                        example: FHSDJFSDHFSD
+                    tiltAngleString:
+                      type: string
+                      description: the angle of the stamp on the printed page, to give the appearance of manually stamped paper
+                      example: '0.04264535201250923'
+                    stamp:
+                      type: object
+                      properties:
+                        bureauMarket:
+                          type: string
+                          description: the bureau market for the underwriting 'paper' used to provide cover
+                          example: Lloyd's
+                        uniqueID:
+                          type: string
+                          description: the platform's internal unique code for this stamp
+                          example: STBA841D6D-EB9F-4729-96BA-67BE91C73CE8
+                        businessUnit:
+                          type: string
+                          description: the business unit for the underwriting 'paper' used to provide cover
+                          example: Lloyd's Syndicate 1314
+                        stampType:
+                          type: string
+                          description: to distinguish between Lloyd's and the Company Market
+                          example: lloyds
+                        bureauMarketCode:
+                          type: string
+                          description: the bureau market code, which is the Syndicate Number within Lloyd's
+                          example: '1314'
+                        bureauSubMarket:
+                          description: the bureau sub market for the underwriting 'paper' used to provide cover
+                          type: string
+                    stampIdentifiers:
+                      type: array
+                      items:
+                        properties:
+                          category:
+                            type: string
+                            description: the originating market that the bureau or syndicate belongs to
+                            example: LloydsSyndicate
+                          categoryNumber:
+                            type: string
+                            description: the bureau market code, Syndicate Number, or other unique identifier
+                            example: '1314'
+                          categoryExtra:
+                            type: string
+                            description: returned only for Lloyd's Syndicates and Lloyd's Brussels underwriters, listing their three-letter pseudonym
+                            example: ASC
+                          splitPercentage:
+                            type: string
+                            description: returned only for stamps that have a fixed split between multiple syndicates, listing the percentage falling under this syndicate. Split stamps have a separate stampIdentifiers block for each syndicate, and the combined splitPercentage totals 100%
+                            example: 82%
+              contractHash:
+                type: string
+                example: 81b7151e30ba40f098ab50cc3828e5ff6f5a725dbb76910416f018d3ca23638a
+                description: a hash of the contract data to verify the text being agreed to
+              stamperUserID:
+                type: string
+                example: MUB6090366-B15D-4C2B-BA54-EABE5F638FDF
+                description: the unique platform code for the individual underwriter
+              conditionsEnabled:
+                description: true if conditions were attached to the written line
+                type: boolean
+              mode:
+                type: string
+                example: written
+              lineConditions:
+                type: array
+                description: the set of line conditions added by the underwriter
+                items:
+                  type: object
+              conditionsApproved:
+                type: boolean
+                description: true if the conditions applied have been approved
+        createdAt:
+          type: string
+          description: The creation date of the activity document, in YYYY-MM-DD hh:mm:ss format
+          example: '2021-07-28T13:15:12.000Z'
+        userID:
+          type: string
+          description: The user ID of the user who took the action generating the activity document
+          example: MUE516933D-D0B9-46C5-8D99-A4D5A6D9D37B
+    RWComment:
+      type: object
+      description: A document that represents one comment in a chat
+      properties:
+        _id:
+          type: string
+          description: unique document id for the comment
+          example: IC2C2C364A-F483-48F3-A927-05BC703CFCE3::CHAT::901F20D1-6BC8-46C6-BAA4-92B64507D7A2
+        apnsData:
+          type: object
+          description: data for notifications to be sent alerting users about the activity. NOTE - this is for internal Whitespace usage and so the data can be subject to change. Please do use this object for integration purposes
+          properties:
+            channels:
+              type: array
+              description: A list of the channels for users to receive the notification
+              items:
+                type: string
+                description: the team channel
+                example: carrier_MARINECASUALTY
+            data:
+              type: object
+              properties:
+                docId:
+                  type: string
+                  description: the risk root ID associated with the activity
+                  example: IC6A318B90-C319-4D2A-9088-98AD1B313556
+            dataForEmail:
+              type: object
+              properties:
+                riskInformation:
+                  type: array
+                  items:
+                    type: string
+                    description: an array of text strings to be displayed in the notification message
+                    example: Acme Widgets Inc USD 25,000,000 B0999JC2311220803
+                userID:
+                  type: string
+                  description: the ID of the user whose action triggered the activity
+                  example: MUB70853CF-3221-4FD4-8A30-12B05EAD2EA5
+            subscriptionRootID:
+              type: string
+              description: the risk root ID associated with the activity
+              example: IC6A318B90-C319-4D2A-9088-98AD1B313556
+            subtitle:
+              type: string
+              description: text subtitle for the message
+              example: 'Messina Insurance Co
+
+                Aviation Hull and Liability Insurance'
+            title:
+              type: string
+              description: text title for the message
+              example: Declined Quote Request
+        _rev:
+          type: string
+          example: 1-141df67df9e5eaacd0830c65e47a0bf9
+        createdAt:
+          type: string
+          example: '2021-08-04 15:18:02'
+        updatedAt:
+          type: string
+          example: '2021-08-04 15:18:02'
+        type:
+          type: string
+          example: RWComment
+          description: RWComment in all cases
+        associatedRootID:
+          type: string
+          example: IC2C2C364A-F483-48F3-A927-05BC703CFCE3
+          description: The root ID for the risk which the chat relates to
+        channels:
+          type: array
+          description: The team channels of users allowed to see the document
+          items:
+            type: string
+            example: blackpool_TERRORISM
+        comment:
+          type: string
+          description: The text of the comment
+          example: Is this within your risk criteria?
+        brokerMessageDocID:
+          example: IC09F74B05-AC0C-4FCA-A0C0-1FD94D4BEA2A::FO::BrokerMessage::tomyunderwriting_ALL
+          type: string
+          description: The ID of the broker message, if the comment was a broker message
+        brokerMessageStage:
+          type: string
+          example: FirmOrder
+          description: The stage of the risk when the broker message was shown
+        user:
+          type: string
+          description: The ID of the user who sent the message
+          example: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+        createdAtMilliseconds:
+          type: integer
+          example: 1709213501333
+          description: The value of createdAt in miliseconds
+        isInternal:
+          type: boolean
+          example: false
+          description: True if the message is internal
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

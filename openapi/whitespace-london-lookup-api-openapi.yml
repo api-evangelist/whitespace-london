@@ -1,0 +1,678 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Lookup API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Lookup
+paths:
+  /api/lookup/check/{heading}:
+    get:
+      summary: check whether a line item heading maps to one from the enumerated MRC Heading list
+      description: <p>The Platform uses Original Heading for the text to display to the user, and holds a Name Variation and MRC Heading for unambiguous identification.</p> <p>Try this endpoint with values such as Rate, Company, LossLimit, NoSuchHeading.</p> <p>In the 'maps to' case, the headings are shown both as the Title Case enumerated value (e.g. LimitOfLiability) and the multi-word display value (e.g. Limit of Liability).</p>
+      tags:
+      - Lookup
+      parameters:
+      - in: path
+        name: heading
+        required: true
+        schema:
+          type: string
+          description: The text of the heading to be checked
+          example: rate
+      responses:
+        '200':
+          description: succesful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: either 'not mapped' or 'maps to a heading of...'
+                    example: LossLimit maps to a Heading of LimitOfLiability = Limit of Liability
+  /api/lookup/headings:
+    get:
+      summary: get the enumerated list of MRC headings
+      tags:
+      - Lookup
+      responses:
+        '200':
+          description: succesful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  headings:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                    - UMR
+                    - AttachingToLineslipContractOrBindingAuthorityAgreementNumber
+                    - ContractType
+                    - ProposalForm
+                    - UMR
+                    - AttachingToLineslipContractOrBindingAuthorityAgreementNumber
+                    - ContractType
+                    - ProposalForm
+                    - Insured
+                    - OriginalInsured
+                    - Retrocedent
+                    - OriginalReinsured
+                    - Reinsured
+                    - PrincipalAddress
+                    - Period
+                    - OriginalPolicyPeriod
+                    - Conveyance
+                    - Vessels
+                    - Interest
+                    - AdditionalCoverages
+                    - LimitOfLiability
+                    - AggregateLimit
+                    - UnderlyingLimits
+                    - Excess
+                    - Sublimits
+                    - Deductibles
+                    - ReInsuredsRetention
+                    - ReinstatementProvisions
+                    - IndemnityPeriod
+                    - Exclusions
+                    - Situation
+                    - BasisOfValuation
+                    - Conditions
+                    - OriginalConditions
+                    - LossPayee
+                    - CoReinsuranceWarranty
+                    - Notices
+                    - ExpressWarranties
+                    - ConditionsPrecedent
+                    - Subjectivities
+                    - ChoiceOfLawAndJurisdiction
+                    - Arbitration
+                    - Premium
+                    - PremiumTransfer
+                    - PremiumPaymentTerms
+                    - Bordereaux
+                    - Commission
+                    - EstimatedPremiumIncome
+                    - TaxesPayableByInsuredAndAdministeredByInsurers
+                    - TaxesPayableByInsurersAndAdministeredByInsuredOrTheirAgent
+                    - ProfitCommission
+                    - RecordingTransmittingAndStoringInformation
+                    - InsurerContractDocumentation
+                    - Form
+                    - SlipPolicyNotice
+                    - PremiumReserveAndInterest
+                    - LossReserveAndInterest
+                    - CashLossLimit
+                    - Portfolio
+                    - PremiumPortfolio
+                    - LossPortfolio
+                    - Accounts
+                    - NoticeOfCancellationProvisions
+                    - BasisOfLoss
+                    - PriorAndPendingLitigation
+                    - CountryOfInsured
+                    - EndorsementAgreements
+                    - UseToWhichInsuredPropertyIsPut
+                    - OccupationOfTheInsuredPersons
+                    - DisputeResolution
+                    - RetroactiveDate
+                    - InsurerDocumentProduction
+                    - ScopeOfInsurance
+                    - EstimatedPeriod
+                    - Information
+                    - ReinsurersLiability
+                    - OrderHereon
+                    - BasisOfWrittenLines
+                    - BasisOfSignedLines
+                    - SigningProvisions
+                    - SyndicatePseudonym
+                    - SyndicateIdNumber
+                    - CompanyName
+                    - CompanyIdNumber
+                    - UnderwriterReference1
+                    - UnderwriterReference2
+                    - InsurersWrittenLine
+                    - InsurersWrittenLineInUnits
+                    - InsurersWrittenLineInLines
+                    - LineConditions
+                    - SigningInstructions
+                    - InsurersSignedLine
+                    - ProvisionsSpecificToPanelSecurity
+                    - SlipLeader
+                    - BureauLeader
+                    - BasisOfAgreementToContractChanges
+                    - OtherAgreementPartiesForContractChangesForPart2GUAChangesOnly
+                    - AgreementPartiesForContractChangesForTheirProportionOnly
+                    - BasisOfClaimsAgreement
+                    - ClaimsAgreementParties
+                    - ClaimsAdministration
+                    - RulesAndExtentOfAnyOtherDelegatedClaimsAuthority
+                    - ExpertsFeesCollection
+                    - SettlementDueDate
+                    - InstalmentPremiumPeriodOfCredit
+                    - AdjustmentPremiumPeriodOfCredit
+                    - BureauxArrangements
+                    - NonBureauxArrangements
+                    - SingleClaimsAgreementPartyArrangements
+                    - TaxPayableByInsurers
+                    - CountryOfOrigin
+                    - OverseasBroker
+                    - SurplusLinesBroker
+                    - StateOfFiling
+                    - LicenseInformation
+                    - USClassification
+                    - NAICCodes
+                    - AllocationOfPremiumToCoding
+                    - AllocationOfPremiumToYearsOfAccount
+                    - FsaClientClassification
+                    - RegulatoryClientClassification
+                    - ForeignAccountTaxComplianceAct
+                    - IsTheBusinessSubjectToDistanceMarketingDirective
+                    - WholesaleBroker
+                    - RetailBroker
+                    - FeePayableByClient
+                    - TotalBrokerage
+                    - RetailBrokerage
+                    - WholesaleBrokerage
+                    - OtherDeductionsFromPremium
+                    - CustomMRCHeading
+                    - NonMRCHeading
+                    - EndorsementName
+                    - EndorsementNumber
+                    - EndorsementReference
+                    - EndorsementEffectiveDate
+                    - ContractChanges
+                    - PremiumProcessingType
+                    - LineSlipReference
+                    - BrokerName
+                    - BrokerAddress
+                    - AuthorisedClassesOfBusinessAndCoverages
+                    - ExclusionsWithinTheAuthorisedClassesOfBusinessAndCoverages
+                    - PeriodFromDate
+                    - PeriodToDate
+                    - ExtensionsOfPeriodOfLineSlip
+                    - MaximumPeriodOfEachInsuranceBound
+                    - MaximumLimitsOfLiability
+                    - MaximumAggregateLimits
+                    - TerritoriesFromWhichEachInsuranceMayBeBound
+                    - TerritorialLimitsOfEachInsuranceBound
+                    - ConditionsOfEachInsuranceBound
+                    - NoticesOfEachInsuranceBound
+                    - ExpressWarrantiesOfEachInsuranceBound
+                    - ConditionsPrecedentOfEachInsuranceBound
+                    - ChoiceOfLawAndJurisdictionOfTheLineSlip
+                    - ChoiceOfLawAndJurisdictionOfEachInsuranceBound
+                    - GrossPremiumIncomeLimit
+                    - NotifiablePercentageOfTheGrossPremiumIncomeLimitNotToExceed
+                    - PremiumBordereauxInterval
+                    - TaxesPayableByInsuredAndAdministeredByInsurersForEachInsuranceBound
+                    - CancellationNoticeOfTheLineSlip
+                    - AgreementPartiesForLineSlipChanges
+                    - BasisOfAgreementToLineSlipChanges
+                    - ScopeAndLimitsOfDelegationForLineSlipChanges
+                    - AgreementPartiesForEachInsuranceBoundAndAlterationsThereto
+                    - BasisOfAgreementForEachInsuranceBoundAndAlterationsThereto
+                    - ScopeAndLimitsOfDelegationForInsurancesBoundAndAlterationsThereto
+                    - LineSlipAdministration
+                    - Unknown
+  /api/lookup/endorsementHeadingsInSection/{section}:
+    get:
+      summary: list the headings associated with a specific endorsement section
+      tags:
+      - Lookup
+      parameters:
+      - in: path
+        name: section
+        description: The section - RiskAndEndorsementIdentificationDetails, ContractChanges, EndorsementData, Information, ContractAdministrationAndAdvisory
+        required: true
+        schema:
+          type: string
+          example: ContractChanges
+      responses:
+        '200':
+          description: note that the JSON tag key contains the input section e.g. 'ContractChanges headings'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ContractChanges_headings:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                    - EndorsementEffectiveDate
+                    - ContractChanges
+  /api/lookup/headingsInSection/{section}:
+    get:
+      summary: list the headings associated with a specific section
+      tags:
+      - Lookup
+      parameters:
+      - in: path
+        name: section
+        description: The section - RiskDetails, Information, SecurityDetails, SubscriptionAgreement, FiscalAndRegulatory, BrokerRemunerationAndDeductions
+        required: true
+        schema:
+          type: string
+          example: FiscalAndRegulatory
+      responses:
+        '200':
+          description: note that the JSON tag key contains the input section e.g. 'FiscalAndRegulatory headings'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  FiscalAndRegulatory_headings:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                    - TaxPayableByInsurers
+                    - CountryOfOrigin
+                    - OverseasBroker
+                    - SurplusLinesBroker
+                    - StateOfFiling
+                    - LicenseInformation
+                    - USClassification
+                    - NAICCodes
+                    - AllocationOfPremiumToCoding
+                    - AllocationOfPremiumToYearsOfAccount
+                    - FsaClientClassification
+                    - RegulatoryClientClassification
+                    - ForeignAccountTaxComplianceAct
+                    - IsTheBusinessSubjectToDistanceMarketingDirective
+  /api/lookup/namevariations:
+    get:
+      summary: a list of prepared name variations for MRC Headings
+      tags:
+      - Lookup
+      responses:
+        '200':
+          description: <p>Each JSON key inside headingByVariation is the Name Variation and is unique, and the value is the MRC Heading which may not be unique (see Insured below) and may be the same as the Variation (see NoticesOfEachInsuranceBound below).</p> <p>Most of the Name Variations were set by the Lloyd's TOM Structured Data Capture project.</p>
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  headingByVariation:
+                    type: object
+                    properties:
+                      Order:
+                        type: string
+                        example: OrderHereon
+                      NoticesOfEachInsuranceBound:
+                        type: string
+                        example: NoticesOfEachInsuranceBound
+                      NameOfFirm:
+                        type: string
+                        example: Insured
+                      LifeAssured:
+                        type: string
+                        example: Insured
+                      Policyholder:
+                        type: string
+                        example: Insured
+                      NameOfPractice:
+                        type: string
+                        example: Insured
+                      NamedInsured:
+                        type: string
+                        example: Insured
+                      InsuredAndLocation:
+                        type: string
+                        example: Insured
+                      Insured:
+                        type: string
+                        example: Insured
+                      Assured:
+                        type: string
+                        example: Insured
+                      Company:
+                        type: string
+                        example: Insured
+                      SponsoringEmployerCompany:
+                        type: string
+                        example: Insured
+                      InsuredPerson:
+                        type: string
+                        example: Insured
+  /api/lookup/person/{email}:
+    get:
+      summary: Retrieve data on an individual identified by an email address
+      tags:
+      - Lookup
+      parameters:
+      - in: path
+        name: email
+        description: the email of the person to be searched for
+        required: true
+        schema:
+          type: string
+          example: sarah.kay.blackpool@wspt.co.uk
+      responses:
+        '200':
+          description: <p>There may be more than one entry in the members array as the platform supports multiple logons.</p>
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  search:
+                    type: string
+                    description: the search string passed in
+                    example: sarah.kay.blackpool@wspt.co.uk
+                  count:
+                    type: number
+                    description: the number of matches
+                    example: 1
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CorporateDetail/properties/members/items'
+components:
+  schemas:
+    CorporateDetail:
+      type: object
+      properties:
+        admins:
+          type: array
+          description: List of user emails for administrators at the company
+          items:
+            type: string
+            example: sarah.kay.blackpool@wspt.co.uk
+        updatedAt:
+          type: string
+          description: The date and time the company's details were last updated
+          example: '2020-02-24T15:32:50.000Z'
+        teams:
+          type: array
+          items:
+            type: object
+            properties:
+              teamId:
+                type: string
+                description: Team identifier using uppercase letters with no punctuation
+                example: MARINECARGO
+              secondApprovalReviewers:
+                type: array
+                items:
+                  type: string
+                  description: Deprecated (see permissions array below). This array will always be empty. Formerly held userIDs of users with Internal Reviewer permission
+                  example: '-'
+              secondApprovalSelfApprovers:
+                type: array
+                items:
+                  type: string
+                  description: Deprecated (see permissions array below). This array will always be empty. Formerly held userIDs of users with Self-Approver permission
+                  example: '-'
+              name:
+                type: string
+                description: The name of the team, usually relating to the class of business worked on
+                example: Marine Cargo
+              channel:
+                type: string
+                description: The system channel for the team, comprising a lowercase version of the company ID, followed by underscrore and the team id
+                example: blackpool_MARINECARGO
+              isInactive:
+                type: boolean
+                example: false
+                description: True if the team has been marked as inactive
+              classOfBusiness:
+                type: array
+                items:
+                  type: string
+                  example: Marine
+                  description: The class(es) of business that are associated with the team
+        createdAt:
+          type: string
+          description: Time and date of creation
+          example: '2020-02-24 15:32:50'
+        companyId:
+          type: string
+          description: Company identifier using uppercase letters with no punctuation
+          example: OFFLINEBRITISHMARINE
+        isTestOnly:
+          type: boolean
+          description: True if the company account is just a test account with no live database access
+          example: false
+        channels:
+          type: array
+          description: Array with just one item, shared channel
+          items:
+            type: string
+            description: The value 'shared'
+            example: shared
+        stamps:
+          type: array
+          description: For (re)insurers, lists the stamps they have set up on the system. Empty for brokers
+          items:
+            type: object
+            properties:
+              bureauMarket:
+                type: string
+                example: Lloyd's
+              bureauMarketCode:
+                type: string
+                example: '1444'
+              bureauSubMarket:
+                type: string
+                example: PSM1
+              businessUnit:
+                type: string
+                example: Lloyd's Syndicate No.1444
+              stampType:
+                type: string
+                example: lloyds
+              uniqueID:
+                type: string
+                example: ST1843A345-1F69-435D-84E9-187BB3DD0F23
+        buttonStamps:
+          type: object
+          properties:
+            active:
+              type: boolean
+              example: true
+              description: True if the button stamp is available for users to apply
+            bureauMarketCode:
+              type: string
+              example: 5307/5
+            companyName:
+              type: string
+              example: Tomy
+            iconOnStamp:
+              type: boolean
+              description: True if an icon of any type is shown on the stamp, icon type is specified by stampType
+              example: true
+            layout:
+              type: object
+              description: The placement of name, type, and code data on the button stamp, each appearing once across the bottom, center, and top slots of the stamp
+              properties:
+                bottom:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+                center:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+                top:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+            stampID:
+              type: string
+              example: BTN-BAB19551-5557-4E6B-888B-E3B1B6A0E982
+              description: The unique ID of the button stamp, which always starts with BTN
+            stampType:
+              type: string
+              description: The type of icon displayed on the stamp. Note that other indicates no icon
+              enum:
+              - lloyds
+              - brexit
+              - other
+        settings:
+          type: object
+          properties:
+            canViewOfflineTeams:
+              type: boolean
+              description: True if the broking organisation is configured to save off-platform lines
+              example: false
+            mandatoryAuthStages:
+              type: array
+              items:
+                type: string
+                description: The list of contract stages at which second approval is required before a contract can proceed
+                example: brFirmOrder
+            digitiseOnlyToTemplate:
+              type: boolean
+              example: true
+              description: True if the broking organisation can only digitise imported contract files as templates
+        isOffline:
+          type: boolean
+          description: True for company accounts that are offline placeholders for organisations not yet using the platform
+          example: false
+        _id:
+          type: string
+          description: Reference ID for this company document
+          example: Corporate-BLACKPOOL
+        _rev:
+          type: string
+          description: Currect revision ID for this document
+          example: 3-a1df22093d0dc2978b87f396be3cd2fa
+        name:
+          type: string
+          description: The name of the company
+          example: Blackpool Insurance Brokers Ltd
+        role:
+          type: string
+          description: The organisation's role on the platform, either 'broker' or 'underwriter'
+          example: underwriter
+        authorityDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              authority:
+                type: string
+                example: Lloyd's (Syndicate Number)
+              pseudonymn:
+                type: string
+                example: '131'
+              registrationNumber:
+                type: string
+                example: '12313'
+        members:
+          type: array
+          items:
+            type: object
+            description: A user on the platform
+            properties:
+              name:
+                type: string
+                description: the user's name
+                example: Sarah Kay
+              email:
+                type: string
+                description: <p>email address for the user</p> <p>Note that for Data Protection reasons, the email is removed from some outputs, such as the /api/shared/corporate list. In these cases it can be removed by a call to /api/documents/Corporate-{CompanyID}.</p>
+                example: sarah.kay.blackpool@wspt.co.uk
+              currentState:
+                type: string
+                description: Live, Draft, Suspended etc
+                example: Live
+              uniqueID:
+                type: string
+                description: Live, Draft, Suspended etc
+                example: MUDA8AF5A8-98DF-4EF2-B2B8-4E069EDB7E8C
+              allowReporting:
+                type: boolean
+                description: whether or not the user may run the management reports
+                example: true
+              isOffPlatform:
+                type: boolean
+                description: indicates the user is "off platform"s
+                example: false
+              teams:
+                type: array
+                items:
+                  type: string
+                  description: list of teams the user belongs to
+                example:
+                - blackpool_MARINEHULL
+                - blackpool_MARINECARGO
+        permissions:
+          type: object
+          properties:
+            secondApprovalReviewers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's members with Internal Reviewer permission
+            secondApprovalSelfApprovers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's Internal Reviewers who also have the Self Approver permission
+            templateManagers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's members who have the Template Manager permission. This permission is only available to broking organisations
+        channelPrefix:
+          type: string
+          description: A lowercase version of companyId used for the beginning of team channels
+          example: blackpool
+        provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

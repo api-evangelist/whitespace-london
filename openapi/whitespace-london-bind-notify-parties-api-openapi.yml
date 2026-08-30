@@ -1,0 +1,71 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Bind Notify Parties API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Bind Notify Parties
+paths:
+  /api/bindNotifyParties:
+    post:
+      summary: Bind notify and non-notify parties to a contract declared to a facility/MGA. At least one (re)insurer has to be assigned as a non/notify party before making this call.
+      tags:
+      - Bind Notify Parties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                declarationID:
+                  type: string
+                  description: The riskID of the firm order declaration contract
+                  example: ICDD2F9D3D-822C-4D6B-AD80-C95503938562::FO
+                facilityID:
+                  type: object
+                  properties:
+                    facilityID:
+                      type: string
+                      description: The rootID of the facility agreement contract
+                      example: IC97A46B13-39DD-4929-AA16-572B0D2D8CBF
+      responses:
+        '200':
+          description: Response from binding a notify party
+          content:
+            application/json:
+              example:
+              - rev: 1-c37d9fdb98287f1d0fecba5c6598d15c
+                id: IC5CA72000-F46E-46C6-BB75-C680B4CFFD2E::FO::OFFLINEA2BCONSORTIUMFOLLOW::ALL
+              - rev: 1-fe1bd7fd0a3859ff6269d8153ca20a5a
+                id: IC5CA72000-F46E-46C6-BB75-C680B4CFFD2E::FO::OFFLINEA2BCONSORTIUMFOLLOW::ALL::LGUS
+              - id: IC5CA72000-F46E-46C6-BB75-C680B4CFFD2E::FO::OFFLINEA2BCONSORTIUMFOLLOW::ALL::ARCH::70D7A3DC-5082-4088-834B-FCCB4A59CDD2
+                rev: 1-d9b4279aaf51d560b9a6ebcfc082e22e
+              - rev: 1-047b5d20389629334e0cc56a0c8a1d1c
+                id: IC5CA72000-F46E-46C6-BB75-C680B4CFFD2E::FO::OFFLINEA2BCONSORTIUMFOLLOW::ALL::ACTI::AE88CA52-6DE7-41E4-8A4B-5B657835ED26
+              - id: IC5CA72000-F46E-46C6-BB75-C680B4CFFD2E::FO::OFFLINEA2BCONSORTIUMFOLLOW::ALL::WRLS
+                rev: 1-cd135c3cf52de350a4c439ce83b94b19
+              - id: IC5CA72000-F46E-46C6-BB75-C680B4CFFD2E::FO::OFFLINEA2BCONSORTIUMFOLLOW::ALL::WRLS::1::LARC::A24F2442-BC0B-48F5-A1A5-688DD7D95B43
+                rev: 1-b11001394976a5e8e8cb3c2c7e048a17
+              - rev: 1-f38212a9115b13e2e737771c0abbc68c
+                id: IC5CA72000-F46E-46C6-BB75-C680B4CFFD2E::FO::OFFLINEA2BCONSORTIUMFOLLOW::ALL::WRLS-offlinea2b9582_ALL
+              - id: IC5CA72000-F46E-46C6-BB75-C680B4CFFD2E::FO::OFFLINEA2B9582::ALL::WRLS-offlinea2bconsortiumfollow_ALL
+                rev: 1-c3a8c9c977f512b0a6e25b9d43d47af5
+              - rev: 4-6222e2504624461428bc5f778aff9be6
+                id: IC5CA72000-F46E-46C6-BB75-C680B4CFFD2E::FGUI::ICDD1393D9-252B-40CF-ADF7-04EBF542C220
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

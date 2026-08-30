@@ -1,0 +1,327 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Questionnaire API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Questionnaire
+paths:
+  /api/v23.09/data/questionnaire/{riskID}:
+    get:
+      summary: Gets a list of answered Questions in the risk
+      description: Get a list of Questions with their Answers from the questionnaire associated with the risk. NOTE this only returns questions which have been answered. As such, this call is intended for integrators looking to extract data from the questionnaire, while the questionnaire/answer endpoint is more suitable for answering outstanding questions.
+      tags:
+      - Questionnaire
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk
+        example: IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854
+      responses:
+        '200':
+          description: successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  questions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tag:
+                          type: string
+                          example: Pension_Or_Benefits_Plan_Company_Sponsor
+                        value:
+                          type: string
+                          example: 'Yes'
+                        id:
+                          type: string
+                          example: Pension or Benefits Plan - Company Sponsor
+                        label:
+                          type: string
+                          example: Does the company sponsor any pension or benefits plan?
+                        table:
+                          type: object
+                          properties:
+                            rows:
+                              type: array
+                              items:
+                                type: object
+                                additionalProperties:
+                                  oneOf:
+                                  - type: string
+                                  - type: number
+                                  - type: object
+                                    properties:
+                                      value:
+                                        type: string
+                                        example: GBP 1,000,000
+                                      phType:
+                                        type: string
+                                        example: Amount
+                                  description: A cell value (string, number, or an object with value/phType)
+                            labels:
+                              type: object
+                              additionalProperties:
+                                type: string
+                              example:
+                                Total_Plan_Assets_Amount: Total Plan Assets Amount
+                                Asset_Amount_Year: Year
+                  metadata:
+                    type: object
+                    properties:
+                      userID:
+                        type: string
+                        example: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+                      fetchedAt:
+                        type: string
+                        format: date-time
+                        example: '2024-12-16 10:16:04'
+                      documentID:
+                        type: string
+                        example: IC193F7106-EF8F-4F30-A217-7A6DA1258505
+                      documentRevision:
+                        type: string
+                        example: 7-56a99bd7700e9a8bf17475c9063ed230
+                      env:
+                        type: string
+                        example: apitest
+                  rev:
+                    type: string
+                    example: 2-af869e73e714e1f2ba3a7770566135ad
+              example:
+                questions:
+                - tag: Pension_Or_Benefits_Plan_Company_Sponsor
+                  value: 'Yes'
+                  id: Pension or Benefits Plan - Company Sponsor
+                  label: Does the company sponsor any pension or benefits plan?
+                - tag: Plans_Adequately_Funded
+                  value: 'Yes'
+                  id: Plans Adequately Funded
+                  label: Are the plans adequately funded as attested by an Actuary?
+                - tag: Total_Participants_Of_Plans
+                  value: '1'
+                  id: Total Participants of Plans
+                  label: What is the total number of participants of the plans?
+                - id: Total Plan Assets Amount
+                  label: What is the total plan assets amount(all plans combined)?
+                  table:
+                    rows:
+                    - Total_Plan_Assets_Amount:
+                        value: GBP 1,000,000
+                        phType: Amount
+                      Asset_Amount_Year: '2024'
+                    - Asset_Amount_Year: '2025'
+                      Total_Plan_Assets_Amount:
+                        value: USD 2,000,000
+                        phType: Amount
+                    labels:
+                      Total_Plan_Assets_Amount: Total Plan Assets Amount
+                      Asset_Amount_Year: Year
+                metadata:
+                  userID: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+                  fetchedAt: '2024-12-16 10:16:04'
+                  documentID: IC193F7106-EF8F-4F30-A217-7A6DA1258505
+                  documentRevision: 7-56a99bd7700e9a8bf17475c9063ed230
+                  env: apitest
+  /api/questionnaire/{riskID}:
+    get:
+      summary: Gets a list of Questions in the risk
+      description: Get a full list of Questions that have been added to a risk/template''s questionnaire. This list includes Questions that do not yet have answers, and provides information about the rules/validations applying to a Question. As such, this call is intended for integrators looking to use the questionnaire/answer endpoint to add answers via API, while the v23.09/data/questionnaire call is more suitable for extracting data.
+      tags:
+      - Questionnaire
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the Risk.
+        example: IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854
+      responses:
+        '200':
+          description: successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rules:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: list
+                          description: The type of rule, i.e 'list' or 'regex' or 'date'
+                        values:
+                          type: array
+                          description: If rule type is list, then this will specify all the possible values the answer can have
+                          items:
+                            type: string
+                        regex:
+                          type: string
+                          example: ^(?:AED|AFN|ALL|AMD|ANG|ANG|AOA|ARS|AUD|AWG|AZN|BAM|BBD|BDT|BGN|BHD|BIF|BMD|BND|BOB|BOV|BRL|BSD|BTN|BWP|BYR|BZD|CAD|CDF|CHE|CHF|CHW|CLF|CLP|CNY|COP|COU|CRC|CUC|CUP|CVE|CZK|DJF|DKK|DOP|DZD|EGP|ERN|ETB|EUR|FJD|FKP|GBP|GEL|GHS|GIP|GMD|GNF|GTQ|GYD|HKD|HNL|HRK|HTG|HUF|IDR|ILS|INR|IQD|IRR|ISK|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LRD|LSL|LTL|LYD|MAD|MDL|MGA|MKD|MMK|MNT|MOP|MRO|MUR|MVR|MWK|MXN|MXV|MYR|MZN|NAD|NGN|NIO|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SLL|SOS|SRD|SSP|STD|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|UYI|UYU|UZS|VEF|VND|VUV|WST|XAF|XCD|XDR|XOF|XPF|XSU|XUA|YER|ZAR|ZMW|ZWL)[ -]?(?:\d{1,3}(?:,\d{3})*|\d{1,9})(?:\.\d{1,4})?\$|^(?:nil|none|Nil|None|NIL|NONE)\$
+                        example:
+                          type: string
+                          example: GBP 1,000,000
+                        phType:
+                          type: string
+                          example: Amount
+                          description: Placeholder type i.e 'Amount' or 'Date'
+                        template:
+                          type: string
+                          example: CCY AMOUNT
+                          description: A template of how an answer should look
+                  tags:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        ruleID:
+                          type: string
+                          example: '37'
+                          description: Look up the ruleId in the Rules array to get information on the rule
+                        preferredListPresentation:
+                          type: string
+                          example: buttons
+                          description: How the list of values should be presented to the user
+                  questions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        text:
+                          type: string
+                          example: Who is the client contact?
+                          description: The text of the question
+                        answer:
+                          type: string
+                          example: Bruce Crown
+                          description: The answer to the question
+                        id:
+                          type: string
+                          example: Client Contact Name
+                          description: The unique ID of the question
+                        dependents:
+                          type: array
+                          items:
+                            description: If any other questions are dependant on this question, the Id''s will be shown here
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: Client Contact Name
+                        tag:
+                          type: string
+                          example: Client_Contact_Name
+                          description: The tag of the question
+                        condition:
+                          description: If the question requires a condition for it to appear, details will be shown here
+                          type: object
+                          properties:
+                            question:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                            value:
+                              type: string
+                        table:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              text:
+                                type: string
+                              tag:
+                                type: string
+  /api/questionnaire/{riskID}/answer:
+    post:
+      tags:
+      - Questionnaire
+      summary: Add Answers to a set of questions - Broker Only
+      description: Use the GET /questionnaire endpoint OR go via /risks/{riskID} to obtain a list of questions available on the risk/template. This call is then used to add answers to the relevant questions. You need to add all the answers in one payload. NOTE that because some questions are dependent on others being answered in a specific way, some of the answers added might not appear in the UI until the parent questions have been answered appropriately.
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk/template
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rev:
+                  type: string
+                  example: 2-af869e73e714e1f2ba3a7770566135ad
+                answers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: the ID of the question
+                        example: Client Contact Name
+                      dataType:
+                        type: string
+                        description: can be 'text' or 'date'
+                        example: text
+                      value:
+                        type: string
+                        description: A sample text string
+                        example: Bruce Crown
+                    required:
+                    - id
+                    - dataType
+                    - value
+              required:
+              - rev
+              - answers
+      responses:
+        '200':
+          description: successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: ICC8C95CB8-D71F-469B-837A-45491CC4466A
+                  ok:
+                    type: boolean
+                    example: true
+                  rev:
+                    type: string
+                    example: 7-ade833b5c2a23808f0a8a3f95c50b883
+        '401':
+          $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

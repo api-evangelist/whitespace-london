@@ -1,0 +1,133 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Owner API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Owner
+paths:
+  /api/owner/{rootID}:
+    get:
+      summary: Gets the owner of the risk. Calls from broker accounts also get the risk owner for each carrier that has one set.
+      parameters:
+      - in: path
+        name: rootID
+        schema:
+          type: string
+        required: true
+        description: The unique root ID of the risk
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      tags:
+      - Owner
+      responses:
+        '200':
+          description: array of RWRiskOwner documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: A document detailing the user who is the owner of a risk
+                  properties:
+                    _id:
+                      type: string
+                      description: unique document id for the ownership document
+                      example: IC0C8EF318-72FF-4956-8E23-AD8FCF2BFA5E::OWN::AKHIL::TEST
+                    _rev:
+                      type: string
+                      description: current revision number of the ownership document
+                      example: 1-141df67df9e5eaacd0830c65e47a0bf9
+                    createdAt:
+                      type: string
+                      example: '2021-08-04T15:18:02.000Z'
+                    updatedAt:
+                      type: string
+                      example: '2021-08-04T15:18:02.000Z'
+                    type:
+                      type: string
+                      example: RWRiskOwner
+                      description: internal descriptor, RWRiskOwner in all cases
+                    associatedRootID:
+                      type: string
+                      example: IC0C8EF318-72FF-4956-8E23-AD8FCF2BFA5E
+                      description: the root ID of the risk
+                    channels:
+                      type: array
+                      description: the team channel names of the teams of users allowed to see the document
+                      items:
+                        type: string
+                        example: akhil_TEST
+                    ownerChannel:
+                      type: string
+                      description: the team channel name of the owner
+                      example: akhil_TEST
+                    ownerUserID:
+                      type: string
+                      description: the uniqueID of the owner
+                      example: MU999AF919-3FDB-49F2-B4C5-D42614B02E56
+    post:
+      summary: Assign the ownership of the risk
+      description: Can only assign an owner for your organisation''s side of the risk
+      parameters:
+      - in: path
+        name: rootID
+        schema:
+          type: string
+        required: true
+        description: The unique root ID of the risk
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      tags:
+      - Owner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                owner:
+                  type: string
+                  description: the uniqueID of the user you want to set as ower
+                  example: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+                channel:
+                  type: string
+                  description: channel of the team
+                  example: akhil_ALL
+        description: The ID of the new owner. Required if posting an ownership change.
+      responses:
+        '200':
+          description: A confirmation of the saved data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: the document id of the ownership document recording the change
+                    example: IC250645CD-7EE6-497E-A4A0-B6E6556BE7AE::OWN::AKHIL::ALL
+                  rev:
+                    type: string
+                    description: the current revision of the ownership document
+                    example: 1-6a99b794f62c7237242e8cec6701b7bc
+                  ok:
+                    type: boolean
+                    description: true if the comment was saved
+                    example: true
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

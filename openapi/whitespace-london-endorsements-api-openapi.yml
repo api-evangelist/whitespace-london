@@ -1,0 +1,348 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Endorsements API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Endorsements
+paths:
+  /api/endorsements/{rootID}:
+    get:
+      tags:
+      - Endorsements
+      summary: Get all endorsements for a Risk
+      parameters:
+      - in: path
+        name: rootID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      responses:
+        '200':
+          description: All the endorsements for the risk as JMRC structures
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RWPlacing'
+              example:
+              - MRCContract:
+                  lineItems:
+                  - elements: []
+                    fragments: []
+                    index: 0
+                    mrcHeading: NonMRCHeading
+                    mrcSection: RiskAndEndorsementIdentificationDetails
+                    nameVariation: NonMRCHeading
+                    originalHeading: CONTRACT ENDORSEMENT
+                    originalSection: self
+                    placeholders: []
+                    subItems: []
+                  - elements:
+                    - index: 0
+                      text: ' [[DefinedData0]]'
+                    fragments: []
+                    index: 1
+                    locked: false
+                    mrcHeading: UMR
+                    mrcSection: RiskAndEndorsementIdentificationDetails
+                    nameVariation: UMR
+                    originalHeading: UNIQUE MARKET REFERENCE
+                    originalSection: ''
+                    placeholders:
+                    - name: DefinedData0
+                      originalValue: B13123123
+                      phType: DefinedData
+                      tags:
+                      - Page:D7F19D50-5AEC-4259-8E8C-2AF144361591
+                      - Broker_Reference
+                      value: B13123123
+                    subItems: []
+                    tagPages:
+                    - pageID: D7F19D50-5AEC-4259-8E8C-2AF144361591
+                      sectionIDs: []
+                      title: ''
+                  - elements:
+                    - index: 0
+                      text: Dalston Airways
+                    fragments: []
+                    index: 2
+                    locked: false
+                    mrcHeading: Insured
+                    mrcSection: RiskAndEndorsementIdentificationDetails
+                    nameVariation: Insured
+                    originalHeading: INSURED
+                    originalSection: ''
+                    placeholders: []
+                    subItems: []
+                    tagPages:
+                    - pageID: 81DA7CD1-754D-4C12-B673-B8D6B1D81DD9
+                      sectionIDs: []
+                      title: ''
+                  - elements:
+                    - index: 0
+                      text: '2'
+                    fragments: []
+                    index: 3
+                    mrcHeading: EndorsementNumber
+                    mrcSection: RiskAndEndorsementIdentificationDetails
+                    nameVariation: EndorsementNumber
+                    originalHeading: ENDORSEMENT NUMBER
+                    originalSection: ''
+                    placeholders: []
+                    subItems: []
+                  - elements: []
+                    fragments: []
+                    index: 4
+                    mrcHeading: NonMRCHeading
+                    mrcSection: ContractChanges
+                    nameVariation: NonMRCHeading
+                    originalHeading: CONTRACT CHANGES
+                    originalSection: self
+                    placeholders: []
+                    subItems: []
+                  - elements:
+                    - index: 0
+                      text: '[[Date1]]'
+                    fragments: []
+                    index: 5
+                    mrcHeading: EndorsementEffectiveDate
+                    mrcSection: ContractChanges
+                    nameVariation: EndorsementEffectiveDate
+                    originalHeading: ENDORSEMENT EFFECTIVE DATE
+                    originalSection: ''
+                    placeholders:
+                    - name: Date1
+                      originalValue: 3 April 2023
+                      phType: Date
+                      value: 3 April 2023
+                    subItems: []
+                  - elements: []
+                    fragments: []
+                    index: 6
+                    mrcHeading: ContractChanges
+                    mrcSection: ContractChanges
+                    nameVariation: ContractChanges
+                    originalHeading: CONTRACT CHANGES
+                    originalSection: ''
+                    placeholders: []
+                    subItems: []
+                  - elements: []
+                    fragments: []
+                    index: 7
+                    mrcHeading: ParticipantChanges
+                    mrcSection: ContractChanges
+                    nameVariation: ParticipantChanges
+                    originalHeading: PARTICIPANT CHANGES
+                    originalSection: ''
+                    placeholders: []
+                    subItems: []
+                  - elements: []
+                    fragments: []
+                    index: 8
+                    mrcHeading: NonMRCHeading
+                    mrcSection: Agreement
+                    nameVariation: NonMRCHeading
+                    originalHeading: AGREEMENT
+                    originalSection: self
+                    placeholders: []
+                    subItems: []
+                  - elements: []
+                    fragments: []
+                    index: 9
+                    mrcHeading: EndorsementAgreements
+                    mrcSection: Agreement
+                    nameVariation: EndorsementAgreements
+                    originalHeading: ENDORSEMENT AGREEMENTS
+                    originalSection: ''
+                    placeholders: []
+                    subItems: []
+                _id: IC5B4B0C81-DCF7-4728-B2BD-087EB2B84A4B::FO::EN2
+                _rev: 4-5fae8498d0ef7472780a663fccb4ee30
+                accountDocID: null
+                channels:
+                - akhil_ALL
+                control:
+                  contractType: Aviation Hull and Liability Insurance
+                  createdInVersion: 21000
+                  endorsementNumber: '2'
+                  endorsementType: mtpc
+                  insuranceType: Insurance
+                  insuredName: DQPro Demo
+                  isFacility: false
+                  limitSummary: ''
+                  originalDocID: IC5B4B0C81-DCF7-4728-B2BD-087EB2B84A4B::FO
+                  placementType: FullContract
+                  placingBroker: akhil ALL
+                  placingBrokerChannel: akhil_ALL
+                  shownToUnderwriter: ''
+                  status: EndorsementInPreparation
+                  umr: ' B13123123'
+                createdAt: '2023-04-03 14:36:42'
+                proposedEndorsementFollowers:
+                  tomyunderwriting_ALL: unchosen
+                provenance:
+                  dataHash: 621f95e40f08b6fe509fb5cc60a1c9bdf78d17730673251e112e3844bdad204b
+                  provHash: b6a3f3f2eae55805242c786196783e930fad08c3f37fea089529fcbb966c4a16
+                  system: LaVAPI
+                  userID: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+                  version: 2023-04-02@19:07:07
+                  writtenAt: '2023-04-03 14:36:42'
+                type: RWPlacing
+                updatedAt: '2023-04-03 14:36:42'
+        '401':
+          $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+components:
+  schemas:
+    RWPlacing:
+      type: object
+      description: <p>The MRCRisk obect contains the full text and structure of the JMRC Insurance Contract.</p> <p>It includes an MRCContract object where a set of MRCLineItem objects represent the headings and data in the contract, and an MRCRiskControl object which provides summary and meta data about the risk to enable the system's performance.</p>
+      properties:
+        _id:
+          type: string
+          example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+          description: unique document id for the risk
+        _rev:
+          type: string
+          example: 1-141df67df9e5eaacd0830c65e47a0bf9
+        createdAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        updatedAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        type:
+          type: string
+          example: RWPlacing
+          description: RWPlacing in all cases
+        control:
+          type: object
+          properties:
+            status:
+              type: string
+              description: The current stage of the contract in the placing process, taken from an enumerated list containing stages such as Draft, Quoted, FirmOrder, etc
+              example: FirmOrder
+            insuranceType:
+              type: string
+              example: Insurance
+              description: Either Insurance or ReInsurance, as specified at contract creation
+            umr:
+              type: string
+              description: The Lloyd's Unique Market Reference number for the contract
+              example: B0999JC201909241622
+            insuredName:
+              type: string
+              example: Acme Widgets Inc
+              description: The name given to the contract
+            contractType:
+              type: string
+              example: Aviation Hull Cover
+              description: The class of business that the contract falls under
+            leadUnderwriterChannel:
+              type: string
+              example: messina_ALL
+              description: The team channel name of the lead underwriter on the risk, once specified
+            leadUnderwriter:
+              type: string
+              example: Messina All Risks
+              description: The plaintext company and team name of the lead underwriter's team, once specified
+            placingBrokerChannel:
+              type: string
+              example: ajc_ALL
+              description: The team channel name of the contract's broker
+            placingBroker:
+              type: string
+              example: AJC All Risks
+              description: The plaintext company and team name of the broker's team
+            limitSummary:
+              type: string
+              description: The limit of liability for the contract
+            originalDocID:
+              type: string
+              description: The unique ID of the document this contract was created from, if any
+              example: IC97799647-4496-4760-B594-02AC726B0D7E
+            endorsementNumber:
+              type: string
+              example: '2'
+              description: If this contract is an endorsement, its endorsement number is stored here
+            endorsementType:
+              type: string
+              description: For endorsements, specifies whether the endorsement is a Mid-Term Participant Change or a standard endorsement
+              enum:
+              - standard
+              - mtpc
+            isFacility:
+              type: boolean
+              example: false
+              description: True if this contract is a facility agreement
+            associatedFacilityIDs:
+              type: array
+              items:
+                type: string
+                example: ICB1213647-4876-4760-B594-02AC7261312412
+                description: If the contract is a declaration, this array lists the unique IDs of all facility agreeements it is attached to
+            placementType:
+              type: string
+              enum:
+              - FullContract
+              - OffPlatform
+              - Template
+              description: The contract type. OffPlatform is for contracts backloaded to duplicate agreements conducted off-platform, Template is for contract templates, and FullContract is for all live contracts
+            verticalVisibility:
+              type: string
+              enum:
+              - OwnStampOnly
+              - AllStamps
+              - LeaderStamps
+              description: If the risk has vertical terms, this string specifies which stamps underwriters can see.
+            createdInVersion:
+              type: number
+              example: 21100
+              description: Which version of the platform the risk was created in.
+            isIndicative:
+              type: boolean
+              example: false
+              description: True if the Indicative flag been toggled, indicating that the contract is not binding.
+            submittedAsCopyOf:
+              type: string
+              example: ICD937404C-87A7-4408-BE4B-D449216F9A85
+              description: If this contract is a placing document shared from another broker, the unique ID of the original producing broker's contract is held here.
+            stampVisibility:
+              type: string
+              description: Decides whose stamps underwriters can see
+              enum:
+              - Allstamps
+              - OwnStampsOnly
+              - LeadersStamps
+        MRCContract:
+          type: object
+          description: a top level object which currently contains only the array of line items
+          properties:
+            lineItems:
+              type: array
+              items:
+                type: object
+                $ref: '#/paths/~1api~1risks~1%7BriskID%7D~1lineitem~1%7BmrcHeading%7D/get/responses/200/content/application~1json/schema/items'
+        channels:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

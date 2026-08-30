@@ -1,0 +1,189 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Customer API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Customer
+paths:
+  /api/customer/{teamID}/{uniqueID}:
+    get:
+      summary: Retrieves the additional data across all keys used to store information
+      description: <div>The document return includes each payload of JSON as keys below customerData.</div>
+      tags:
+      - Customer
+      parameters:
+      - in: path
+        name: teamID
+        schema:
+          type: string
+        required: true
+        description: The team ID for the relevant team that the user belongs to
+        example: MARINE
+      - in: path
+        name: uniqueID
+        schema:
+          type: string
+        required: true
+        description: An idientifier, usually a reference to an external system
+        example: XYZ-123
+      responses:
+        '200':
+          description: the defined data document, containing metadata, multiSectionDefinition and definedData
+          content:
+            application/json:
+              schema:
+                description: The JSON payloads are stored as keyed objects below customerData
+              examples:
+                Simple Case:
+                  description: Any JSON data can be stored
+                  value:
+                    _id: CR::ajc_ALL::XYZ-123
+                    _rev: 2-291fbd5a54865c14dc9df55e4be723e2
+                    channels:
+                    - ajc_ALL
+                    createdAt: '2022-06-17 12:32:24'
+                    customerData:
+                      assessed:
+                        RiskLevel: 2
+                      pas_reference:
+                        PASData:
+                          RiskID: IC9E52131E-760A-4D01-8478-39FC5636510E
+                          updated: '2022-06-17T13:26:00'
+                    docID: CR::ajc_ALL::XYZ-123
+                    provenance:
+                      dataHash: ebba086e38e681ef29cc74e960ace8d07f46d50719b3b76ac464c24bf8baee4b
+                      provHash: e4ef8ba5d3bc5a841dc2c9669aee56d253f6fe708b7629090d672cfa72ed98cc
+                      system: LaVAPI
+                      userID: MU4DD606E3-1BDB-4B3B-8342-D7F38EC3C71B
+                      version: 2022-06-16@19:08:18
+                      writtenAt: '2022-06-17 12:45:31'
+                    teamID: ALL
+                    type: RWCustomerData
+                    uniqueID: XYZ-123
+                    updatedAt: '2022-06-17 12:45:31'
+  /api/customer/{teamID}/{uniqueID}/{key}:
+    post:
+      tags:
+      - Customer
+      summary: Saves additional data, usually to link to other systems
+      description: <div>The payload can be any JSON. It is recorded against a unique identifier, usually a reference to an external system. Additionally, a key allows different pieces of data to be recorded against one identifer.</div>
+      parameters:
+      - in: path
+        name: teamID
+        schema:
+          type: string
+        required: true
+        description: The team ID for the relevant team that the user belongs to
+        example: MARINE
+      - in: path
+        name: uniqueID
+        schema:
+          type: string
+        required: true
+        description: An idientifier, usually a reference to an external system
+        example: XYZ-123
+      - in: path
+        name: key
+        schema:
+          type: string
+        required: true
+        description: A key to refer to the JSON for fetching later
+        example: pas_reference
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Any data you like:
+                description: Any JSON can be stored
+                value:
+                  PASData:
+                    RiskID: IC9E52131E-760A-4D01-8478-39FC5636510E
+                    updated: '2022-06-17T13:26:00'
+            schema:
+              description: Any JSON can be stored
+              type: object
+              additionalProperties: {}
+      responses:
+        '200':
+          description: A confirmation of the saved data. Note the document id includes the teamID, uniqueID and key parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: the id of the customer specific document
+                    example: CR::ajc_ALL::XYZ-123
+                  rev:
+                    type: string
+                    description: the revision of the document
+                    example: 1-299083cee917a40a0944fc0d997d2d24
+                  ok:
+                    type: boolean
+                    description: true if the data was saved
+                    example: true
+    delete:
+      tags:
+      - Customer
+      summary: Deletes additional data
+      parameters:
+      - in: path
+        name: teamID
+        schema:
+          type: string
+        required: true
+        description: The team ID for the relevant team that the user belongs to
+        example: MARINE
+      - in: path
+        name: uniqueID
+        schema:
+          type: string
+        required: true
+        description: An idientifier, usually a reference to an external system
+        example: XYZ-123
+      - in: path
+        name: key
+        schema:
+          type: string
+        required: true
+        description: A key to refer to the JSON for fetching later
+        example: pas_reference
+      responses:
+        '200':
+          description: A confirmation of the changed data. Note the document id includes the teamID, uniqueID and key parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: the id of the customer specific document
+                    example: CR::ajc_ALL::XYZ-123
+                  rev:
+                    type: string
+                    description: the revision of the document
+                    example: 5-968f8ad0fe3dc5046c208b71a9b7c522
+                  ok:
+                    type: boolean
+                    description: true if the data was saved
+                    example: true
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

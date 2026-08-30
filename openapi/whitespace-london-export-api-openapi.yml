@@ -1,0 +1,246 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Export API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Export
+paths:
+  /export/pdf/{riskID}:
+    post:
+      summary: Returns a pdf file of the risk Contract.
+      description: <p>If the risk is verticalised then a zip archive file is returned containing each version.</p> <p>Note that this endpoint is $ROOT/export/pdf, <b>not</b> $ROOT/api/export/pdf because it is run on separate resources from the main platform endpoints.</p> <p> If inline attachments are part of the contract they will be included in the export. <p> Using POST with a blank payload {} will return an export with default settings. If you want a more customised version see the schema for the options.</p>
+      tags:
+      - Export
+      parameters:
+      - in: path
+        name: riskID
+        schema:
+          type: string
+        required: true
+        description: The unique ID of the risk
+        example: ICFEB57650-EB06-4D89-8004-C0A175B54D44::FO
+      requestBody:
+        description: Options for the document layout
+        required: true
+        content:
+          application/json:
+            examples:
+              PDF Example:
+                description: PDF without attachments
+                value:
+                  blankPagesAfterStamps: 1
+                  oneUnderwritersAgreementPerPage: true
+                  hideLogo: false
+                  includePolicyOrUMRInHeader: 1
+                  includeSections:
+                  - RiskDetails
+                  - Information
+                  - SecurityDetails
+                  - SubscriptionAgreement
+                  - FiscalAndRegulatory
+                  - BrokerRemunerationAndDeductions
+                  - ContractAdministrationAndAdvisory
+                  - ContractChanges
+                  - RiskAndEndorsementIdentificationDetails
+                  - Agreement
+                  suppressPageBreaksAfterSections:
+                  - SecurityDetails
+                  - SubscriptionAgreement
+                  - Information
+                  - RiskDetails
+                  restartPageNumberingAfterSections:
+                  - SecurityDetails
+                  - Information
+                  - RiskDetails
+                  alignToBottomOfHeadings: false
+                  exportContract: true
+                  exportCarrierTerms: false
+                  appendTermsToContract: false
+                  includeAuthDetails: true
+                  includeButtonStampInFooter: true
+                  appendPDFAttachments: []
+                  prependPDFAttachments: []
+                  fontStyle: serif
+                  defaultFontSize: 14
+                  exportDefinedData: true
+                  definedDataSettings:
+                    apiVersion: v23.09
+                    tagSet: MRCV3
+                  exportQuestionnaire: true
+                  draftWatermark: true
+                  lineItemHeadingPts: 14
+                  straightenStamps: false
+                  addPageNumbers: true
+                  includeDateTime: true
+                  addBrokerCompanyName: false
+                  includeRegisteredAddress: true
+                  includeInvoiceAddress: false
+                  facilityStampExportFilter: showAll
+              Attachment Example:
+                description: PDF including attachments
+                value:
+                  blankPagesAfterStamps: 2
+                  hideLogo: false
+                  includeUMRInHeader: true
+                  includeSections:
+                  - RiskDetails
+                  - Information
+                  - SecurityDetails
+                  - SubscriptionAgreement
+                  - FiscalAndRegulatory
+                  - BrokerRemunerationAndDeductions
+                  alignToBottomOfHeadings: false
+                  exportContract: true
+                  exportCarrierTerms: false
+                  includeAuthDetails: true
+                  includeButtonStampInFooter: true
+                  appendPDFAttachments:
+                  - attachmentID: A-36B2B858-9119-44F5-A187-01EA956E9A5F
+                    docID: ICFEB57650-EB06-4D89-8004-C0A175B54D44::ATCH::A-36B2B858-9119-44F5-A187-01EA956E9A5F
+                  prependPDFAttachments:
+                  - attachmentID: A-77753B15-4BF8-44CD-BF37-18360C2D484E
+                    docID: ICFEB57650-EB06-4D89-8004-C0A175B54D44::ATCH::A-77753B15-4BF8-44CD-BF37-18360C2D484E
+                  fontStyle: serif
+            schema:
+              properties:
+                hideLogo:
+                  type: boolean
+                  description: whether or not to show the company's logo at the top of each page
+                  example: false
+                includeUMRInHeader:
+                  type: boolean
+                  description: whether or not to include the UMR in the header of each page
+                  example: true
+                includeSections:
+                  type: array
+                  description: list of the sections to include in the output
+                  items:
+                    type: string
+                    example: RiskDetails Information SubscriptionAgreement FiscalAndRegulatory SecurityDetails BrokerRemunerationAndDeductions
+                alignToBottomOfHeadings:
+                  type: boolean
+                  description: whether or not to align line item data to the bottom of the heading
+                  example: false
+                exportContract:
+                  type: boolean
+                  description: for verticalised contracts, set to false to export the verticalised terms only, without the contract. This will export as a zip. Ignored on non-verticalised placements
+                  example: true
+                exportCarrierTerms:
+                  type: boolean
+                  description: for verticalised contracts, set to true to export carrier terms. This will export as a zip. Ignored on non-verticalised placements.
+                  example: true
+                includeButtonStampInFooter:
+                  type: boolean
+                  description: whether or not to include button stamps in the footer
+                  example: true
+                appendPDFAttachments:
+                  type: array
+                  description: any documents to add to the end of the output
+                  items:
+                    type: object
+                    properties:
+                      attachmentID:
+                        type: string
+                        description: the attachmentID from within the attachment collection ATCH document
+                        example: A-36B2B858-9119-44F5-A187-01EA956E9A5F
+                      docID:
+                        type: string
+                        description: the document ID of the attachment collection
+                        example: ICFEB57650-EB06-4D89-8004-C0A175B54D44::ATCH::A-36B2B858-9119-44F5-A187-01EA956E9A5F
+                prependPDFAttachments:
+                  type: array
+                  description: any documents to add to the beginning of the output
+                  items:
+                    type: object
+                    properties:
+                      attachmentID:
+                        type: string
+                        description: the attachmentID from within the attachment collection ATCH document
+                        example: A-77753B15-4BF8-44CD-BF37-18360C2D484E
+                      docID:
+                        type: string
+                        description: the document ID of the attachment collection
+                        example: ICFEB57650-EB06-4D89-8004-C0A175B54D44::ATCH::A-36B2B858-9119-44F5-A187-01EA956E9A5F
+                fontStyle:
+                  type: string
+                  description: a choice of serif or sans-serif font for the contract
+                  example: sans
+                exportDefinedData:
+                  type: boolean
+                  description: choose whether to export any tagged data as a separate pdf. NOTE that this will result in the export being a zip file containing multiple pdfs. Defaults to false if not included in payload
+                  example: false
+                includeAuthDetails:
+                  type: boolean
+                  description: choose to additionally export any authorisation details as a separate document
+                  example: false
+                topMarginPts:
+                  type: integer
+                  description: how large you want the top margin of the document to be, measured in points. NOTE this is ignored unless hideLogo is set to true
+                  example: 10
+                blankPagesAfterStamps:
+                  type: integer
+                  description: the number of blank pages, if any, to be inserted after the stamps. Default is to not have any blank pages after the stamp.
+                  example: 3
+                oneUnderwritersAgreementPerPage:
+                  type: boolean
+                  description: if you want each underwriter agreement to be in a seperate page
+                  example: false
+                restartPageNumberingAfterSections:
+                  type: array
+                  descriptions: list the sections where you want to restart page breaks
+                  items:
+                    type: string
+                    example: SecurityDetails
+                appendTermsToContract:
+                  type: boolean
+                  description: If contract has vertical terms, set to true if you want the terms appended to the main pdf rather than as seperate pdf filters
+                  example: true
+                exportQuestionnaire:
+                  type: boolean
+                  description: Export the questionnaire as a seprate pdf if it exists. Will create a zip file if chosen.
+                  example: true
+                draftWatermark:
+                  type: boolean
+                  description: Only for draft contracts - adds the draft watermark to the pdf
+                  example: false
+                straightenStamps:
+                  type: boolean
+                  description: if set to true it will have the stamps as straight, rather than a randmon tilt by default
+                  example: false
+                addPageNumbers:
+                  type: boolean
+                  description: add page numbers at the bottom of each page
+                  example: true
+                includeDateTime:
+                  type: boolean
+                  description: adds the date and time the pdf was generated (UTC time) at the footer of each page
+                  example: true
+                includeInvoiceAddress:
+                  type: boolean
+                  description: include the invoice address as part of the stamps when exporting
+                  example: false
+                includeRegisteredAddress:
+                  type: boolean
+                  description: include the registered address as part of the stamps when exporting
+                  example: false
+      responses:
+        '200':
+          description: The document as PDF or ZIP
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

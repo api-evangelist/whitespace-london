@@ -1,0 +1,700 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Documents API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Documents
+paths:
+  /api/documents/{docID}:
+    get:
+      summary: An endpoint that can fetch any document that the user is allowed to see
+      description: <pre>This endpoint returns specified risk documents (names start with IC) which the user can see.</pre> <p/> <pre>Additionally, it can fetch shared documents visible to all users on the Whitespace Platform.</pre> <p/> <pre>Commonly-useful shared documents include (a) RWDefinedData, which contains the full list of Defined Data tags by contract heading along with all tag validation rules, and details of alternate tag name sets; and (b) Corporate-_COMPANYID_, which contains the full public details of the organisation whose Whitespace system name is _COMPANYID_.</pre>
+      tags:
+      - Documents
+      parameters:
+      - in: path
+        name: docID
+        required: true
+        schema:
+          type: string
+          example: IC7B4C4ECF-5340-4A88-B5BE-A4ECE8859B61::CHAT::50E4EB6C-147B-4337-8FB7-B4051D42410F
+          description: the full document ID
+      responses:
+        '200':
+          description: The raw JSON document
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/documents/corporateApprovedCarriers/getAll:
+    get:
+      tags:
+      - Documents
+      summary: Get the list of approved carriers, if it exists - Broker Only
+      description: In organisations where the <b>Approved (Re)Insurer List</b> has been activated, calling systems should only offer underwriters on the list to brokers as potential recipients for showing a risk. <p/>If the list has not been created, or is set to enabled = false, all (re)insurers are deemed suitable.
+      responses:
+        '200':
+          description: A list of approved carriers for the broker
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApprovedCarrierList'
+        '401':
+          $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+  /api/documents/corporateApprovedCarriers/saveAndPropagate:
+    post:
+      tags:
+      - Documents
+      summary: Set a broking organisation's list of approved carriers - Broker Only
+      description: Users making this call MUST HAVE Admin permission. Note that each time this endpoint is called, the payload replaces <b>ALL</b> of the existing approved carrier data. It should therefore always be called with a complete list of approved carriers, not just the ones to be updated. As such, we recommend calling the /documents/corporateApprovedCarriers/getAll endpoint first to retrieve the existing approved carrier list, and then building the POST payload using that array.
+      requestBody:
+        description: A document updating the approved carrier list
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                carriers:
+                  type: array
+                  description: A list of approved carriers
+                  items:
+                    $ref: '#/components/schemas/ApprovedCarrierList/properties/carriers/items'
+                companyID:
+                  type: string
+                  description: The unique uppercase ID of the broking organisation
+                  example: BLACKPOOL
+                enabled:
+                  type: boolean
+                  description: Whether the approved carrier functionality is active. If false, the list is suppressed
+                  example: true
+      responses:
+        '200':
+          description: An acknowledgement message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: ApprovedCarrierList saved
+        '401':
+          $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+  /api/documents/getLineGuidanceForRoot/{rootID}:
+    get:
+      tags:
+      - Documents
+      summary: Get line guidance documents for a risk
+      parameters:
+      - in: path
+        name: rootID
+        schema:
+          type: string
+        required: true
+        description: 'The unique root ID of the risk, excluding any :: suffixes'
+        example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+      responses:
+        '200':
+          description: A list of line guidance documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RWLineGuidanceSet'
+        '401':
+          $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+components:
+  schemas:
+    RWLineGuidanceSet:
+      type: object
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: number
+                example: 1
+              leadUnderwriterChannel:
+                type: string
+                example: offlineafricare_ALL
+                description: The name of the leader's team channel
+              multiSectionName:
+                type: string
+                description: The name of the section
+                example: Hull
+              multiSectionId:
+                type: string
+                description: The ID number of the section
+                example: '1'
+              leadUnderwriter:
+                type: string
+                example: OFFLINEAFRICANRE ALL
+                description: The leader's company and team IDs
+              leadUnderwriterFacility:
+                type: string
+                example: ICD77B5FD4-0790-42B9-BC53-65242FB96558
+                description: The unique ID of the leader's facility agreement
+        contents:
+          type: array
+          items:
+            type: object
+            properties:
+              conditionsEnabled:
+                type: boolean
+                example: true
+                description: Whether there are any conditions on the guidance
+              sectionIdentifiers:
+                type: array
+                items:
+                  type: string
+                  example: '1'
+                  description: The ID number of the section
+              maxString:
+                type: string
+                example: '40'
+                description: The maximum requested line percentage
+              minString:
+                type: string
+                example: '30'
+                description: The minimum requested line percentage
+              suggestedStamps:
+                $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
+              role:
+                description: Facility participation role
+                type: string
+                enum:
+                - leader
+                - agreementParty
+                - notifyParty
+                - nonNotifyParty
+                - doesNotApply
+              associatedFacilityId:
+                type: string
+                example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
+                description: Unique ID of the facility agreement that the declaration is attached to.
+              associatedFacilitySectionID:
+                type: string
+                example: '1'
+                description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
+        associatedPlacingID:
+          type: string
+          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO
+          description: The Unique ID of the Firm Order that this line guidance applies to
+        _id:
+          type: string
+          description: The unique ID of this document
+          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO::CATANIA::ALL::LGUS
+        _rev:
+          type: string
+          description: The revision number of this document
+          example: 1-304aa44d6b3231c380ed83bbda5d8f08
+        channels:
+          type: array
+          items:
+            type: string
+            example: catania_ALL
+        Provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+        type:
+          type: string
+          description: The named JMRC type descriptor for this document
+          example: RWLineGuidance
+    ExtendedMRC:
+      type: object
+      description: JSON returned by getExtendedMRC including the Risk and a broader range of data
+      properties:
+        createdAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        updatedAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        type:
+          type: string
+          example: RWPlacing
+          description: RWPlacing in all cases
+        control:
+          $ref: '#/components/schemas/RWPlacing/properties/control'
+        channels:
+          type: array
+          items:
+            type: string
+            example: ajc_ALL
+        MRCContract:
+          $ref: '#/components/schemas/RWPlacing/properties/MRCContract'
+        questionnaire:
+          type: object
+          properties:
+            questionnaire:
+              type: object
+              properties:
+                questions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tag:
+                        type: string
+                        example: Pension_Or_Benefits_Plan_Company_Sponsor
+                        description: name of the tag
+                      text:
+                        type: string
+                        example: Does the company sponsor any pension or benefits plan?
+                        description: The Question text
+                      id:
+                        type: string
+                        example: Pension or Benefits Plan - Company Sponsor
+                        description: the id of the question
+                      hidden:
+                        type: boolean
+                        example: true
+                        description: If the question is hidden or not, usually because the dependant question has not been answered
+                      table:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            tag:
+                              type: string
+                              example: Asset_Amount_Year
+                            text:
+                              type: string
+                              example: Year
+                        required:
+                        - tag
+                        - text
+                    required:
+                    - text
+                    - id
+                    - tag
+              required:
+              - questions
+          required:
+          - questionnaire
+        proposedEndorsementFollowers:
+          type: object
+          description: an object where the keys are the carrier team ids and the values are 'unchosen', 'leader', 'agreementParty', 'notifyParty', 'nonNotifyParty'
+          properties:
+            palermo_ALL:
+              description: as an example, the follower status for the Palermo All Risks team
+              type: string
+              example: leader
+        provenance:
+          type: object
+          description: Meta-data about the document to aid with auditing
+          properties:
+            version:
+              type: string
+              description: Version message of the platform system that created the document
+              example: 2022-04-11@15:04:48
+            dataHash:
+              type: string
+              description: Data hash of the activity document
+              example: 485241de4e5bfc76a0e2ef8bab79350c02d3aa06846fd2996cbf9fc9a7840eb0
+            system:
+              type: string
+              description: The internal name of the platform system
+              example: LavAPI
+            userID:
+              type: string
+              description: The user ID of the user whose action generated the document
+              example: MUB980AB60-1C96-4092-A1B4-B8FB183360D1
+            writtenAt:
+              type: string
+              description: The creation date of the document, in YYYY-MM-DD hh:mm:ss format
+              example: '2022-05-09T11:44:41.000Z'
+            provHash:
+              type: string
+              description: Provisioning hash of the document
+              example: 76a209a16d8b9214e7a33483d78718cc1a7e7aed7047282d2c94417404558e2d
+        accountDocID:
+          type: string
+          example: ''
+        writtenLineSets:
+          type: array
+          description: the written lines on the contract
+          items:
+            $ref: '#/components/schemas/RWWrittenLineSet'
+        signedLineSets:
+          type: array
+          description: the signed lines on the contract
+          items:
+            $ref: '#/components/schemas/RWSignedLineSet'
+        platformReferences:
+          type: object
+          description: document and revision of the risk
+          properties:
+            RiskID:
+              type: string
+              description: the document ID of the risk
+              example: IC08B5EC17-5486-4323-82FC-62CC8C410EA0::FO::EN1
+            Revision:
+              type: string
+              description: the revision of the risk
+              example: 4-b63141573da07d5316b7a2b4585fbd2b
+    ApprovedCarrierList:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Usually true, false allows the entire list to be suppressed
+          example: true
+        carriers:
+          type: array
+          description: A list of the approved carriers
+          items:
+            type: object
+            properties:
+              active:
+                type: boolean
+                description: Usually true, false allows the carrier to be suppressed temporarily or permanently
+                example: true
+              companyID:
+                type: string
+                description: Uppercase unique company ID for the carrier
+                example: ACMEUNDERWRITING
+              notes:
+                type: string
+                description: Optional notes about the status of the carrier
+                example: TOBA since January 2021
+              canSeeExtendedData:
+                type: boolean
+                example: true
+                description: Whether the carrier can see a Q&A Extended Data Questionnaire on the risk if one is present
+              approvedStamps:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    approved:
+                      type: boolean
+                      example: true
+                      description: Whether the stamp is approved or not
+                    stampID:
+                      type: string
+                      description: The ID of a stamp
+                      example: ST0366B6B0-E2FD-44CC-AE40-6D5E6F50A08E
+        companyID:
+          type: string
+          description: the unique uppercase ID of the broker
+          example: BLACKPOOL
+        channels:
+          type: array
+          description: array with just one item, the company shared channel
+          items:
+            type: string
+            description: the companyID in lowercase followed by _COMPANY_SHARED
+            example: blackpool_COMPANY_SHARED
+        type:
+          type: string
+          description: must be RWApprovedCarrierList
+          example: RWApprovedCarrierList
+        _id:
+          type: string
+          description: 'the document name, being ACL:: followed by the broker company ID'
+          example: ACL::BLACKPOOL
+    CorporateDetail:
+      type: object
+      properties:
+        admins:
+          type: array
+          description: List of user emails for administrators at the company
+          items:
+            type: string
+            example: sarah.kay.blackpool@wspt.co.uk
+        updatedAt:
+          type: string
+          description: The date and time the company's details were last updated
+          example: '2020-02-24T15:32:50.000Z'
+        teams:
+          type: array
+          items:
+            type: object
+            properties:
+              teamId:
+                type: string
+                description: Team identifier using uppercase letters with no punctuation
+                example: MARINECARGO
+              secondApprovalReviewers:
+                type: array
+                items:
+                  type: string
+                  description: Deprecated (see permissions array below). This array will always be empty. Formerly held userIDs of users with Internal Reviewer permission
+                  example: '-'
+              secondApprovalSelfApprovers:
+                type: array
+                items:
+                  type: string
+                  description: Deprecated (see permissions array below). This array will always be empty. Formerly held userIDs of users with Self-Approver permission
+                  example: '-'
+              name:
+                type: string
+                description: The name of the team, usually relating to the class of business worked on
+                example: Marine Cargo
+              channel:
+                type: string
+                description: The system channel for the team, comprising a lowercase version of the company ID, followed by underscrore and the team id
+                example: blackpool_MARINECARGO
+              isInactive:
+                type: boolean
+                example: false
+                description: True if the team has been marked as inactive
+              classOfBusiness:
+                type: array
+                items:
+                  type: string
+                  example: Marine
+                  description: The class(es) of business that are associated with the team
+        createdAt:
+          type: string
+          description: Time and date of creation
+          example: '2020-02-24 15:32:50'
+        companyId:
+          type: string
+          description: Company identifier using uppercase letters with no punctuation
+          example: OFFLINEBRITISHMARINE
+        isTestOnly:
+          type: boolean
+          description: True if the company account is just a test account with no live database access
+          example: false
+        channels:
+          type: array
+          description: Array with just one item, shared channel
+          items:
+            type: string
+            description: The value 'shared'
+            example: shared
+        stamps:
+          type: array
+          description: For (re)insurers, lists the stamps they have set up on the system. Empty for brokers
+          items:
+            type: object
+            properties:
+              bureauMarket:
+                type: string
+                example: Lloyd's
+              bureauMarketCode:
+                type: string
+                example: '1444'
+              bureauSubMarket:
+                type: string
+                example: PSM1
+              businessUnit:
+                type: string
+                example: Lloyd's Syndicate No.1444
+              stampType:
+                type: string
+                example: lloyds
+              uniqueID:
+                type: string
+                example: ST1843A345-1F69-435D-84E9-187BB3DD0F23
+        buttonStamps:
+          type: object
+          properties:
+            active:
+              type: boolean
+              example: true
+              description: True if the button stamp is available for users to apply
+            bureauMarketCode:
+              type: string
+              example: 5307/5
+            companyName:
+              type: string
+              example: Tomy
+            iconOnStamp:
+              type: boolean
+              description: True if an icon of any type is shown on the stamp, icon type is specified by stampType
+              example: true
+            layout:
+              type: object
+              description: The placement of name, type, and code data on the button stamp, each appearing once across the bottom, center, and top slots of the stamp
+              properties:
+                bottom:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+                center:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+                top:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+            stampID:
+              type: string
+              example: BTN-BAB19551-5557-4E6B-888B-E3B1B6A0E982
+              description: The unique ID of the button stamp, which always starts with BTN
+            stampType:
+              type: string
+              description: The type of icon displayed on the stamp. Note that other indicates no icon
+              enum:
+              - lloyds
+              - brexit
+              - other
+        settings:
+          type: object
+          properties:
+            canViewOfflineTeams:
+              type: boolean
+              description: True if the broking organisation is configured to save off-platform lines
+              example: false
+            mandatoryAuthStages:
+              type: array
+              items:
+                type: string
+                description: The list of contract stages at which second approval is required before a contract can proceed
+                example: brFirmOrder
+            digitiseOnlyToTemplate:
+              type: boolean
+              example: true
+              description: True if the broking organisation can only digitise imported contract files as templates
+        isOffline:
+          type: boolean
+          description: True for company accounts that are offline placeholders for organisations not yet using the platform
+          example: false
+        _id:
+          type: string
+          description: Reference ID for this company document
+          example: Corporate-BLACKPOOL
+        _rev:
+          type: string
+          description: Currect revision ID for this document
+          example: 3-a1df22093d0dc2978b87f396be3cd2fa
+        name:
+          type: string
+          description: The name of the company
+          example: Blackpool Insurance Brokers Ltd
+        role:
+          type: string
+          description: The organisation's role on the platform, either 'broker' or 'underwriter'
+          example: underwriter
+        authorityDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              authority:
+                type: string
+                example: Lloyd's (Syndicate Number)
+              pseudonymn:
+                type: string
+                example: '131'
+              registrationNumber:
+                type: string
+                example: '12313'
+        members:
+          type: array
+          items:
+            type: object
+            description: A user on the platform
+            properties:
+              name:
+                type: string
+                description: the user's name
+                example: Sarah Kay
+              email:
+                type: string
+                description: <p>email address for the user</p> <p>Note that for Data Protection reasons, the email is removed from some outputs, such as the /api/shared/corporate list. In these cases it can be removed by a call to /api/documents/Corporate-{CompanyID}.</p>
+                example: sarah.kay.blackpool@wspt.co.uk
+              currentState:
+                type: string
+                description: Live, Draft, Suspended etc
+                example: Live
+              uniqueID:
+                type: string
+                description: Live, Draft, Suspended etc
+                example: MUDA8AF5A8-98DF-4EF2-B2B8-4E069EDB7E8C
+              allowReporting:
+                type: boolean
+                description: whether or not the user may run the management reports
+                example: true
+              isOffPlatform:
+                type: boolean
+                description: indicates the user is "off platform"s
+                example: false
+              teams:
+                type: array
+                items:
+                  type: string
+                  description: list of teams the user belongs to
+                example:
+                - blackpool_MARINEHULL
+                - blackpool_MARINECARGO
+        permissions:
+          type: object
+          properties:
+            secondApprovalReviewers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's members with Internal Reviewer permission
+            secondApprovalSelfApprovers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's Internal Reviewers who also have the Self Approver permission
+            templateManagers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's members who have the Template Manager permission. This permission is only available to broking organisations
+        channelPrefix:
+          type: string
+          description: A lowercase version of companyId used for the beginning of team channels
+          example: blackpool
+        provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

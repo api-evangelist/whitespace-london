@@ -1,0 +1,204 @@
+openapi: 3.2.0
+info:
+  version: 0.1.0
+  title: Whitespace Platform Comments API
+  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+servers:
+- description: Sandbox Environment
+  url: https://sandbox.whitespace.co.uk/
+- description: Tess Environment
+  url: https://tess.whitespace.co.uk/
+- description: Beta Environment
+  url: https://beta.whitespace.co.uk/
+- description: Staging Environment
+  url: https://staging.whitespace.co.uk/
+security:
+- bearerAuth: []
+tags:
+- name: Comments
+paths:
+  /api/comments:
+    get:
+      summary: Gets all comments. Deprecated in favour of /risks/$rootID/related/RWComment
+      description: <div>This endpoint returns <b>all</b> comments a user can see.</div> <p/> <div>This will become impractical as volumes grow over time, so the endpoint is deprecated.</div> <p/> <div>We recommend loading the comments on an individual risk by using the 'related' endpoint with 'RWComment' as the document type /risks/$rootID/related/RWComment</div>
+      tags:
+      - Comments
+      responses:
+        '200':
+          description: array of RWComment documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RWComment'
+    post:
+      summary: Add a comment to a discussion between teams on a risk
+      description: <div>A discussion can be started by either Broker or Underwriter by creating a new comment. The discussion is between the broker and carrier teams on the risk, with the individual making the comment identified.</div>
+      tags:
+      - Comments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: the text of the message
+                  example: Is there a recent survey?
+                riskID:
+                  type: string
+                  description: 'The root ID of the risk, stopping before the :: delimiter'
+                  example: ICDF6A4332-589F-4962-9491-22BEBB8CB615
+                recipient:
+                  type: string
+                  description: the team channel for the recipient
+                  example: blackswan_MOTOR
+                senderChannel:
+                  type: string
+                  description: the channel of the sender
+                  example: akhil_ALL
+        description: PostCommentInput object. Optional item(s)
+      responses:
+        '200':
+          description: A confirmation of the saved data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: the document id of the comment saved
+                    example: IC7B4C4ECF-5340-4A88-B5BE-A4ECE8859B61::CHAT::50E4EB6C-147B-4337-8FB7-B4051D42410F
+                  rev:
+                    type: string
+                    description: the revision of the saved document
+                    example: 1-6a99b794f62c7237242e8cec6701b7bc
+                  ok:
+                    type: boolean
+                    description: true if the comment was saved
+                    example: true
+  /api/comments/global:
+    get:
+      summary: An array of 'global' comments sent by Whitespace to all platform users
+      description: <div>Whitespace can communicate with platform users through comments sent to everyone which are dismissed when read. This endpoint fetches those global comments.</div>
+      tags:
+      - Comments
+      responses:
+        '200':
+          description: array of comment documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RWComment'
+components:
+  schemas:
+    RWComment:
+      type: object
+      description: A document that represents one comment in a chat
+      properties:
+        _id:
+          type: string
+          description: unique document id for the comment
+          example: IC2C2C364A-F483-48F3-A927-05BC703CFCE3::CHAT::901F20D1-6BC8-46C6-BAA4-92B64507D7A2
+        apnsData:
+          type: object
+          description: data for notifications to be sent alerting users about the activity. NOTE - this is for internal Whitespace usage and so the data can be subject to change. Please do use this object for integration purposes
+          properties:
+            channels:
+              type: array
+              description: A list of the channels for users to receive the notification
+              items:
+                type: string
+                description: the team channel
+                example: carrier_MARINECASUALTY
+            data:
+              type: object
+              properties:
+                docId:
+                  type: string
+                  description: the risk root ID associated with the activity
+                  example: IC6A318B90-C319-4D2A-9088-98AD1B313556
+            dataForEmail:
+              type: object
+              properties:
+                riskInformation:
+                  type: array
+                  items:
+                    type: string
+                    description: an array of text strings to be displayed in the notification message
+                    example: Acme Widgets Inc USD 25,000,000 B0999JC2311220803
+                userID:
+                  type: string
+                  description: the ID of the user whose action triggered the activity
+                  example: MUB70853CF-3221-4FD4-8A30-12B05EAD2EA5
+            subscriptionRootID:
+              type: string
+              description: the risk root ID associated with the activity
+              example: IC6A318B90-C319-4D2A-9088-98AD1B313556
+            subtitle:
+              type: string
+              description: text subtitle for the message
+              example: 'Messina Insurance Co
+
+                Aviation Hull and Liability Insurance'
+            title:
+              type: string
+              description: text title for the message
+              example: Declined Quote Request
+        _rev:
+          type: string
+          example: 1-141df67df9e5eaacd0830c65e47a0bf9
+        createdAt:
+          type: string
+          example: '2021-08-04 15:18:02'
+        updatedAt:
+          type: string
+          example: '2021-08-04 15:18:02'
+        type:
+          type: string
+          example: RWComment
+          description: RWComment in all cases
+        associatedRootID:
+          type: string
+          example: IC2C2C364A-F483-48F3-A927-05BC703CFCE3
+          description: The root ID for the risk which the chat relates to
+        channels:
+          type: array
+          description: The team channels of users allowed to see the document
+          items:
+            type: string
+            example: blackpool_TERRORISM
+        comment:
+          type: string
+          description: The text of the comment
+          example: Is this within your risk criteria?
+        brokerMessageDocID:
+          example: IC09F74B05-AC0C-4FCA-A0C0-1FD94D4BEA2A::FO::BrokerMessage::tomyunderwriting_ALL
+          type: string
+          description: The ID of the broker message, if the comment was a broker message
+        brokerMessageStage:
+          type: string
+          example: FirmOrder
+          description: The stage of the risk when the broker message was shown
+        user:
+          type: string
+          description: The ID of the user who sent the message
+          example: MU9FCFC64E-7694-420A-BE61-2ABEDB3E8F52
+        createdAtMilliseconds:
+          type: integer
+          example: 1709213501333
+          description: The value of createdAt in miliseconds
+        isInternal:
+          type: boolean
+          example: false
+          description: True if the message is internal
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
