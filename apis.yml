@@ -202,6 +202,8 @@ apis:
   humanURL: https://apidocs.whitespace.co.uk/
   baseURL: https://sandbox.whitespace.co.uk/
   tags:
+  - Customers
+  tags_raw:
   - Customer
   properties:
   - type: OpenAPI
