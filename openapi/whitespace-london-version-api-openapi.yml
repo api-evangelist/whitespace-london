@@ -2,7 +2,10 @@ openapi: 3.2.0
 info:
   version: 0.1.0
   title: Whitespace Platform Version API
-  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+  description: 'Last update 29th May 2025
+
+
+    Our intention is to cover the API calls most of use to those wanting to integrate external systems to the Whitespace Platform.'
 servers:
 - description: Sandbox Environment
   url: https://sandbox.whitespace.co.uk/
@@ -46,6 +49,8 @@ paths:
                     description: commit of the underlying business logic library
                     example: 7ace78cb91d72b7fba303ebe50cb0c1e720abd61
           description: Version message for the latest build of the API library
+      operationId: getApiVersion
+      x-operation-id-source: derived
 components:
   securitySchemes:
     bearerAuth:

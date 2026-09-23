@@ -2,7 +2,10 @@ openapi: 3.2.0
 info:
   version: 0.1.0
   title: Whitespace Platform Data API
-  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+  description: 'Last update 29th May 2025
+
+
+    Our intention is to cover the API calls most of use to those wanting to integrate external systems to the Whitespace Platform.'
 servers:
 - description: Sandbox Environment
   url: https://sandbox.whitespace.co.uk/
@@ -19,8 +22,8 @@ tags:
 paths:
   /api/v22.04/data/{riskID}:
     get:
-      summary: Gets all Defined Data for a Risk.
-      description: <div>This endpoint returns the Defined Data for a risk. NOTE that this is the old version, new integrators please use v23.09.</div>
+      summary: Gets all Defined Data for a Risk
+      description: This endpoint returns the Defined Data for a risk. NOTE that this is the old version, new integrators please use v23.09.
       parameters:
       - in: path
         name: riskID
@@ -437,9 +440,14 @@ paths:
                       originalHeading: WRITTEN LINES
                       parentID: STB08B9750-CADF-4E86-B778-FECB7A6A4FA2
                       sectionIDs: []
+      operationId: getApiV2204DataByRiskID
+      x-operation-id-source: derived
     post:
       summary: Sets risk data through the Defined Data mechanism
-      description: <div>The payload needs the metadata from a previous GET, a multiSectionDefinition array which can be empty, and a definedData array with the values to be updated.</div> <p>You can NOT have an empty string as a value for a tag, please use ??? as the placeholder instead.</p>
+      description: 'The payload needs the metadata from a previous GET, a multiSectionDefinition array which can be empty, and a definedData array with the values to be updated.
+
+
+        You can NOT have an empty string as a value for a tag, please use ??? as the placeholder instead.'
       parameters:
       - in: path
         name: riskID
@@ -576,10 +584,12 @@ paths:
                   reason:
                     type: string
                     example: Something went wrong.
+      operationId: postApiV2204DataByRiskID
+      x-operation-id-source: derived
   /api/v22.04/data/{riskID}/tagset/{tagset}:
     get:
       summary: Gets all Defined Data for a Risk using an alternate tagset
-      description: <div>This endpoint returns the Defined Data for a risk</div>
+      description: This endpoint returns the Defined Data for a risk
       parameters:
       - in: path
         name: riskID
@@ -673,10 +683,15 @@ paths:
                       mrcHeading: Information
                       controlled: true
                       originalHeading: PLACING DATA
+      operationId: getApiV2204DataByRiskIDTagsetByTagset
+      x-operation-id-source: derived
   /api/v22.04/data/{riskID}/verify:
     post:
       summary: Verifies the risk data to check that it is acceptable for the update POST
-      description: <div>This endpoint describes any problems with the data that is intended to be sent to POST /api/v22.04/data/$RiskID.</div> <div>It just does a verify, it <b>does not</b> save any data.</div>
+      description: 'This endpoint describes any problems with the data that is intended to be sent to POST /api/v22.04/data/$RiskID.
+
+
+        It just does a verify, it does not save any data.'
       parameters:
       - in: path
         name: riskID
@@ -750,10 +765,21 @@ paths:
                             type: boolean
                             description: if included as true, indicates an item created through a controlled process, such as Written or Signed Line values
                             example: true
+      operationId: postApiV2204DataByRiskIDVerify
+      x-operation-id-source: derived
   /api/v23.09/data/{riskID}:
     get:
-      summary: Gets all tagged data for a risk using the default Whitespace Defined Data tagset.
-      description: <p>This endpoint returns the Defined Data for a risk.</p> <p>This data now includes several items of implicit information retrieved and tagged by the endpoint itself, including these new Controlled tags -- Agreement_Party_Role, Participation_Basis, Premium_Discount_Indicator, Subjectivity_Indicator, Subjectivity_Due_Date, Subjectivity_Condition, Subjectivity_Terms, Section_Reference, Insurer_Identification_Pseudonym, Reinsurer_Identification_Pseudonym, Insurer_Identification_Split_Percentage, Reinsurer_Identification_Split_Percentage, Placing_Broker_Unique_Identifier, Placing_Broker_Unique_Identifier_Agency, Premium_Split_Type, Deductible_Or_Excess_Indicator, Other_Intermediary_Unique_Identifier_Type.</p> <p>These implicit data tags are labelled with the term Controlled to clearly identify them.</p> <p>For consistency''s sake please use the same version of the different Data API calls when working with the same information -- i.e., use 23.09 POST calls if you used 23.09 calls to GET the data. </p>
+      summary: Gets all tagged data for a risk using the default Whitespace Defined Data tagset
+      description: 'This endpoint returns the Defined Data for a risk.
+
+
+        This data now includes several items of implicit information retrieved and tagged by the endpoint itself, including these new Controlled tags -- Agreement_Party_Role, Participation_Basis, Premium_Discount_Indicator, Subjectivity_Indicator, Subjectivity_Due_Date, Subjectivity_Condition, Subjectivity_Terms, Section_Reference, Insurer_Identification_Pseudonym, Reinsurer_Identification_Pseudonym, Insurer_Identification_Split_Percentage, Reinsurer_Identification_Split_Percentage, Placing_Broker_Unique_Identifier, Placing_Broker_Unique_Identifier_Agency, Premium_Split_Type, Deductible_Or_Excess_Indicator, Other_Intermediary_Unique_Identifier_Type.
+
+
+        These implicit data tags are labelled with the term Controlled to clearly identify them.
+
+
+        For consistency''''s sake please use the same version of the different Data API calls when working with the same information -- i.e., use 23.09 POST calls if you used 23.09 calls to GET the data.'
       parameters:
       - in: path
         name: riskID
@@ -904,9 +930,14 @@ paths:
                   tagSet: Whitespace
               schema:
                 $ref: '#/components/schemas/DefinedData'
+      operationId: getApiV2309DataByRiskID
+      x-operation-id-source: derived
     post:
-      summary: Sets tagged data in the risk through the Defined Data system.
-      description: <div>The payload needs the metadata from a previous GET, a multiSectionDefinition array which can be empty, and a definedData array with the values to be updated.</div> <p>You can NOT have an empty string as a value for a tag, please use ??? as the placeholder instead.</p>
+      summary: Sets tagged data in the risk through the Defined Data system
+      description: 'The payload needs the metadata from a previous GET, a multiSectionDefinition array which can be empty, and a definedData array with the values to be updated.
+
+
+        You can NOT have an empty string as a value for a tag, please use ??? as the placeholder instead.'
       parameters:
       - in: path
         name: riskID
@@ -1086,10 +1117,12 @@ paths:
                   reason:
                     type: string
                     example: Something went wrong.
+      operationId: postApiV2309DataByRiskID
+      x-operation-id-source: derived
   /api/v23.09/data/{riskID}/tagset/{tagset}:
     get:
-      summary: Gets all tagged data for a risk using an alternate set of data tags.
-      description: <div>This endpoint returns the Defined Data for a risk using tag field names that are not the default Whitespace tags.</div>
+      summary: Gets all tagged data for a risk using an alternate set of data tags
+      description: This endpoint returns the Defined Data for a risk using tag field names that are not the default Whitespace tags.
       parameters:
       - in: path
         name: riskID
@@ -1149,10 +1182,17 @@ paths:
                       documentRevision: 2-c29f73fcf3a9a415087fbd279a4d1fc2
                       version: '23.09'
                     multiSectionDefinition: []
+      operationId: getApiV2309DataByRiskIDTagsetByTagset
+      x-operation-id-source: derived
   /api/v23.09/data/{riskID}/verify:
     post:
-      summary: Verifies the data payload to check that it will be accepted by an update POST, and explains errors in detail.
-      description: <div>This endpoint describes any problems with a data payload that is to be sent to the POST /api/v23.09/data/$RiskID call.</div> <div>Unlike an update POST operation, it provides verbose error descriptions rather than a simple failure notification. <div>Please note that this call is solely for verification, it <b>does not</b> save any data.</div>
+      summary: Verifies the data payload to check that it will be accepted by an update POST…
+      description: 'This endpoint describes any problems with a data payload that is to be sent to the POST /api/v23.09/data/$RiskID call.
+
+
+        Unlike an update POST operation, it provides verbose error descriptions rather than a simple failure notification.
+
+        Please note that this call is solely for verification, it does not save any data.'
       parameters:
       - in: path
         name: riskID
@@ -1258,6 +1298,8 @@ paths:
                   mrcHeading: Period
                   parentID: Page:17D6A8C3-4C32-4E5D-AD1D-0A7321C66535
                   section: RiskDetails
+      operationId: postApiV2309DataByRiskIDVerify
+      x-operation-id-source: derived
 components:
   schemas:
     DefinedData:

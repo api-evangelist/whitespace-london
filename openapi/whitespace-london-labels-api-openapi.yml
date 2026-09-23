@@ -2,7 +2,10 @@ openapi: 3.2.0
 info:
   version: 0.1.0
   title: Whitespace Platform Labels API
-  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+  description: 'Last update 29th May 2025
+
+
+    Our intention is to cover the API calls most of use to those wanting to integrate external systems to the Whitespace Platform.'
 servers:
 - description: Sandbox Environment
   url: https://sandbox.whitespace.co.uk/
@@ -50,6 +53,8 @@ paths:
                     type: string
                     description: the revision for the document
                     example: 2-4412b4f96247795da30b19250bbf5e00
+      operationId: deleteApiLabelsByRootOrLabelID
+      x-operation-id-source: derived
     get:
       summary: Gets an array of labels for the risk
       tags:
@@ -71,6 +76,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RWLabel'
+      operationId: getApiLabelsByRootOrLabelID
+      x-operation-id-source: derived
     post:
       summary: Adds a label to a risk
       description: The payload covers the label text and team
@@ -118,6 +125,8 @@ paths:
                     type: boolean
                     description: true if the labels was saved
                     example: true
+      operationId: postApiLabelsByRootOrLabelID
+      x-operation-id-source: derived
   /api/labels/suggested:
     get:
       summary: A list of frequently used labels to prompt the user§
@@ -133,6 +142,8 @@ paths:
                 items:
                   type: string
                   example: High Priority
+      operationId: getApiLabelsSuggested
+      x-operation-id-source: derived
   /api/labels/teamLabels:
     get:
       summary: A list of all labels applied to risks for the team
@@ -147,6 +158,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RWLabel'
+      operationId: getApiLabelsTeamLabels
+      x-operation-id-source: derived
 components:
   schemas:
     RWLabel:

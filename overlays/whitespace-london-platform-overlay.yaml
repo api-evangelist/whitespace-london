@@ -5,7 +5,7 @@ overlay: 1.0.0
 info:
   title: API Evangelist enhancements for the Whitespace Platform API
   version: 1.0.0
-  description: 'Enhancements applied on top of the OpenAPI 3.0.0 document Whitespace serves inline at
+  x-description: 'Enhancements applied on top of the OpenAPI 3.0.0 document Whitespace serves inline at
     https://swagger.whitespace.co.uk/index.spec.js. The published specification declares NO operationId
     on any of its 121 operations, declares no production server, and marks four superseded operations
     as deprecated only in prose. This overlay adds a stable operationId per operation (derived from the

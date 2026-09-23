@@ -2,7 +2,10 @@ openapi: 3.2.0
 info:
   version: 0.1.0
   title: Whitespace Platform Attachments API
-  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+  description: 'Last update 29th May 2025
+
+
+    Our intention is to cover the API calls most of use to those wanting to integrate external systems to the Whitespace Platform.'
 servers:
 - description: Sandbox Environment
   url: https://sandbox.whitespace.co.uk/
@@ -42,6 +45,8 @@ paths:
           description: a logo, not as JSON, usually in PNG format
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: getApiAttachmentsByCorporateByLogo
+      x-operation-id-source: derived
   /api/attachments/{rootID}:
     get:
       tags:
@@ -111,6 +116,8 @@ paths:
                       example: 1
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: getApiAttachmentsByRootID
+      x-operation-id-source: derived
   /api/attachments/array/{rootID}:
     get:
       tags:
@@ -198,10 +205,18 @@ paths:
                 version: 1
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: getApiAttachmentsArrayByRootID
+      x-operation-id-source: derived
   /api/attachments/{parentDocID}/{identifier}:
     get:
       summary: Get an attachment
-      description: <p>Download an attachment, using values from a call to /api/attachments/$RiskID. The content will not be JSON, but the contents of the attachment which can be saved to a file.</p> <p>Due to limitations in Swagger, the attachment might not display properly when tested, but all attachment types can be downloaded normally outside Swagger.</p> <p>If you want to download an attachment linked to a Subjectivity, you need to grab the <b>_id</b> and <b>identifier</b> by calling /api/risks/{rootID}/related/{type} with a type of RWSubjectivityResponse.</p>
+      description: 'Download an attachment, using values from a call to /api/attachments/$RiskID. The content will not be JSON, but the contents of the attachment which can be saved to a file.
+
+
+        Due to limitations in Swagger, the attachment might not display properly when tested, but all attachment types can be downloaded normally outside Swagger.
+
+
+        If you want to download an attachment linked to a Subjectivity, you need to grab the _id and identifier by calling /api/risks/{rootID}/related/{type} with a type of RWSubjectivityResponse.'
       tags:
       - Attachments
       parameters:
@@ -222,10 +237,20 @@ paths:
       responses:
         '200':
           description: The content of the file, which will not be JSON, but more likely an image, spreadsheet etc.
+      operationId: getApiAttachmentsByParentDocIDByIdentifier
+      x-operation-id-source: derived
   /api/attachments/{riskID}/{attachmentName}:
     post:
       summary: Upload an attachment - Broker Only
-      description: <p>Broker users can call this endpoint to upload an attachment document to a risk. The document is not automatically shared with carriers. The broker must deliberately share it as required.</p> <p>The payload is not JSON, but the binary content of the file. The MIME Content header must correctly define the file, so "image/png" for an image, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" for an XLSX spreadsheet and so on. All content headers should match the <a href='https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'>reference list of MIME types at mozilla.org</a>. <p>If you want to replace an existing attachment, use the <b>newVersionOf</b> parameter<p> <p>Please note that underwriter users may call POST /api/attachbyunderwriter to send a contract attachment to the broker.</p>
+      description: 'Broker users can call this endpoint to upload an attachment document to a risk. The document is not automatically shared with carriers. The broker must deliberately share it as required.
+
+
+        The payload is not JSON, but the binary content of the file. The MIME Content header must correctly define the file, so "image/png" for an image, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" for an XLSX spreadsheet and so on. All content headers should match the reference list of MIME types at mozilla.org.
+
+        If you want to replace an existing attachment, use the newVersionOf parameter
+
+
+        Please note that underwriter users may call POST /api/attachbyunderwriter to send a contract attachment to the broker.'
       tags:
       - Attachments
       parameters:
@@ -262,6 +287,8 @@ paths:
                     type: string
                     example: Attachment uploaded.
                     description: A message indicating success
+      operationId: postApiAttachmentsByRiskIDByAttachmentName
+      x-operation-id-source: derived
   /api/attachments/{rootID}/showToCarriers:
     post:
       summary: Show an attachment to carriers - Broker Only
@@ -308,6 +335,8 @@ paths:
                     type: string
                     description: Message to confirm the attachment has been shown.
                     example: Attachment Shown
+      operationId: postApiAttachmentsByRootIDShowToCarriers
+      x-operation-id-source: derived
   /api/attachbyunderwriter/{riskID}/{underwriter_channel}/{attachmentname}:
     post:
       summary: Upload an Attachment as an Underwriter - Underwriter Only
@@ -364,6 +393,8 @@ paths:
                     type: string
                     description: The ID of the new attachment
                     example: A-22E24B43-38B7-4B86-B62A-8018DC8B9839
+      operationId: postApiAttachbyunderwriterByRiskIDByUnderwriterChannelByAttachmentname
+      x-operation-id-source: derived
 components:
   securitySchemes:
     bearerAuth:

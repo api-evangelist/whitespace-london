@@ -2,7 +2,10 @@ openapi: 3.2.0
 info:
   version: 0.1.0
   title: Whitespace Platform Activities API
-  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+  description: 'Last update 29th May 2025
+
+
+    Our intention is to cover the API calls most of use to those wanting to integrate external systems to the Whitespace Platform.'
 servers:
 - description: Sandbox Environment
   url: https://sandbox.whitespace.co.uk/
@@ -19,7 +22,7 @@ tags:
 paths:
   /api/activities/{riskID}:
     get:
-      summary: A list of the activity documents that describe the history of one specific document instance
+      summary: A list of the activity documents that describe the history of one specific…
       description: This endpoint returns the activity associated with one specific version of a contract or another single document associated with a risk. In most cases, this will be less useful than GET /activities/{RootID}/full, which returns all the activities associated with a root risk.
       tags:
       - Activities
@@ -93,6 +96,8 @@ paths:
                       example: IC70286F5F-9457-41D7-AE71-16222BECEF21::ARCH::96C8C81A-C8B6-44AA-BF4C-03FE2812AF56
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: getApiActivitiesByRiskID
+      x-operation-id-source: derived
   /api/activities/{rootID}/full:
     get:
       summary: A list of the activity documents that describe the full history of a root risk
@@ -118,6 +123,8 @@ paths:
                   $ref: '#/paths/~1api~1activities~1%7BriskID%7D/get/responses/200/content/application~1json/schema/items'
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: getApiActivitiesByRootIDFull
+      x-operation-id-source: derived
   /api/activities/filter/help:
     get:
       tags:
@@ -167,11 +174,13 @@ paths:
                 - Subjectivities/Line Conditions Rejected
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: getApiActivitiesFilterHelp
+      x-operation-id-source: derived
   /api/activities/filter:
     post:
       tags:
       - Activities
-      summary: Fetch a list of all activity visible to the user matching a specific activity type and optional date range
+      summary: Fetch a list of all activity visible to the user matching a specific activity…
       description: A parameter matching a single activity is required for this call, but the 'from' and 'to' parameters are optional, and take a date/time block in yyyy-mm-dd hh:mm:ss format. If the date parameters are missing, all visible activity documents matching the activity will be returned. Note that the 'from' parameter can instead accept a duration. If a duration is used, it is calculated backwards from the present time, and the 'to' parameter should be omitted. See GET /activities/filter/help for example payloads and a list of commonly requested activities.
       requestBody:
         description: Array of filter criteria
@@ -204,141 +213,10 @@ paths:
                   $ref: '#/components/schemas/RWActivity'
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiActivitiesFilter
+      x-operation-id-source: derived
 components:
   schemas:
-    ExtendedMRC:
-      type: object
-      description: JSON returned by getExtendedMRC including the Risk and a broader range of data
-      properties:
-        createdAt:
-          type: string
-          example: '2021-08-04T15:18:02.000Z'
-        updatedAt:
-          type: string
-          example: '2021-08-04T15:18:02.000Z'
-        type:
-          type: string
-          example: RWPlacing
-          description: RWPlacing in all cases
-        control:
-          $ref: '#/components/schemas/RWPlacing/properties/control'
-        channels:
-          type: array
-          items:
-            type: string
-            example: ajc_ALL
-        MRCContract:
-          $ref: '#/components/schemas/RWPlacing/properties/MRCContract'
-        questionnaire:
-          type: object
-          properties:
-            questionnaire:
-              type: object
-              properties:
-                questions:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      tag:
-                        type: string
-                        example: Pension_Or_Benefits_Plan_Company_Sponsor
-                        description: name of the tag
-                      text:
-                        type: string
-                        example: Does the company sponsor any pension or benefits plan?
-                        description: The Question text
-                      id:
-                        type: string
-                        example: Pension or Benefits Plan - Company Sponsor
-                        description: the id of the question
-                      hidden:
-                        type: boolean
-                        example: true
-                        description: If the question is hidden or not, usually because the dependant question has not been answered
-                      table:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            tag:
-                              type: string
-                              example: Asset_Amount_Year
-                            text:
-                              type: string
-                              example: Year
-                        required:
-                        - tag
-                        - text
-                    required:
-                    - text
-                    - id
-                    - tag
-              required:
-              - questions
-          required:
-          - questionnaire
-        proposedEndorsementFollowers:
-          type: object
-          description: an object where the keys are the carrier team ids and the values are 'unchosen', 'leader', 'agreementParty', 'notifyParty', 'nonNotifyParty'
-          properties:
-            palermo_ALL:
-              description: as an example, the follower status for the Palermo All Risks team
-              type: string
-              example: leader
-        provenance:
-          type: object
-          description: Meta-data about the document to aid with auditing
-          properties:
-            version:
-              type: string
-              description: Version message of the platform system that created the document
-              example: 2022-04-11@15:04:48
-            dataHash:
-              type: string
-              description: Data hash of the activity document
-              example: 485241de4e5bfc76a0e2ef8bab79350c02d3aa06846fd2996cbf9fc9a7840eb0
-            system:
-              type: string
-              description: The internal name of the platform system
-              example: LavAPI
-            userID:
-              type: string
-              description: The user ID of the user whose action generated the document
-              example: MUB980AB60-1C96-4092-A1B4-B8FB183360D1
-            writtenAt:
-              type: string
-              description: The creation date of the document, in YYYY-MM-DD hh:mm:ss format
-              example: '2022-05-09T11:44:41.000Z'
-            provHash:
-              type: string
-              description: Provisioning hash of the document
-              example: 76a209a16d8b9214e7a33483d78718cc1a7e7aed7047282d2c94417404558e2d
-        accountDocID:
-          type: string
-          example: ''
-        writtenLineSets:
-          type: array
-          description: the written lines on the contract
-          items:
-            $ref: '#/components/schemas/RWWrittenLineSet'
-        signedLineSets:
-          type: array
-          description: the signed lines on the contract
-          items:
-            $ref: '#/components/schemas/RWSignedLineSet'
-        platformReferences:
-          type: object
-          description: document and revision of the risk
-          properties:
-            RiskID:
-              type: string
-              description: the document ID of the risk
-              example: IC08B5EC17-5486-4323-82FC-62CC8C410EA0::FO::EN1
-            Revision:
-              type: string
-              description: the revision of the risk
-              example: 4-b63141573da07d5316b7a2b4585fbd2b
     RWActivity:
       type: object
       description: The summary data associated with an individual activity document.
@@ -620,6 +498,139 @@ components:
           type: boolean
           example: false
           description: True if the message is internal
+    ExtendedMRC:
+      type: object
+      description: JSON returned by getExtendedMRC including the Risk and a broader range of data
+      properties:
+        createdAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        updatedAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        type:
+          type: string
+          example: RWPlacing
+          description: RWPlacing in all cases
+        control:
+          $ref: '#/components/schemas/RWPlacing/properties/control'
+        channels:
+          type: array
+          items:
+            type: string
+            example: ajc_ALL
+        MRCContract:
+          $ref: '#/components/schemas/RWPlacing/properties/MRCContract'
+        questionnaire:
+          type: object
+          properties:
+            questionnaire:
+              type: object
+              properties:
+                questions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tag:
+                        type: string
+                        example: Pension_Or_Benefits_Plan_Company_Sponsor
+                        description: name of the tag
+                      text:
+                        type: string
+                        example: Does the company sponsor any pension or benefits plan?
+                        description: The Question text
+                      id:
+                        type: string
+                        example: Pension or Benefits Plan - Company Sponsor
+                        description: the id of the question
+                      hidden:
+                        type: boolean
+                        example: true
+                        description: If the question is hidden or not, usually because the dependant question has not been answered
+                      table:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            tag:
+                              type: string
+                              example: Asset_Amount_Year
+                            text:
+                              type: string
+                              example: Year
+                        required:
+                        - tag
+                        - text
+                    required:
+                    - text
+                    - id
+                    - tag
+              required:
+              - questions
+          required:
+          - questionnaire
+        proposedEndorsementFollowers:
+          type: object
+          description: an object where the keys are the carrier team ids and the values are 'unchosen', 'leader', 'agreementParty', 'notifyParty', 'nonNotifyParty'
+          properties:
+            palermo_ALL:
+              description: as an example, the follower status for the Palermo All Risks team
+              type: string
+              example: leader
+        provenance:
+          type: object
+          description: Meta-data about the document to aid with auditing
+          properties:
+            version:
+              type: string
+              description: Version message of the platform system that created the document
+              example: 2022-04-11@15:04:48
+            dataHash:
+              type: string
+              description: Data hash of the activity document
+              example: 485241de4e5bfc76a0e2ef8bab79350c02d3aa06846fd2996cbf9fc9a7840eb0
+            system:
+              type: string
+              description: The internal name of the platform system
+              example: LavAPI
+            userID:
+              type: string
+              description: The user ID of the user whose action generated the document
+              example: MUB980AB60-1C96-4092-A1B4-B8FB183360D1
+            writtenAt:
+              type: string
+              description: The creation date of the document, in YYYY-MM-DD hh:mm:ss format
+              example: '2022-05-09T11:44:41.000Z'
+            provHash:
+              type: string
+              description: Provisioning hash of the document
+              example: 76a209a16d8b9214e7a33483d78718cc1a7e7aed7047282d2c94417404558e2d
+        accountDocID:
+          type: string
+          example: ''
+        writtenLineSets:
+          type: array
+          description: the written lines on the contract
+          items:
+            $ref: '#/components/schemas/RWWrittenLineSet'
+        signedLineSets:
+          type: array
+          description: the signed lines on the contract
+          items:
+            $ref: '#/components/schemas/RWSignedLineSet'
+        platformReferences:
+          type: object
+          description: document and revision of the risk
+          properties:
+            RiskID:
+              type: string
+              description: the document ID of the risk
+              example: IC08B5EC17-5486-4323-82FC-62CC8C410EA0::FO::EN1
+            Revision:
+              type: string
+              description: the revision of the risk
+              example: 4-b63141573da07d5316b7a2b4585fbd2b
   securitySchemes:
     bearerAuth:
       type: http

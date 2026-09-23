@@ -2,7 +2,10 @@ openapi: 3.2.0
 info:
   version: 0.1.0
   title: Whitespace Platform Bind Notify Parties API
-  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+  description: 'Last update 29th May 2025
+
+
+    Our intention is to cover the API calls most of use to those wanting to integrate external systems to the Whitespace Platform.'
 servers:
 - description: Sandbox Environment
   url: https://sandbox.whitespace.co.uk/
@@ -19,7 +22,7 @@ tags:
 paths:
   /api/bindNotifyParties:
     post:
-      summary: Bind notify and non-notify parties to a contract declared to a facility/MGA. At least one (re)insurer has to be assigned as a non/notify party before making this call.
+      summary: Bind notify and non-notify parties to a contract declared to a facility/MGA.
       tags:
       - Bind Notify Parties
       requestBody:
@@ -63,6 +66,8 @@ paths:
                 rev: 1-c3a8c9c977f512b0a6e25b9d43d47af5
               - rev: 4-6222e2504624461428bc5f778aff9be6
                 id: IC5CA72000-F46E-46C6-BB75-C680B4CFFD2E::FGUI::ICDD1393D9-252B-40CF-ADF7-04EBF542C220
+      operationId: postApiBindNotifyParties
+      x-operation-id-source: derived
 components:
   securitySchemes:
     bearerAuth:

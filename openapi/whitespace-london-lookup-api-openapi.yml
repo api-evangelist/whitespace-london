@@ -2,7 +2,10 @@ openapi: 3.2.0
 info:
   version: 0.1.0
   title: Whitespace Platform Lookup API
-  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+  description: 'Last update 29th May 2025
+
+
+    Our intention is to cover the API calls most of use to those wanting to integrate external systems to the Whitespace Platform.'
 servers:
 - description: Sandbox Environment
   url: https://sandbox.whitespace.co.uk/
@@ -19,8 +22,14 @@ tags:
 paths:
   /api/lookup/check/{heading}:
     get:
-      summary: check whether a line item heading maps to one from the enumerated MRC Heading list
-      description: <p>The Platform uses Original Heading for the text to display to the user, and holds a Name Variation and MRC Heading for unambiguous identification.</p> <p>Try this endpoint with values such as Rate, Company, LossLimit, NoSuchHeading.</p> <p>In the 'maps to' case, the headings are shown both as the Title Case enumerated value (e.g. LimitOfLiability) and the multi-word display value (e.g. Limit of Liability).</p>
+      summary: check whether a line item heading maps to one from the enumerated MRC Heading…
+      description: 'The Platform uses Original Heading for the text to display to the user, and holds a Name Variation and MRC Heading for unambiguous identification.
+
+
+        Try this endpoint with values such as Rate, Company, LossLimit, NoSuchHeading.
+
+
+        In the ''maps to'' case, the headings are shown both as the Title Case enumerated value (e.g. LimitOfLiability) and the multi-word display value (e.g. Limit of Liability).'
       tags:
       - Lookup
       parameters:
@@ -43,6 +52,8 @@ paths:
                     type: string
                     description: either 'not mapped' or 'maps to a heading of...'
                     example: LossLimit maps to a Heading of LimitOfLiability = Limit of Liability
+      operationId: getApiLookupCheckByHeading
+      x-operation-id-source: derived
   /api/lookup/headings:
     get:
       summary: get the enumerated list of MRC headings
@@ -231,6 +242,8 @@ paths:
                     - ScopeAndLimitsOfDelegationForInsurancesBoundAndAlterationsThereto
                     - LineSlipAdministration
                     - Unknown
+      operationId: getApiLookupHeadings
+      x-operation-id-source: derived
   /api/lookup/endorsementHeadingsInSection/{section}:
     get:
       summary: list the headings associated with a specific endorsement section
@@ -259,6 +272,8 @@ paths:
                     example:
                     - EndorsementEffectiveDate
                     - ContractChanges
+      operationId: getApiLookupEndorsementHeadingsInSectionBySection
+      x-operation-id-source: derived
   /api/lookup/headingsInSection/{section}:
     get:
       summary: list the headings associated with a specific section
@@ -299,6 +314,8 @@ paths:
                     - RegulatoryClientClassification
                     - ForeignAccountTaxComplianceAct
                     - IsTheBusinessSubjectToDistanceMarketingDirective
+      operationId: getApiLookupHeadingsInSectionBySection
+      x-operation-id-source: derived
   /api/lookup/namevariations:
     get:
       summary: a list of prepared name variations for MRC Headings
@@ -354,6 +371,8 @@ paths:
                       InsuredPerson:
                         type: string
                         example: Insured
+      operationId: getApiLookupNamevariations
+      x-operation-id-source: derived
   /api/lookup/person/{email}:
     get:
       summary: Retrieve data on an individual identified by an email address
@@ -387,6 +406,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/CorporateDetail/properties/members/items'
+      operationId: getApiLookupPersonByEmail
+      x-operation-id-source: derived
 components:
   schemas:
     CorporateDetail:

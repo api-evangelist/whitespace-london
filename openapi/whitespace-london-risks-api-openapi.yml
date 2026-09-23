@@ -2,7 +2,10 @@ openapi: 3.2.0
 info:
   version: 0.1.0
   title: Whitespace Platform Risks API
-  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+  description: 'Last update 29th May 2025
+
+
+    Our intention is to cover the API calls most of use to those wanting to integrate external systems to the Whitespace Platform.'
 servers:
 - description: Sandbox Environment
   url: https://sandbox.whitespace.co.uk/
@@ -2020,6 +2023,8 @@ paths:
                 updatedAt: '2024-08-22 15:07:10'
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: getApiRisksByRiskID
+      x-operation-id-source: derived
   /api/risks/{riskID}/editLineItem:
     post:
       tags:
@@ -2785,6 +2790,8 @@ paths:
                     originalHeading: 'BROKER REMUNERATION AND DEDUCTIONS '
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDEditLineItem
+      x-operation-id-source: derived
   /api/risks/{riskID}/editMultipleLineItems:
     post:
       tags:
@@ -2938,9 +2945,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RWPlacing'
+      operationId: postApiRisksByRiskIDEditMultipleLineItems
+      x-operation-id-source: derived
   /api/risks/{riskID}/changeDraftNowQuoteInPreparation:
     post:
-      summary: The Underwriter takes a Quotation Request and starts preparing an Underwriter Quotation - Underwriter Only
+      summary: The Underwriter takes a Quotation Request and starts preparing an Underwriter…
       description: No payload is required for this endpoint
       tags:
       - Risks
@@ -2964,6 +2973,8 @@ paths:
                     type: string
                     description: the doc ID of the created Underwriter Quotation
                     example: IC8F2D09C8-A220-4DD6-9E14-77AFF7A617AC::MU71BA6F2F-FFD1-4A92-86AC-5277FEAF3012::UQ4
+      operationId: postApiRisksByRiskIDChangeDraftNowQuoteInPreparation
+      x-operation-id-source: derived
   /api/risks/{riskID}/cloneDraft:
     post:
       summary: Clones an existing risk as a new draft, setting UMR and Insured - Broker Only
@@ -3037,6 +3048,8 @@ paths:
                     type: string
                     description: The unique ID of the new risk, starting with IC. As it is a Draft, it will not have any '::' delimiters.
                     example: ICF9074CE2-4D25-4ECB-AE5D-27CEA1A25F9B
+      operationId: postApiRisksByRiskIDCloneDraft
+      x-operation-id-source: derived
   /api/risks/{riskID}/declineQuoteRequest:
     post:
       summary: Called by the Underwriter to decline a quote request - Underwriter Only
@@ -3104,6 +3117,8 @@ paths:
                     type: string
                     description: a message showing that the quote has been declined
                     example: Quote Request IC8F2D09C8-A220-4DD6-9E14-77AFF7A617AC::QR2 successfully declined
+      operationId: postApiRisksByRiskIDDeclineQuoteRequest
+      x-operation-id-source: derived
   /api/risks/{riskID}/draftToFirmOrder:
     post:
       summary: Creates a firm order risk from a draft - Broker Only
@@ -3138,6 +3153,8 @@ paths:
                     type: string
                     example: doc with id IC63D86D53-3B1F-459F-9D35-5C2D4F0E4854 successfully marked as firm order
                     description: A message indicating success
+      operationId: postApiRisksByRiskIDDraftToFirmOrder
+      x-operation-id-source: derived
   /api/risks/{riskID}/endorsementFollowers:
     get:
       summary: Details of the follower carriers on an endorsement
@@ -3160,11 +3177,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RWEndorsementFollower'
+      operationId: getApiRisksByRiskIDEndorsementFollowers
+      x-operation-id-source: derived
   /api/risks/{riskID}/getExtendedMRC:
     get:
       tags:
       - Risks
-      summary: get extended data about the state of a risk, adding, for instance, written and signed lines to the risk itself
+      summary: get extended data about the state of a risk, adding, for instance, written and…
       parameters:
       - in: path
         name: riskID
@@ -3180,10 +3199,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExtendedMRC'
+      operationId: getApiRisksByRiskIDGetExtendedMRC
+      x-operation-id-source: derived
   /api/risks/{riskID}/lineitem/{mrcHeading}:
     get:
       summary: Gets the line item by index, or all line items for a specified heading
-      description: The final parameter can be a numeric index, or a specific heading such as Period, Premium etc. <p/> The endpoint /api/lookup/headings gives list of the available headings. <p/> Note that the API returns an array as there could be more than one line item with the chosen heading.
+      description: 'The final parameter can be a numeric index, or a specific heading such as Period, Premium etc.
+
+        The endpoint /api/lookup/headings gives list of the available headings.
+
+        Note that the API returns an array as there could be more than one line item with the chosen heading.'
       tags:
       - Risks
       parameters:
@@ -3557,6 +3582,8 @@ paths:
                             type: string
                             example: toymunderwriting
                             description: The channel prefix (the first section of the channel name) of carrier/s assigned this version of the vertical term
+      operationId: getApiRisksByRiskIDLineitemByMrcHeading
+      x-operation-id-source: derived
   /api/risks/{riskID}/markAsFirmOrder:
     post:
       summary: The broker converts a quoted risk into a firm order - Broker Only
@@ -3591,9 +3618,11 @@ paths:
                     type: string
                     description: A message indicating success
                     example: doc with id ICB2906C80-AC59-4B3A-B4AC-643E340D5B30::MUD10D799A-7AEB-4F84-A4D9-9FDA73D057DE::UQ1 successfully marked as firm order
+      operationId: postApiRisksByRiskIDMarkAsFirmOrder
+      x-operation-id-source: derived
   /api/risks/{riskID}/markAsIndicative:
     post:
-      summary: The underwriter sets or unsets the indicative flag for an Underwriter Quotation ::UQx
+      summary: The underwriter sets or unsets the indicative flag for an Underwriter Quotation…
       tags:
       - Risks
       parameters:
@@ -3623,10 +3652,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RWPlacing'
+      operationId: postApiRisksByRiskIDMarkAsIndicative
+      x-operation-id-source: derived
   /api/risks/{riskID}/requestWrittenLineSets:
     post:
-      summary: Sends a Firm Order/Bindable Quote risk to a carrier for a Written Line - Broker Only
-      description: <p>The payload covers various options which the broker can set, including the percentage range for the Written Line and the Stamp to be used. Multiple carriers can be approached with one endpoint call.</p>
+      summary: Sends a Firm Order/Bindable Quote risk to a carrier for a Written Line - Broker…
+      description: The payload covers various options which the broker can set, including the percentage range for the Written Line and the Stamp to be used. Multiple carriers can be approached with one endpoint call.
       tags:
       - Risks
       parameters:
@@ -3757,9 +3788,11 @@ paths:
                     type: string
                     example: Line guidances sent.
                     description: A message indicating success
+      operationId: postApiRisksByRiskIDRequestWrittenLineSets
+      x-operation-id-source: derived
   /api/risks/{riskID}/showQuoteToBroker:
     post:
-      summary: The Underwriter sends an Underwriter Quotation back to the Broker - Underwriter Only
+      summary: The Underwriter sends an Underwriter Quotation back to the Broker - Underwriter…
       description: No payload is required for this endpoint
       tags:
       - Risks
@@ -3783,6 +3816,8 @@ paths:
                     type: string
                     description: a message showing a successful result
                     example: doc with id IC8F2D09C8-A220-4DD6-9E14-77AFF7A617AC::MU71BA6F2F-FFD1-4A92-86AC-5277FEAF3012::UQ4 successfully shown to broker
+      operationId: postApiRisksByRiskIDShowQuoteToBroker
+      x-operation-id-source: derived
   /api/risks/{riskID}/showToLeadUnderwriter:
     post:
       summary: Shows a draft risk to an underwriter for quoting - Broker Only
@@ -3879,10 +3914,12 @@ paths:
                   msg:
                     type: string
                     example: Shown ICC81F7C6D-90D8-430B-9514-30B9A2614612 to Underwriter MARINEHULL at WHITECLIFFS
+      operationId: postApiRisksByRiskIDShowToLeadUnderwriter
+      x-operation-id-source: derived
   /api/risks/{riskID}/signSets:
     post:
-      summary: Sign the written lines on a Firm Order, promoting the risk to signed status - Broker Only
-      description: <p>The payload must include one written line set identifying the line or lines written by an underwriter, along with the percentage of the risk signed to that line. This set can include a section ID reference, and multiple sets may be written so long as the total percentage written does not exceed 100%.</p>
+      summary: Sign the written lines on a Firm Order, promoting the risk to signed status…
+      description: The payload must include one written line set identifying the line or lines written by an underwriter, along with the percentage of the risk signed to that line. This set can include a section ID reference, and multiple sets may be written so long as the total percentage written does not exceed 100%.
       tags:
       - Risks
       parameters:
@@ -3975,6 +4012,8 @@ paths:
                     description: Success is confirmed by the message 'Successfully signed lines!'
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDSignSets
+      x-operation-id-source: derived
   /api/risks/{riskID}/reSignSets:
     post:
       summary: Update the Signed Lines on a Signed Risk - Broker Only
@@ -4076,10 +4115,12 @@ paths:
                   rev: 1-fd42e2e456272f33005d436540c3c044
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDReSignSets
+      x-operation-id-source: derived
   /api/risks/{riskID}/writeLine:
     post:
       summary: Writes a line to the risk - Underwriter Only
-      description: <p>The payload must include one stamp detailed as line percentage, year and stamp ID, with references. It can optionally include section ID references, multiple stamps, and details of line conditions or subjectivities.</p>
+      description: The payload must include one stamp detailed as line percentage, year and stamp ID, with references. It can optionally include section ID references, multiple stamps, and details of line conditions or subjectivities.
       tags:
       - Risks
       parameters:
@@ -4304,6 +4345,8 @@ paths:
                     description: Success is confirmed by the message 'Wrote line.'
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDWriteLine
+      x-operation-id-source: derived
   /api/risks/newDraft:
     post:
       tags:
@@ -4368,6 +4411,8 @@ paths:
                 ok: true
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksNewDraft
+      x-operation-id-source: derived
   /api/risks/root/{rootID}:
     get:
       tags:
@@ -4409,6 +4454,8 @@ paths:
                       - messina_ALL
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: getApiRisksRootByRootID
+      x-operation-id-source: derived
   /api/risks/{rootID}/related/{type}:
     get:
       tags:
@@ -4441,6 +4488,8 @@ paths:
                   description: documents of the specified type
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: getApiRisksByRootIDRelatedByType
+      x-operation-id-source: derived
   /api/risks/save:
     post:
       tags:
@@ -5314,6 +5363,8 @@ paths:
                   reason:
                     type: string
                     example: Invalid WSAUTH
+      operationId: postApiRisksSave
+      x-operation-id-source: derived
   /api/risks/{EndorsementID}/showEndorsement:
     post:
       tags:
@@ -5360,6 +5411,8 @@ paths:
                     description: Success is confirmed by the message 'Shown.'
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByEndorsementIDShowEndorsement
+      x-operation-id-source: derived
   /api/risks/{EndorsementID}/acceptEndorsement:
     post:
       summary: Accept an endorsement as an underwriter - Underwriter Only
@@ -5405,6 +5458,8 @@ paths:
                     type: string
                     description: an acceptance message
                     example: accepted
+      operationId: postApiRisksByEndorsementIDAcceptEndorsement
+      x-operation-id-source: derived
   /api/risks/changeRiskName/{rootID}:
     post:
       summary: Change the name of the risk - Broker Only
@@ -5441,6 +5496,8 @@ paths:
                     type: string
                     description: Message to confirm that the risk name has been updated
                     example: Updated Risk Name
+      operationId: postApiRisksChangeRiskNameByRootID
+      x-operation-id-source: derived
   /api/risks/{quoteID}/createDraftFromQuote:
     post:
       summary: Create an editable draft from a quote - Broker Only
@@ -5467,11 +5524,13 @@ paths:
                     type: string
                     description: a message showing that the draft has been created
                     example: Draft created
+      operationId: postApiRisksByQuoteIDCreateDraftFromQuote
+      x-operation-id-source: derived
   /api/risks/{riskID}/lineItemAttributes:
     post:
       tags:
       - Risks
-      summary: Edit an attribute of a line item -- that is, one contract heading and its associated text -- such as locking the text to prevent further editing, or adding a page break
+      summary: Edit an attribute of a line item -- that is, one contract heading and its…
       parameters:
       - in: path
         name: riskID
@@ -5516,11 +5575,13 @@ paths:
       responses:
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDLineItemAttributes
+      x-operation-id-source: derived
   /api/risks/{riskID}/getQuoteDetails:
     get:
       tags:
       - Risks
-      summary: Returns any information entered by the underwriter into a quote's 'Quote Details' panel. Underwriters are not required to use this panel when quoting, so some (or all) information may be blank.
+      summary: Returns any information entered by the underwriter into a quote's 'Quote…
       parameters:
       - in: path
         name: riskID
@@ -5572,6 +5633,8 @@ paths:
                       description: The stamp that the underwriter is considering using when writing the line
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: getApiRisksByRiskIDGetQuoteDetails
+      x-operation-id-source: derived
   /api/risks/{riskID}/saveQuoteDetails:
     post:
       summary: Edit and Save Quote Details - Underwriter Only
@@ -5642,6 +5705,8 @@ paths:
                     type: string
                     description: A message indicating success
                     example: Successfully updated quote details.
+      operationId: postApiRisksByRiskIDSaveQuoteDetails
+      x-operation-id-source: derived
   /api/risks/{riskID}/createBindableQuote:
     post:
       summary: Creates a Bindable Quote - Broker Only
@@ -5676,9 +5741,11 @@ paths:
                     type: string
                     example: Created bindable quote from IC576DEFEE-7046-4E3A-B18E-2F69638E9939::MU999AF919-3FDB-49F2-B4C5-D42614B02E70::UQ1
                     description: A message indicating success
+      operationId: postApiRisksByRiskIDCreateBindableQuote
+      x-operation-id-source: derived
   /api/risks/{riskID}/selfApproveSecondApproval:
     post:
-      summary: Self-approve one of your contracts flagged for internal review. NOTE You must have the 'Self Approver' role enabled for this API call to work.
+      summary: Self-approve one of your contracts flagged for internal review.
       tags:
       - Risks
       parameters:
@@ -5711,6 +5778,8 @@ paths:
                     type: string
                     description: message describing success
                     example: Successfully self-approved
+      operationId: postApiRisksByRiskIDSelfApproveSecondApproval
+      x-operation-id-source: derived
   /api/risks/{riskID}/duplicateDraft:
     post:
       summary: Duplicate an existing draft contract under the same risk overview - Broker Only
@@ -5745,9 +5814,11 @@ paths:
                     type: string
                     example: Created copy of Draft to Placing
                     description: A message indicating success
+      operationId: postApiRisksByRiskIDDuplicateDraft
+      x-operation-id-source: derived
   /api/risks/{riskID}/changeHeadings:
     post:
-      summary: Delete contract headings from a risk.
+      summary: Delete contract headings from a risk
       description: To delete one or more contract headings, use the Delete array in the request and leave the Insert and Modify arrays blank. Please note that certain headings, such as UMR, cannot be deleted.
       tags:
       - Risks
@@ -6097,6 +6168,8 @@ paths:
                     elements: []
                     subItems: []
                     originalHeading: 'BROKER REMUNERATION AND DEDUCTIONS '
+      operationId: postApiRisksByRiskIDChangeHeadings
+      x-operation-id-source: derived
   /api/risks/{riskID}/declineFirmOrder:
     post:
       summary: Declines a firm order - Underwriter Only
@@ -6157,6 +6230,8 @@ paths:
                 id: ICEB90F9F2-7B58-41FD-9160-528350E53EFE::FO::TOMYUNDERWRITING::ALL
               - rev: 1-335ee730cde9c14ab513ebdbf9e4a733
                 id: ICEB90F9F2-7B58-41FD-9160-528350E53EFE::FOD::TOMYUNDERWRITING::ALL
+      operationId: postApiRisksByRiskIDDeclineFirmOrder
+      x-operation-id-source: derived
   /api/risks/{riskID}/withdrawFirmOrder:
     post:
       summary: Withdraw a firm order from an underwriter - Broker Only
@@ -6222,11 +6297,13 @@ paths:
                 id: ICEB90F9F2-7B58-41FD-9160-528350E53EFE::FO::TOMYUNDERWRITING::ALL
               - rev: 1-335ee730cde9c14ab513ebdbf9e4a733
                 id: ICEB90F9F2-7B58-41FD-9160-528350E53EFE::FOD::TOMYUNDERWRITING::ALL
+      operationId: postApiRisksByRiskIDWithdrawFirmOrder
+      x-operation-id-source: derived
   /api/risks/{riskID}/saveVerticalLines:
     post:
       tags:
       - Risks
-      summary: Sets the vertical terms for a specific heading on a risk. This operation can only be performed on contracts at the firm order or bindable quote stages - Broker Only
+      summary: Sets the vertical terms for a specific heading on a risk.
       parameters:
       - in: path
         name: riskID
@@ -6365,6 +6442,8 @@ paths:
                 $ref: '#/components/schemas/RWPlacing'
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDSaveVerticalLines
+      x-operation-id-source: derived
   /api/risks/{riskID}/notTakeUpQuotation:
     post:
       tags:
@@ -6398,6 +6477,8 @@ paths:
                     example: doc with id IC13FD54AD-2DAA-49C2-A91C-E5DCEE3BFCE2::MU999AF919-3FDB-49F2-B4C5-D42614B02E70::UQ2 successfully not taken up
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDNotTakeUpQuotation
+      x-operation-id-source: derived
   /api/risks/{riskID}/rollbackSigned:
     post:
       summary: Reverts a risk from signed to unsigned - Broker Only
@@ -6432,6 +6513,8 @@ paths:
                     type: string
                     example: Signed risk rolled back to Firm Order.
                     description: A message indicating success
+      operationId: postApiRisksByRiskIDRollbackSigned
+      x-operation-id-source: derived
   /api/risks/{riskID}/createEndorsement:
     post:
       summary: Creates an endorsement - Broker Only
@@ -6482,6 +6565,8 @@ paths:
                   version:
                     type: string
                     example: '2.8'
+      operationId: postApiRisksByRiskIDCreateEndorsement
+      x-operation-id-source: derived
   /api/risks/{riskID}/deleteDraft:
     post:
       summary: Deletes a Draft Contract - Broker Only
@@ -6515,11 +6600,13 @@ paths:
                     type: string
                     example: Draft Deleted
                     description: A message indicating success
+      operationId: postApiRisksByRiskIDDeleteDraft
+      x-operation-id-source: derived
   /api/risks/{riskID}/applyTemplate:
     post:
       tags:
       - Risks
-      summary: Merge the data from a risk with the text, data and other material from a template, preserving all the risk''s data while replacing all its other content - Broker Only
+      summary: Merge the data from a risk with the text, data and other material from a…
       description: You need the ID and current revision number of both the risk and the template you are trying to merge. You can fetch the revision number of a risk with /risks/{riskID} and check the ._rev field. Can only be done on a risk stage that has not been shown to underwriters.
       parameters:
       - in: path
@@ -6566,11 +6653,13 @@ paths:
                     description: ID of the merged risk
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDApplyTemplate
+      x-operation-id-source: derived
   /api/risks/{riskID}/rejectWrittenLine/{writtenLineSetID}:
     post:
       tags:
       - Risks
-      summary: Reject an underwriter''s line written with Line Conditions or Subjectivities - Broker Only
+      summary: Reject an underwriter''s line written with Line Conditions or Subjectivities…
       description: You need to provide the ID of the Firm Order as well the ID of the underwriter''s line (RWWrittenLineSet ID). This can be fetched from /combinedSets, /getExtendedRisk
       parameters:
       - in: path
@@ -6605,11 +6694,13 @@ paths:
                     type: string
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDRejectWrittenLineByWrittenLineSetID
+      x-operation-id-source: derived
   /api/risks/{riskID}/acceptWrittenLine/{writtenLineSetID}:
     post:
       tags:
       - Risks
-      summary: Accepts an underwriter''s line with Line Conditions or Subjectivities - Broker Only
+      summary: Accepts an underwriter''s line with Line Conditions or Subjectivities - Broker…
       description: You need to provide the ID of the Firm Order as well the ID of the underwriter''s line (RWWrittenLineSet ID). This can be fetched from /combinedSets, /getExtendedRisk.
       parameters:
       - in: path
@@ -6645,6 +6736,8 @@ paths:
                     type: string
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDAcceptWrittenLineByWrittenLineSetID
+      x-operation-id-source: derived
   /api/risks/{riskID}/createContractCorrection:
     post:
       summary: Create a Contract Correction - Broker Only
@@ -6679,12 +6772,23 @@ paths:
                     type: string
                     example: Contract Correction Created
                     description: A message indicating success
+      operationId: postApiRisksByRiskIDCreateContractCorrection
+      x-operation-id-source: derived
   /api/risks/{riskID}/contractAttributes:
     post:
       tags:
       - Risks
-      summary: Edit an attribute of the entire contract. Currently limited to text-locking options - Broker Only
-      description: <ul> <li>lockAll - lock all text and tagged data</li> <li>lockTextonly - lock normal text but allow tagged data to be edited</li> <li>lockAllTemplate - Template Only - locks all text and tagged data, can only be removed by a Template Manager, same locking is applied to any risks cloned from the template</li> <li>lockTextOnlyTemplate - Template Only - lock normal text but allow tagged data to be editable, can only be removed by a Template Manager, same locking is applied to any risks cloned from the template</li></ul>
+      summary: Edit an attribute of the entire contract.
+      description: 'lockAll - lock all text and tagged data
+
+
+        lockTextonly - lock normal text but allow tagged data to be edited
+
+
+        lockAllTemplate - Template Only - locks all text and tagged data, can only be removed by a Template Manager, same locking is applied to any risks cloned from the template
+
+
+        lockTextOnlyTemplate - Template Only - lock normal text but allow tagged data to be editable, can only be removed by a Template Manager, same locking is applied to any risks cloned from the template'
       parameters:
       - in: path
         name: riskID
@@ -6731,6 +6835,8 @@ paths:
                     description: ID of thr risk/template
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDContractAttributes
+      x-operation-id-source: derived
   /api/risks/{riskID}/setTemplateChannels:
     post:
       tags:
@@ -6773,11 +6879,13 @@ paths:
                     type: string
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDSetTemplateChannels
+      x-operation-id-source: derived
   /api/risks/{riskID}/quoteOnRequest:
     post:
       tags:
       - Risks
-      summary: Send a Quote back to the broker wihout making any alterations to the Quote Request received - Underwriter only
+      summary: Send a Quote back to the broker wihout making any alterations to the Quote…
       description: This call allows an underwriter to return a Quote to the originating broker, provided that it is not necessary to make any changes to the broker''s Quote Request. If changes are required, then use /changeDraftNowQuoteInPreparation to create an editable quote document, edit that document, and then use /showQuoteToBroker to return the edited document as a Quote.
       parameters:
       - in: path
@@ -6806,6 +6914,8 @@ paths:
                     type: string
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDQuoteOnRequest
+      x-operation-id-source: derived
   /api/risks/{riskID}/deleteEndorsement:
     post:
       summary: Deletes a Draft Endorsement - Broker Only
@@ -6840,6 +6950,8 @@ paths:
                     type: string
                     example: deleted
                     description: A message indicating success
+      operationId: postApiRisksByRiskIDDeleteEndorsement
+      x-operation-id-source: derived
   /bodapi/risks/from:
     post:
       tags:
@@ -6940,6 +7052,8 @@ paths:
                     example: 1-K23K2J2JL323IEOW
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postBodapiRisksFrom
+      x-operation-id-source: derived
   /api/risks/{riskID}/editLineItemWithBB:
     post:
       tags:
@@ -6988,12 +7102,23 @@ paths:
                 $ref: '#/components/schemas/RWPlacing'
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDEditLineItemWithBB
+      x-operation-id-source: derived
   /api/risks/{riskID}/recordLine:
     post:
       tags:
       - Risks
       summary: Record an off-platform line - Broker Only
-      description: <p>You can use this call to record a line for an off-platform company on 'FullContracts' OR for an off-platform team of a live company on an off-platform contract.</p> <p>You can use an existing stamp or, for an off-platform carrier, create a new stamp yourself. If you want to use an existing stamp for an off-platform carrier, you can grab the list of existing stamps by calling /documents/{docID}, where docID in this case is Extra-{companyId}.</p> <p>Always set saveStamps as False.</p> <p>There are number of stamp types you can choose but for now via API we are only allowing nonBureau stamps. See example below</p>
+      description: 'You can use this call to record a line for an off-platform company on ''FullContracts'' OR for an off-platform team of a live company on an off-platform contract.
+
+
+        You can use an existing stamp or, for an off-platform carrier, create a new stamp yourself. If you want to use an existing stamp for an off-platform carrier, you can grab the list of existing stamps by calling /documents/{docID}, where docID in this case is Extra-{companyId}.
+
+
+        Always set saveStamps as False.
+
+
+        There are number of stamp types you can choose but for now via API we are only allowing nonBureau stamps. See example below'
       parameters:
       - in: path
         name: riskID
@@ -7165,6 +7290,8 @@ paths:
                 properties:
                   msg:
                     type: string
+      operationId: postApiRisksByRiskIDRecordLine
+      x-operation-id-source: derived
   /api/risks/{riskID}/forwardAsQuoteRequest:
     post:
       summary: Forwards a quote as a new quote request - Broker Only
@@ -7261,6 +7388,8 @@ paths:
                   msg:
                     type: string
                     example: Forwarded
+      operationId: postApiRisksByRiskIDForwardAsQuoteRequest
+      x-operation-id-source: derived
   /api/risks/{riskID}/setEndorsementFollowerRoles:
     post:
       tags:
@@ -7315,6 +7444,8 @@ paths:
                       type: string
                       description: the id of the document that was updated
                       example: IC6FD42DF7-989A-4AB4-8638-1EB5870E70CD::SIGNED::EN3::ENF::offlineallianzglobal_ALL
+      operationId: postApiRisksByRiskIDSetEndorsementFollowerRoles
+      x-operation-id-source: derived
   /api/risks/{riskID}/setEndorsementFollowerTemplate:
     post:
       tags:
@@ -7416,6 +7547,8 @@ paths:
                     example: unchosen
         '401':
           $ref: '#/paths/~1api~1risks~1save/post/responses/401'
+      operationId: postApiRisksByRiskIDSetEndorsementFollowerTemplate
+      x-operation-id-source: derived
   /api/risks/{riskID}/completeEndorsement:
     post:
       tags:
@@ -7467,6 +7600,8 @@ paths:
                     type: string
                     example: Endorsement Completed
                     description: a message indicating success
+      operationId: postApiRisksByRiskIDCompleteEndorsement
+      x-operation-id-source: derived
 components:
   schemas:
     ExtendedMRC:
@@ -7602,6 +7737,817 @@ components:
               type: string
               description: the revision of the risk
               example: 4-b63141573da07d5316b7a2b4585fbd2b
+    CorporateDetail:
+      type: object
+      properties:
+        admins:
+          type: array
+          description: List of user emails for administrators at the company
+          items:
+            type: string
+            example: sarah.kay.blackpool@wspt.co.uk
+        updatedAt:
+          type: string
+          description: The date and time the company's details were last updated
+          example: '2020-02-24T15:32:50.000Z'
+        teams:
+          type: array
+          items:
+            type: object
+            properties:
+              teamId:
+                type: string
+                description: Team identifier using uppercase letters with no punctuation
+                example: MARINECARGO
+              secondApprovalReviewers:
+                type: array
+                items:
+                  type: string
+                  description: Deprecated (see permissions array below). This array will always be empty. Formerly held userIDs of users with Internal Reviewer permission
+                  example: '-'
+              secondApprovalSelfApprovers:
+                type: array
+                items:
+                  type: string
+                  description: Deprecated (see permissions array below). This array will always be empty. Formerly held userIDs of users with Self-Approver permission
+                  example: '-'
+              name:
+                type: string
+                description: The name of the team, usually relating to the class of business worked on
+                example: Marine Cargo
+              channel:
+                type: string
+                description: The system channel for the team, comprising a lowercase version of the company ID, followed by underscrore and the team id
+                example: blackpool_MARINECARGO
+              isInactive:
+                type: boolean
+                example: false
+                description: True if the team has been marked as inactive
+              classOfBusiness:
+                type: array
+                items:
+                  type: string
+                  example: Marine
+                  description: The class(es) of business that are associated with the team
+        createdAt:
+          type: string
+          description: Time and date of creation
+          example: '2020-02-24 15:32:50'
+        companyId:
+          type: string
+          description: Company identifier using uppercase letters with no punctuation
+          example: OFFLINEBRITISHMARINE
+        isTestOnly:
+          type: boolean
+          description: True if the company account is just a test account with no live database access
+          example: false
+        channels:
+          type: array
+          description: Array with just one item, shared channel
+          items:
+            type: string
+            description: The value 'shared'
+            example: shared
+        stamps:
+          type: array
+          description: For (re)insurers, lists the stamps they have set up on the system. Empty for brokers
+          items:
+            type: object
+            properties:
+              bureauMarket:
+                type: string
+                example: Lloyd's
+              bureauMarketCode:
+                type: string
+                example: '1444'
+              bureauSubMarket:
+                type: string
+                example: PSM1
+              businessUnit:
+                type: string
+                example: Lloyd's Syndicate No.1444
+              stampType:
+                type: string
+                example: lloyds
+              uniqueID:
+                type: string
+                example: ST1843A345-1F69-435D-84E9-187BB3DD0F23
+        buttonStamps:
+          type: object
+          properties:
+            active:
+              type: boolean
+              example: true
+              description: True if the button stamp is available for users to apply
+            bureauMarketCode:
+              type: string
+              example: 5307/5
+            companyName:
+              type: string
+              example: Tomy
+            iconOnStamp:
+              type: boolean
+              description: True if an icon of any type is shown on the stamp, icon type is specified by stampType
+              example: true
+            layout:
+              type: object
+              description: The placement of name, type, and code data on the button stamp, each appearing once across the bottom, center, and top slots of the stamp
+              properties:
+                bottom:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+                center:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+                top:
+                  type: string
+                  enum:
+                  - name
+                  - type
+                  - code
+            stampID:
+              type: string
+              example: BTN-BAB19551-5557-4E6B-888B-E3B1B6A0E982
+              description: The unique ID of the button stamp, which always starts with BTN
+            stampType:
+              type: string
+              description: The type of icon displayed on the stamp. Note that other indicates no icon
+              enum:
+              - lloyds
+              - brexit
+              - other
+        settings:
+          type: object
+          properties:
+            canViewOfflineTeams:
+              type: boolean
+              description: True if the broking organisation is configured to save off-platform lines
+              example: false
+            mandatoryAuthStages:
+              type: array
+              items:
+                type: string
+                description: The list of contract stages at which second approval is required before a contract can proceed
+                example: brFirmOrder
+            digitiseOnlyToTemplate:
+              type: boolean
+              example: true
+              description: True if the broking organisation can only digitise imported contract files as templates
+        isOffline:
+          type: boolean
+          description: True for company accounts that are offline placeholders for organisations not yet using the platform
+          example: false
+        _id:
+          type: string
+          description: Reference ID for this company document
+          example: Corporate-BLACKPOOL
+        _rev:
+          type: string
+          description: Currect revision ID for this document
+          example: 3-a1df22093d0dc2978b87f396be3cd2fa
+        name:
+          type: string
+          description: The name of the company
+          example: Blackpool Insurance Brokers Ltd
+        role:
+          type: string
+          description: The organisation's role on the platform, either 'broker' or 'underwriter'
+          example: underwriter
+        authorityDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              authority:
+                type: string
+                example: Lloyd's (Syndicate Number)
+              pseudonymn:
+                type: string
+                example: '131'
+              registrationNumber:
+                type: string
+                example: '12313'
+        members:
+          type: array
+          items:
+            type: object
+            description: A user on the platform
+            properties:
+              name:
+                type: string
+                description: the user's name
+                example: Sarah Kay
+              email:
+                type: string
+                description: <p>email address for the user</p> <p>Note that for Data Protection reasons, the email is removed from some outputs, such as the /api/shared/corporate list. In these cases it can be removed by a call to /api/documents/Corporate-{CompanyID}.</p>
+                example: sarah.kay.blackpool@wspt.co.uk
+              currentState:
+                type: string
+                description: Live, Draft, Suspended etc
+                example: Live
+              uniqueID:
+                type: string
+                description: Live, Draft, Suspended etc
+                example: MUDA8AF5A8-98DF-4EF2-B2B8-4E069EDB7E8C
+              allowReporting:
+                type: boolean
+                description: whether or not the user may run the management reports
+                example: true
+              isOffPlatform:
+                type: boolean
+                description: indicates the user is "off platform"s
+                example: false
+              teams:
+                type: array
+                items:
+                  type: string
+                  description: list of teams the user belongs to
+                example:
+                - blackpool_MARINEHULL
+                - blackpool_MARINECARGO
+        permissions:
+          type: object
+          properties:
+            secondApprovalReviewers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's members with Internal Reviewer permission
+            secondApprovalSelfApprovers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's Internal Reviewers who also have the Self Approver permission
+            templateManagers:
+              type: object
+              properties:
+                teams:
+                  type: object
+                  properties:
+                    teamID:
+                      type: array
+                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
+                      items:
+                        type: string
+                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
+                        description: The list of userID's of the team's members who have the Template Manager permission. This permission is only available to broking organisations
+        channelPrefix:
+          type: string
+          description: A lowercase version of companyId used for the beginning of team channels
+          example: blackpool
+        provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+    RWWrittenLineSet:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL::WRLS
+          description: The unique ID of this document
+        _rev:
+          example: 1-087952cf08f44dae740c1c001e2d5ab2
+          type: string
+          description: The revision number of this document
+        channels:
+          type: array
+          items:
+            type: string
+            example: akhil_ALL
+            description: The team IDs of the users who can see the risk
+        createdAt:
+          type: string
+          example: '2024-02-21 15:05:47'
+          description: The creation time of this document
+        contents:
+          type: array
+          items:
+            $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
+        provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+        type:
+          type: string
+          description: The named JMRC type descriptor for this document
+          example: RWWrittenLineSet
+        updatedAt:
+          type: string
+          example: '2024-02-21 15:05:47'
+          description: The date and time that this document was last updated
+        isOffline:
+          type: boolean
+          example: true
+          description: Whether the stamp is associated with an offline carrier
+        parentDocID:
+          type: string
+          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL
+          description: The unique ID number of the related RWPlacing document
+      required:
+      - _id
+      - _rev
+      - channels
+      - createdAt
+      - line
+      - parentDocID
+      - provenance
+      - type
+      - updatedAt
+    RWPlacing:
+      type: object
+      description: <p>The MRCRisk obect contains the full text and structure of the JMRC Insurance Contract.</p> <p>It includes an MRCContract object where a set of MRCLineItem objects represent the headings and data in the contract, and an MRCRiskControl object which provides summary and meta data about the risk to enable the system's performance.</p>
+      properties:
+        _id:
+          type: string
+          example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+          description: unique document id for the risk
+        _rev:
+          type: string
+          example: 1-141df67df9e5eaacd0830c65e47a0bf9
+        createdAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        updatedAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        type:
+          type: string
+          example: RWPlacing
+          description: RWPlacing in all cases
+        control:
+          type: object
+          properties:
+            status:
+              type: string
+              description: The current stage of the contract in the placing process, taken from an enumerated list containing stages such as Draft, Quoted, FirmOrder, etc
+              example: FirmOrder
+            insuranceType:
+              type: string
+              example: Insurance
+              description: Either Insurance or ReInsurance, as specified at contract creation
+            umr:
+              type: string
+              description: The Lloyd's Unique Market Reference number for the contract
+              example: B0999JC201909241622
+            insuredName:
+              type: string
+              example: Acme Widgets Inc
+              description: The name given to the contract
+            contractType:
+              type: string
+              example: Aviation Hull Cover
+              description: The class of business that the contract falls under
+            leadUnderwriterChannel:
+              type: string
+              example: messina_ALL
+              description: The team channel name of the lead underwriter on the risk, once specified
+            leadUnderwriter:
+              type: string
+              example: Messina All Risks
+              description: The plaintext company and team name of the lead underwriter's team, once specified
+            placingBrokerChannel:
+              type: string
+              example: ajc_ALL
+              description: The team channel name of the contract's broker
+            placingBroker:
+              type: string
+              example: AJC All Risks
+              description: The plaintext company and team name of the broker's team
+            limitSummary:
+              type: string
+              description: The limit of liability for the contract
+            originalDocID:
+              type: string
+              description: The unique ID of the document this contract was created from, if any
+              example: IC97799647-4496-4760-B594-02AC726B0D7E
+            endorsementNumber:
+              type: string
+              example: '2'
+              description: If this contract is an endorsement, its endorsement number is stored here
+            endorsementType:
+              type: string
+              description: For endorsements, specifies whether the endorsement is a Mid-Term Participant Change or a standard endorsement
+              enum:
+              - standard
+              - mtpc
+            isFacility:
+              type: boolean
+              example: false
+              description: True if this contract is a facility agreement
+            associatedFacilityIDs:
+              type: array
+              items:
+                type: string
+                example: ICB1213647-4876-4760-B594-02AC7261312412
+                description: If the contract is a declaration, this array lists the unique IDs of all facility agreeements it is attached to
+            placementType:
+              type: string
+              enum:
+              - FullContract
+              - OffPlatform
+              - Template
+              description: The contract type. OffPlatform is for contracts backloaded to duplicate agreements conducted off-platform, Template is for contract templates, and FullContract is for all live contracts
+            verticalVisibility:
+              type: string
+              enum:
+              - OwnStampOnly
+              - AllStamps
+              - LeaderStamps
+              description: If the risk has vertical terms, this string specifies which stamps underwriters can see.
+            createdInVersion:
+              type: number
+              example: 21100
+              description: Which version of the platform the risk was created in.
+            isIndicative:
+              type: boolean
+              example: false
+              description: True if the Indicative flag been toggled, indicating that the contract is not binding.
+            submittedAsCopyOf:
+              type: string
+              example: ICD937404C-87A7-4408-BE4B-D449216F9A85
+              description: If this contract is a placing document shared from another broker, the unique ID of the original producing broker's contract is held here.
+            stampVisibility:
+              type: string
+              description: Decides whose stamps underwriters can see
+              enum:
+              - Allstamps
+              - OwnStampsOnly
+              - LeadersStamps
+        MRCContract:
+          type: object
+          description: a top level object which currently contains only the array of line items
+          properties:
+            lineItems:
+              type: array
+              items:
+                type: object
+                $ref: '#/paths/~1api~1risks~1%7BriskID%7D~1lineitem~1%7BmrcHeading%7D/get/responses/200/content/application~1json/schema/items'
+        channels:
+          type: array
+          items:
+            type: string
+    RWSignedLineSet:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL::SILS
+          description: The unique ID of this document
+        _rev:
+          example: 1-087952cf08f44dae740c1c001e2d5ab2
+          type: string
+          description: The revision number of this document
+        channels:
+          type: array
+          items:
+            type: string
+            example: akhil_ALL
+            description: The team channel names of the users who can see the risk these signed lines relate to
+        createdAt:
+          type: string
+          example: '2024-02-21 15:05:47'
+          description: The creation time of this document in YYYY-MM-DD HH:MM:SS format
+        contents:
+          type: array
+          items:
+            $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
+        provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+        type:
+          type: string
+          description: The JMRC type name for this document. Always RWSignedLineSet
+          example: RWSignedLineSet
+        updatedAt:
+          type: string
+          example: '2024-02-21 15:05:47'
+          description: The date and time that this document was last updated in YYYY-MM-DD HH:MM:SS format
+        isOffline:
+          type: boolean
+          example: true
+          description: True if the stamp is associated with an offline (re)insurer
+        parentDocID:
+          type: string
+          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL
+          description: The unique ID of the related RWPlacing document
+      required:
+      - _id
+      - _rev
+      - channels
+      - createdAt
+      - line
+      - parentDocID
+      - provenance
+      - type
+      - updatedAt
+    RWLineGuidanceSet:
+      type: object
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: number
+                example: 1
+              leadUnderwriterChannel:
+                type: string
+                example: offlineafricare_ALL
+                description: The name of the leader's team channel
+              multiSectionName:
+                type: string
+                description: The name of the section
+                example: Hull
+              multiSectionId:
+                type: string
+                description: The ID number of the section
+                example: '1'
+              leadUnderwriter:
+                type: string
+                example: OFFLINEAFRICANRE ALL
+                description: The leader's company and team IDs
+              leadUnderwriterFacility:
+                type: string
+                example: ICD77B5FD4-0790-42B9-BC53-65242FB96558
+                description: The unique ID of the leader's facility agreement
+        contents:
+          type: array
+          items:
+            type: object
+            properties:
+              conditionsEnabled:
+                type: boolean
+                example: true
+                description: Whether there are any conditions on the guidance
+              sectionIdentifiers:
+                type: array
+                items:
+                  type: string
+                  example: '1'
+                  description: The ID number of the section
+              maxString:
+                type: string
+                example: '40'
+                description: The maximum requested line percentage
+              minString:
+                type: string
+                example: '30'
+                description: The minimum requested line percentage
+              suggestedStamps:
+                $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
+              role:
+                description: Facility participation role
+                type: string
+                enum:
+                - leader
+                - agreementParty
+                - notifyParty
+                - nonNotifyParty
+                - doesNotApply
+              associatedFacilityId:
+                type: string
+                example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
+                description: Unique ID of the facility agreement that the declaration is attached to.
+              associatedFacilitySectionID:
+                type: string
+                example: '1'
+                description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
+        associatedPlacingID:
+          type: string
+          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO
+          description: The Unique ID of the Firm Order that this line guidance applies to
+        _id:
+          type: string
+          description: The unique ID of this document
+          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO::CATANIA::ALL::LGUS
+        _rev:
+          type: string
+          description: The revision number of this document
+          example: 1-304aa44d6b3231c380ed83bbda5d8f08
+        channels:
+          type: array
+          items:
+            type: string
+            example: catania_ALL
+        Provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+        type:
+          type: string
+          description: The named JMRC type descriptor for this document
+          example: RWLineGuidance
+    RWEndorsementFollower:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Unique ID for this endorsement follower document
+          example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5::SIGNED::EN1::ENF::messina_ALL
+        _rev:
+          type: string
+          description: Revision number for this document
+          example: 3-a1df22093d0dc2978b87f396be3cd2fa
+        agreement:
+          type: object
+          properties:
+            dateOfAgreement:
+              type: string
+              description: Effective date of the endorsement in yyyy-mm-dd hh:mm:ss format
+              example: '2021-08-06 08:15:28'
+            followerType:
+              type: string
+              example: leader
+              description: The role of this follower in the endorsement
+              enum:
+              - leader
+              - agreementParty
+              - notifyParty
+              - nonNotifyParty
+              - doesNotApply
+              - unchosen
+            instruction:
+              type: string
+              example: leaderOnly
+              description: The parties the broker has selected as needing to agree the endorsement
+              enum:
+              - leaderOnly
+              - none
+              - leaderAndAgreementParties
+              - allToAgree
+            leader:
+              type: string
+              example: 'Yes'
+              description: Set to Yes when the underwriter that this document details is the leader of the endorsement
+            numberOfDaysToNotifyFollowers:
+              type: string
+              description: The number of days within which non-Agreement followers must be notified of the endorsement
+              example: '7'
+            user:
+              type: string
+              example: MUE8368329-A451-49D4-A385-915D421A4465
+              description: The unique ID of the underwriter that this document details as a follower of the endorsement
+            uwrChannel:
+              type: string
+              example: messina_ALL
+              description: The team channel of the underwriter that this document details
+            stampDescriptions:
+              type: array
+              items:
+                type: object
+                properties:
+                  stampID:
+                    type: string
+                    example: ST213211241241
+                    description: The ID of the stamp that the follower put down on the endorsement
+                  desc:
+                    type: string
+                    example: 56 (added by Ascot Reinsurance Company Limited)
+                    description: The brief description text field of the stamp identified above
+            mtpcAgreement:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    description: If the endorsement is a mid-term participant change, this specifies the category of participant change
+                    enum:
+                    - add
+                    - modify
+                    - remove
+                    type: string
+                  line:
+                    $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
+        channels:
+          type: array
+          items:
+            type: string
+            description: A specific channel name identifying one of the entries in the array of team channels of the broker and all followers
+            example: messina_ALL
+        createdAt:
+          type: string
+          description: The date this document was created in yyyy-mm-dd hh:mm:ss format
+          example: '2021-08-06 08:15:28'
+        endorsementDocID:
+          type: string
+          example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5::SIGNED::EN1
+          description: The unique ID of the endorsement that this RWEndorsementFollower document is associated with
+        followerType:
+          type: string
+          example: leader
+          description: The participation type of the follower
+        version:
+          type: integer
+          description: The integer portion of the _ver value, identifying the sequential version number of this document
+          example: 3
+        type:
+          type: string
+          example: RWEndorsementFollower
+          description: The JMRC document type of this document, which will always be RWEndorsementFollower
+        updatedAt:
+          type: string
+          description: The date this document was last updated in yyyy-mm-dd hh:mm:ss format
+          example: '2021-08-06 08:15:28'
+        uwrChannel:
+          type: string
+          example: messina_ALL
+          description: The team channel name of the follower's team
+        template:
+          type: string
+          description: The category of agreement box displayed on the endorsement
+          enum:
+          - GUAStampA
+          - GUAStampB
+          - AVS100B
+          - NonGUA
+        mtpc:
+          type: array
+          items:
+            type: object
+            description: The details of the mid-term participant agreement, if the endorsement is of the MTPC type. Listed properties will change depending on whether the endorsement is adding, removing or modifying participants.
+            properties:
+              type:
+                type: string
+                enum:
+                - add
+                - remove
+                - modify
+                description: The type of change in participation
+              sectionID:
+                example: '1'
+                description: The sectionID of the written line that is being modified/removed
+                type: string
+              setLeader:
+                type: boolean
+                example: true
+                description: True if the MTPC is changing the leader
+              guidance:
+                type: object
+                properties:
+                  conditionsEnabled:
+                    type: boolean
+                    example: true
+                    description: True if there are any conditions on the line guidance
+                  sectionIdentifiers:
+                    type: array
+                    items:
+                      type: string
+                      example: '1'
+                      description: The ID number of the section specifying the line guidance
+                  maxString:
+                    type: string
+                    example: '40'
+                    description: The maximum line percentage requested in the guidance
+                  minString:
+                    type: string
+                    example: '30'
+                    description: The minimum line percentage requested in the guidance
+                  suggestedStamps:
+                    $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
+                  role:
+                    description: The participation role of the follower
+                    type: string
+                    enum:
+                    - leader
+                    - agreementParty
+                    - notifyParty
+                    - nonNotifyParty
+                    - doesNotApply
+                  associatedFacilityId:
+                    type: string
+                    example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
+                    description: The unique ID of the facility agreement, if any, that the declaration is attached to
+                  associatedFacilitySectionID:
+                    type: string
+                    example: '1'
+                    description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
+              section:
+                $ref: '#/components/schemas/RWLineGuidanceSet/properties/sections/items'
+              facilityID:
+                type: string
+                example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5
+                description: The unique ID of the facility agreement, if any, that the risk being endorsed is attached to one
+              newPercentage:
+                type: string
+                example: '50'
+                description: The new percentage value of the line if the MTPC is modifying a line
     RWQuotedLine:
       type: object
       properties:
@@ -7958,817 +8904,6 @@ components:
       - provenance
       - type
       - updatedAt
-    RWWrittenLineSet:
-      type: object
-      properties:
-        _id:
-          type: string
-          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL::WRLS
-          description: The unique ID of this document
-        _rev:
-          example: 1-087952cf08f44dae740c1c001e2d5ab2
-          type: string
-          description: The revision number of this document
-        channels:
-          type: array
-          items:
-            type: string
-            example: akhil_ALL
-            description: The team IDs of the users who can see the risk
-        createdAt:
-          type: string
-          example: '2024-02-21 15:05:47'
-          description: The creation time of this document
-        contents:
-          type: array
-          items:
-            $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
-        provenance:
-          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
-        type:
-          type: string
-          description: The named JMRC type descriptor for this document
-          example: RWWrittenLineSet
-        updatedAt:
-          type: string
-          example: '2024-02-21 15:05:47'
-          description: The date and time that this document was last updated
-        isOffline:
-          type: boolean
-          example: true
-          description: Whether the stamp is associated with an offline carrier
-        parentDocID:
-          type: string
-          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL
-          description: The unique ID number of the related RWPlacing document
-      required:
-      - _id
-      - _rev
-      - channels
-      - createdAt
-      - line
-      - parentDocID
-      - provenance
-      - type
-      - updatedAt
-    CorporateDetail:
-      type: object
-      properties:
-        admins:
-          type: array
-          description: List of user emails for administrators at the company
-          items:
-            type: string
-            example: sarah.kay.blackpool@wspt.co.uk
-        updatedAt:
-          type: string
-          description: The date and time the company's details were last updated
-          example: '2020-02-24T15:32:50.000Z'
-        teams:
-          type: array
-          items:
-            type: object
-            properties:
-              teamId:
-                type: string
-                description: Team identifier using uppercase letters with no punctuation
-                example: MARINECARGO
-              secondApprovalReviewers:
-                type: array
-                items:
-                  type: string
-                  description: Deprecated (see permissions array below). This array will always be empty. Formerly held userIDs of users with Internal Reviewer permission
-                  example: '-'
-              secondApprovalSelfApprovers:
-                type: array
-                items:
-                  type: string
-                  description: Deprecated (see permissions array below). This array will always be empty. Formerly held userIDs of users with Self-Approver permission
-                  example: '-'
-              name:
-                type: string
-                description: The name of the team, usually relating to the class of business worked on
-                example: Marine Cargo
-              channel:
-                type: string
-                description: The system channel for the team, comprising a lowercase version of the company ID, followed by underscrore and the team id
-                example: blackpool_MARINECARGO
-              isInactive:
-                type: boolean
-                example: false
-                description: True if the team has been marked as inactive
-              classOfBusiness:
-                type: array
-                items:
-                  type: string
-                  example: Marine
-                  description: The class(es) of business that are associated with the team
-        createdAt:
-          type: string
-          description: Time and date of creation
-          example: '2020-02-24 15:32:50'
-        companyId:
-          type: string
-          description: Company identifier using uppercase letters with no punctuation
-          example: OFFLINEBRITISHMARINE
-        isTestOnly:
-          type: boolean
-          description: True if the company account is just a test account with no live database access
-          example: false
-        channels:
-          type: array
-          description: Array with just one item, shared channel
-          items:
-            type: string
-            description: The value 'shared'
-            example: shared
-        stamps:
-          type: array
-          description: For (re)insurers, lists the stamps they have set up on the system. Empty for brokers
-          items:
-            type: object
-            properties:
-              bureauMarket:
-                type: string
-                example: Lloyd's
-              bureauMarketCode:
-                type: string
-                example: '1444'
-              bureauSubMarket:
-                type: string
-                example: PSM1
-              businessUnit:
-                type: string
-                example: Lloyd's Syndicate No.1444
-              stampType:
-                type: string
-                example: lloyds
-              uniqueID:
-                type: string
-                example: ST1843A345-1F69-435D-84E9-187BB3DD0F23
-        buttonStamps:
-          type: object
-          properties:
-            active:
-              type: boolean
-              example: true
-              description: True if the button stamp is available for users to apply
-            bureauMarketCode:
-              type: string
-              example: 5307/5
-            companyName:
-              type: string
-              example: Tomy
-            iconOnStamp:
-              type: boolean
-              description: True if an icon of any type is shown on the stamp, icon type is specified by stampType
-              example: true
-            layout:
-              type: object
-              description: The placement of name, type, and code data on the button stamp, each appearing once across the bottom, center, and top slots of the stamp
-              properties:
-                bottom:
-                  type: string
-                  enum:
-                  - name
-                  - type
-                  - code
-                center:
-                  type: string
-                  enum:
-                  - name
-                  - type
-                  - code
-                top:
-                  type: string
-                  enum:
-                  - name
-                  - type
-                  - code
-            stampID:
-              type: string
-              example: BTN-BAB19551-5557-4E6B-888B-E3B1B6A0E982
-              description: The unique ID of the button stamp, which always starts with BTN
-            stampType:
-              type: string
-              description: The type of icon displayed on the stamp. Note that other indicates no icon
-              enum:
-              - lloyds
-              - brexit
-              - other
-        settings:
-          type: object
-          properties:
-            canViewOfflineTeams:
-              type: boolean
-              description: True if the broking organisation is configured to save off-platform lines
-              example: false
-            mandatoryAuthStages:
-              type: array
-              items:
-                type: string
-                description: The list of contract stages at which second approval is required before a contract can proceed
-                example: brFirmOrder
-            digitiseOnlyToTemplate:
-              type: boolean
-              example: true
-              description: True if the broking organisation can only digitise imported contract files as templates
-        isOffline:
-          type: boolean
-          description: True for company accounts that are offline placeholders for organisations not yet using the platform
-          example: false
-        _id:
-          type: string
-          description: Reference ID for this company document
-          example: Corporate-BLACKPOOL
-        _rev:
-          type: string
-          description: Currect revision ID for this document
-          example: 3-a1df22093d0dc2978b87f396be3cd2fa
-        name:
-          type: string
-          description: The name of the company
-          example: Blackpool Insurance Brokers Ltd
-        role:
-          type: string
-          description: The organisation's role on the platform, either 'broker' or 'underwriter'
-          example: underwriter
-        authorityDetails:
-          type: array
-          items:
-            type: object
-            properties:
-              authority:
-                type: string
-                example: Lloyd's (Syndicate Number)
-              pseudonymn:
-                type: string
-                example: '131'
-              registrationNumber:
-                type: string
-                example: '12313'
-        members:
-          type: array
-          items:
-            type: object
-            description: A user on the platform
-            properties:
-              name:
-                type: string
-                description: the user's name
-                example: Sarah Kay
-              email:
-                type: string
-                description: <p>email address for the user</p> <p>Note that for Data Protection reasons, the email is removed from some outputs, such as the /api/shared/corporate list. In these cases it can be removed by a call to /api/documents/Corporate-{CompanyID}.</p>
-                example: sarah.kay.blackpool@wspt.co.uk
-              currentState:
-                type: string
-                description: Live, Draft, Suspended etc
-                example: Live
-              uniqueID:
-                type: string
-                description: Live, Draft, Suspended etc
-                example: MUDA8AF5A8-98DF-4EF2-B2B8-4E069EDB7E8C
-              allowReporting:
-                type: boolean
-                description: whether or not the user may run the management reports
-                example: true
-              isOffPlatform:
-                type: boolean
-                description: indicates the user is "off platform"s
-                example: false
-              teams:
-                type: array
-                items:
-                  type: string
-                  description: list of teams the user belongs to
-                example:
-                - blackpool_MARINEHULL
-                - blackpool_MARINECARGO
-        permissions:
-          type: object
-          properties:
-            secondApprovalReviewers:
-              type: object
-              properties:
-                teams:
-                  type: object
-                  properties:
-                    teamID:
-                      type: array
-                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
-                      items:
-                        type: string
-                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
-                        description: The list of userID's of the team's members with Internal Reviewer permission
-            secondApprovalSelfApprovers:
-              type: object
-              properties:
-                teams:
-                  type: object
-                  properties:
-                    teamID:
-                      type: array
-                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
-                      items:
-                        type: string
-                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
-                        description: The list of userID's of the team's Internal Reviewers who also have the Self Approver permission
-            templateManagers:
-              type: object
-              properties:
-                teams:
-                  type: object
-                  properties:
-                    teamID:
-                      type: array
-                      description: PLEASE NOTE the key-value of teamID above is just an indicative placeholder and will in practice be the teamID of one of the organisation's teams
-                      items:
-                        type: string
-                        example: MU6E391615-CFF5-4E8E-B9D2-B0DE03BACA0
-                        description: The list of userID's of the team's members who have the Template Manager permission. This permission is only available to broking organisations
-        channelPrefix:
-          type: string
-          description: A lowercase version of companyId used for the beginning of team channels
-          example: blackpool
-        provenance:
-          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
-    RWPlacing:
-      type: object
-      description: <p>The MRCRisk obect contains the full text and structure of the JMRC Insurance Contract.</p> <p>It includes an MRCContract object where a set of MRCLineItem objects represent the headings and data in the contract, and an MRCRiskControl object which provides summary and meta data about the risk to enable the system's performance.</p>
-      properties:
-        _id:
-          type: string
-          example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
-          description: unique document id for the risk
-        _rev:
-          type: string
-          example: 1-141df67df9e5eaacd0830c65e47a0bf9
-        createdAt:
-          type: string
-          example: '2021-08-04T15:18:02.000Z'
-        updatedAt:
-          type: string
-          example: '2021-08-04T15:18:02.000Z'
-        type:
-          type: string
-          example: RWPlacing
-          description: RWPlacing in all cases
-        control:
-          type: object
-          properties:
-            status:
-              type: string
-              description: The current stage of the contract in the placing process, taken from an enumerated list containing stages such as Draft, Quoted, FirmOrder, etc
-              example: FirmOrder
-            insuranceType:
-              type: string
-              example: Insurance
-              description: Either Insurance or ReInsurance, as specified at contract creation
-            umr:
-              type: string
-              description: The Lloyd's Unique Market Reference number for the contract
-              example: B0999JC201909241622
-            insuredName:
-              type: string
-              example: Acme Widgets Inc
-              description: The name given to the contract
-            contractType:
-              type: string
-              example: Aviation Hull Cover
-              description: The class of business that the contract falls under
-            leadUnderwriterChannel:
-              type: string
-              example: messina_ALL
-              description: The team channel name of the lead underwriter on the risk, once specified
-            leadUnderwriter:
-              type: string
-              example: Messina All Risks
-              description: The plaintext company and team name of the lead underwriter's team, once specified
-            placingBrokerChannel:
-              type: string
-              example: ajc_ALL
-              description: The team channel name of the contract's broker
-            placingBroker:
-              type: string
-              example: AJC All Risks
-              description: The plaintext company and team name of the broker's team
-            limitSummary:
-              type: string
-              description: The limit of liability for the contract
-            originalDocID:
-              type: string
-              description: The unique ID of the document this contract was created from, if any
-              example: IC97799647-4496-4760-B594-02AC726B0D7E
-            endorsementNumber:
-              type: string
-              example: '2'
-              description: If this contract is an endorsement, its endorsement number is stored here
-            endorsementType:
-              type: string
-              description: For endorsements, specifies whether the endorsement is a Mid-Term Participant Change or a standard endorsement
-              enum:
-              - standard
-              - mtpc
-            isFacility:
-              type: boolean
-              example: false
-              description: True if this contract is a facility agreement
-            associatedFacilityIDs:
-              type: array
-              items:
-                type: string
-                example: ICB1213647-4876-4760-B594-02AC7261312412
-                description: If the contract is a declaration, this array lists the unique IDs of all facility agreeements it is attached to
-            placementType:
-              type: string
-              enum:
-              - FullContract
-              - OffPlatform
-              - Template
-              description: The contract type. OffPlatform is for contracts backloaded to duplicate agreements conducted off-platform, Template is for contract templates, and FullContract is for all live contracts
-            verticalVisibility:
-              type: string
-              enum:
-              - OwnStampOnly
-              - AllStamps
-              - LeaderStamps
-              description: If the risk has vertical terms, this string specifies which stamps underwriters can see.
-            createdInVersion:
-              type: number
-              example: 21100
-              description: Which version of the platform the risk was created in.
-            isIndicative:
-              type: boolean
-              example: false
-              description: True if the Indicative flag been toggled, indicating that the contract is not binding.
-            submittedAsCopyOf:
-              type: string
-              example: ICD937404C-87A7-4408-BE4B-D449216F9A85
-              description: If this contract is a placing document shared from another broker, the unique ID of the original producing broker's contract is held here.
-            stampVisibility:
-              type: string
-              description: Decides whose stamps underwriters can see
-              enum:
-              - Allstamps
-              - OwnStampsOnly
-              - LeadersStamps
-        MRCContract:
-          type: object
-          description: a top level object which currently contains only the array of line items
-          properties:
-            lineItems:
-              type: array
-              items:
-                type: object
-                $ref: '#/paths/~1api~1risks~1%7BriskID%7D~1lineitem~1%7BmrcHeading%7D/get/responses/200/content/application~1json/schema/items'
-        channels:
-          type: array
-          items:
-            type: string
-    RWEndorsementFollower:
-      type: object
-      properties:
-        _id:
-          type: string
-          description: Unique ID for this endorsement follower document
-          example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5::SIGNED::EN1::ENF::messina_ALL
-        _rev:
-          type: string
-          description: Revision number for this document
-          example: 3-a1df22093d0dc2978b87f396be3cd2fa
-        agreement:
-          type: object
-          properties:
-            dateOfAgreement:
-              type: string
-              description: Effective date of the endorsement in yyyy-mm-dd hh:mm:ss format
-              example: '2021-08-06 08:15:28'
-            followerType:
-              type: string
-              example: leader
-              description: The role of this follower in the endorsement
-              enum:
-              - leader
-              - agreementParty
-              - notifyParty
-              - nonNotifyParty
-              - doesNotApply
-              - unchosen
-            instruction:
-              type: string
-              example: leaderOnly
-              description: The parties the broker has selected as needing to agree the endorsement
-              enum:
-              - leaderOnly
-              - none
-              - leaderAndAgreementParties
-              - allToAgree
-            leader:
-              type: string
-              example: 'Yes'
-              description: Set to Yes when the underwriter that this document details is the leader of the endorsement
-            numberOfDaysToNotifyFollowers:
-              type: string
-              description: The number of days within which non-Agreement followers must be notified of the endorsement
-              example: '7'
-            user:
-              type: string
-              example: MUE8368329-A451-49D4-A385-915D421A4465
-              description: The unique ID of the underwriter that this document details as a follower of the endorsement
-            uwrChannel:
-              type: string
-              example: messina_ALL
-              description: The team channel of the underwriter that this document details
-            stampDescriptions:
-              type: array
-              items:
-                type: object
-                properties:
-                  stampID:
-                    type: string
-                    example: ST213211241241
-                    description: The ID of the stamp that the follower put down on the endorsement
-                  desc:
-                    type: string
-                    example: 56 (added by Ascot Reinsurance Company Limited)
-                    description: The brief description text field of the stamp identified above
-            mtpcAgreement:
-              type: array
-              items:
-                type: object
-                properties:
-                  type:
-                    description: If the endorsement is a mid-term participant change, this specifies the category of participant change
-                    enum:
-                    - add
-                    - modify
-                    - remove
-                    type: string
-                  line:
-                    $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
-        channels:
-          type: array
-          items:
-            type: string
-            description: A specific channel name identifying one of the entries in the array of team channels of the broker and all followers
-            example: messina_ALL
-        createdAt:
-          type: string
-          description: The date this document was created in yyyy-mm-dd hh:mm:ss format
-          example: '2021-08-06 08:15:28'
-        endorsementDocID:
-          type: string
-          example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5::SIGNED::EN1
-          description: The unique ID of the endorsement that this RWEndorsementFollower document is associated with
-        followerType:
-          type: string
-          example: leader
-          description: The participation type of the follower
-        version:
-          type: integer
-          description: The integer portion of the _ver value, identifying the sequential version number of this document
-          example: 3
-        type:
-          type: string
-          example: RWEndorsementFollower
-          description: The JMRC document type of this document, which will always be RWEndorsementFollower
-        updatedAt:
-          type: string
-          description: The date this document was last updated in yyyy-mm-dd hh:mm:ss format
-          example: '2021-08-06 08:15:28'
-        uwrChannel:
-          type: string
-          example: messina_ALL
-          description: The team channel name of the follower's team
-        template:
-          type: string
-          description: The category of agreement box displayed on the endorsement
-          enum:
-          - GUAStampA
-          - GUAStampB
-          - AVS100B
-          - NonGUA
-        mtpc:
-          type: array
-          items:
-            type: object
-            description: The details of the mid-term participant agreement, if the endorsement is of the MTPC type. Listed properties will change depending on whether the endorsement is adding, removing or modifying participants.
-            properties:
-              type:
-                type: string
-                enum:
-                - add
-                - remove
-                - modify
-                description: The type of change in participation
-              sectionID:
-                example: '1'
-                description: The sectionID of the written line that is being modified/removed
-                type: string
-              setLeader:
-                type: boolean
-                example: true
-                description: True if the MTPC is changing the leader
-              guidance:
-                type: object
-                properties:
-                  conditionsEnabled:
-                    type: boolean
-                    example: true
-                    description: True if there are any conditions on the line guidance
-                  sectionIdentifiers:
-                    type: array
-                    items:
-                      type: string
-                      example: '1'
-                      description: The ID number of the section specifying the line guidance
-                  maxString:
-                    type: string
-                    example: '40'
-                    description: The maximum line percentage requested in the guidance
-                  minString:
-                    type: string
-                    example: '30'
-                    description: The minimum line percentage requested in the guidance
-                  suggestedStamps:
-                    $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
-                  role:
-                    description: The participation role of the follower
-                    type: string
-                    enum:
-                    - leader
-                    - agreementParty
-                    - notifyParty
-                    - nonNotifyParty
-                    - doesNotApply
-                  associatedFacilityId:
-                    type: string
-                    example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
-                    description: The unique ID of the facility agreement, if any, that the declaration is attached to
-                  associatedFacilitySectionID:
-                    type: string
-                    example: '1'
-                    description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
-              section:
-                $ref: '#/components/schemas/RWLineGuidanceSet/properties/sections/items'
-              facilityID:
-                type: string
-                example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5
-                description: The unique ID of the facility agreement, if any, that the risk being endorsed is attached to one
-              newPercentage:
-                type: string
-                example: '50'
-                description: The new percentage value of the line if the MTPC is modifying a line
-    RWSignedLineSet:
-      type: object
-      properties:
-        _id:
-          type: string
-          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL::SILS
-          description: The unique ID of this document
-        _rev:
-          example: 1-087952cf08f44dae740c1c001e2d5ab2
-          type: string
-          description: The revision number of this document
-        channels:
-          type: array
-          items:
-            type: string
-            example: akhil_ALL
-            description: The team channel names of the users who can see the risk these signed lines relate to
-        createdAt:
-          type: string
-          example: '2024-02-21 15:05:47'
-          description: The creation time of this document in YYYY-MM-DD HH:MM:SS format
-        contents:
-          type: array
-          items:
-            $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
-        provenance:
-          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
-        type:
-          type: string
-          description: The JMRC type name for this document. Always RWSignedLineSet
-          example: RWSignedLineSet
-        updatedAt:
-          type: string
-          example: '2024-02-21 15:05:47'
-          description: The date and time that this document was last updated in YYYY-MM-DD HH:MM:SS format
-        isOffline:
-          type: boolean
-          example: true
-          description: True if the stamp is associated with an offline (re)insurer
-        parentDocID:
-          type: string
-          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL
-          description: The unique ID of the related RWPlacing document
-      required:
-      - _id
-      - _rev
-      - channels
-      - createdAt
-      - line
-      - parentDocID
-      - provenance
-      - type
-      - updatedAt
-    RWLineGuidanceSet:
-      type: object
-      properties:
-        sections:
-          type: array
-          items:
-            type: object
-            properties:
-              index:
-                type: number
-                example: 1
-              leadUnderwriterChannel:
-                type: string
-                example: offlineafricare_ALL
-                description: The name of the leader's team channel
-              multiSectionName:
-                type: string
-                description: The name of the section
-                example: Hull
-              multiSectionId:
-                type: string
-                description: The ID number of the section
-                example: '1'
-              leadUnderwriter:
-                type: string
-                example: OFFLINEAFRICANRE ALL
-                description: The leader's company and team IDs
-              leadUnderwriterFacility:
-                type: string
-                example: ICD77B5FD4-0790-42B9-BC53-65242FB96558
-                description: The unique ID of the leader's facility agreement
-        contents:
-          type: array
-          items:
-            type: object
-            properties:
-              conditionsEnabled:
-                type: boolean
-                example: true
-                description: Whether there are any conditions on the guidance
-              sectionIdentifiers:
-                type: array
-                items:
-                  type: string
-                  example: '1'
-                  description: The ID number of the section
-              maxString:
-                type: string
-                example: '40'
-                description: The maximum requested line percentage
-              minString:
-                type: string
-                example: '30'
-                description: The minimum requested line percentage
-              suggestedStamps:
-                $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
-              role:
-                description: Facility participation role
-                type: string
-                enum:
-                - leader
-                - agreementParty
-                - notifyParty
-                - nonNotifyParty
-                - doesNotApply
-              associatedFacilityId:
-                type: string
-                example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
-                description: Unique ID of the facility agreement that the declaration is attached to.
-              associatedFacilitySectionID:
-                type: string
-                example: '1'
-                description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
-        associatedPlacingID:
-          type: string
-          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO
-          description: The Unique ID of the Firm Order that this line guidance applies to
-        _id:
-          type: string
-          description: The unique ID of this document
-          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO::CATANIA::ALL::LGUS
-        _rev:
-          type: string
-          description: The revision number of this document
-          example: 1-304aa44d6b3231c380ed83bbda5d8f08
-        channels:
-          type: array
-          items:
-            type: string
-            example: catania_ALL
-        Provenance:
-          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
-        type:
-          type: string
-          description: The named JMRC type descriptor for this document
-          example: RWLineGuidance
   securitySchemes:
     bearerAuth:
       type: http

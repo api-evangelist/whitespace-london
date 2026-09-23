@@ -2,7 +2,10 @@ openapi: 3.2.0
 info:
   version: 0.1.0
   title: Whitespace Platform Comments API
-  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+  description: 'Last update 29th May 2025
+
+
+    Our intention is to cover the API calls most of use to those wanting to integrate external systems to the Whitespace Platform.'
 servers:
 - description: Sandbox Environment
   url: https://sandbox.whitespace.co.uk/
@@ -20,7 +23,13 @@ paths:
   /api/comments:
     get:
       summary: Gets all comments. Deprecated in favour of /risks/$rootID/related/RWComment
-      description: <div>This endpoint returns <b>all</b> comments a user can see.</div> <p/> <div>This will become impractical as volumes grow over time, so the endpoint is deprecated.</div> <p/> <div>We recommend loading the comments on an individual risk by using the 'related' endpoint with 'RWComment' as the document type /risks/$rootID/related/RWComment</div>
+      description: 'This endpoint returns all comments a user can see.
+
+
+        This will become impractical as volumes grow over time, so the endpoint is deprecated.
+
+
+        We recommend loading the comments on an individual risk by using the ''related'' endpoint with ''RWComment'' as the document type /risks/$rootID/related/RWComment'
       tags:
       - Comments
       responses:
@@ -32,9 +41,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RWComment'
+      operationId: getApiComments
+      x-operation-id-source: derived
     post:
       summary: Add a comment to a discussion between teams on a risk
-      description: <div>A discussion can be started by either Broker or Underwriter by creating a new comment. The discussion is between the broker and carrier teams on the risk, with the individual making the comment identified.</div>
+      description: A discussion can be started by either Broker or Underwriter by creating a new comment. The discussion is between the broker and carrier teams on the risk, with the individual making the comment identified.
       tags:
       - Comments
       requestBody:
@@ -80,10 +91,12 @@ paths:
                     type: boolean
                     description: true if the comment was saved
                     example: true
+      operationId: postApiComments
+      x-operation-id-source: derived
   /api/comments/global:
     get:
       summary: An array of 'global' comments sent by Whitespace to all platform users
-      description: <div>Whitespace can communicate with platform users through comments sent to everyone which are dismissed when read. This endpoint fetches those global comments.</div>
+      description: Whitespace can communicate with platform users through comments sent to everyone which are dismissed when read. This endpoint fetches those global comments.
       tags:
       - Comments
       responses:
@@ -95,6 +108,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RWComment'
+      operationId: getApiCommentsGlobal
+      x-operation-id-source: derived
 components:
   schemas:
     RWComment:

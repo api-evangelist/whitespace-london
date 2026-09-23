@@ -2,7 +2,10 @@ openapi: 3.2.0
 info:
   version: 0.1.0
   title: Whitespace Platform Overview API
-  description: <div>Last update 29th May 2025</div> <p/> <div>Our intention is to cover the API calls most of use to those wanting  to integrate external systems to the Whitespace Platform. We will give  some descriptions about usage, but put full detail in standalone documents at  <a href='https://apidocs.whitespace.co.uk/'>https://apidocs.whitespace.co.uk/</a>. We intend to have the published endpoints and schemas documented to the  level that the code generated can be used safely and without modification to call our APIs safely.</div>  <p/> <div>Calls exclusive to brokers or underwriters have a comment of Broker Only and Underwriter Only respectively. All other calls work for both, but functionality might depend on the stage the risk is at, or other contextual factors.</div> <div>Where certain properties refer to RootID or similar, they are actually referring to the ID of the entire slip, encompassing all stages and instances of the contract. This is a unique 38-character reference starting with the letters IC. If they mention riskID or docID or placingID, these are refering to the ID of a specific document or contract instance within the slip. This is always the RootID of the base slip followed by a double colon, ::, and further characters.</div> <div> Once your Integration is ready to go live, the URL for production is <b>https://www.whitespaceplatform.com</b></div>
+  description: 'Last update 29th May 2025
+
+
+    Our intention is to cover the API calls most of use to those wanting to integrate external systems to the Whitespace Platform.'
 servers:
 - description: Sandbox Environment
   url: https://sandbox.whitespace.co.uk/
@@ -20,7 +23,67 @@ paths:
   /api/overview/{rootID}:
     get:
       summary: Fetch documents of certain types related to a risk
-      description: <p>This endpoint returns an array where each item is a different document and therefore has different contents from the one before it.</p> <p>The document types included are as listed below. All of them have schemas you can find at the bottom of the page. Note that this is not every  document. It is a set which we have found convenient to present together to give background information on a risk. Note particularly that it does not include the RWPlacing contract wording document.</p> <ul> <li>RWComment</li> <li>RWAttachment</li> <li>RWAttentionWanted</li> <li>RWMultiSectionStorer</li> <li>RWActivity</li> <li>RWEndorsementFollower</li> <li>RWFacilityGuidance</li> <li>RWLineGuidanceSet</li> <li>RWWrittenLineSet</li> <li>RWSignedLineSet</li> <li>RWSubjectivityResponse</li> <li>RWNoCoverGivenLine</li> <li>RWRiskAuthorisationState</li> <li>RWBindableQuoteGuidance</li> <li>RWQuotedLine</li> <li>RWQuotedFacilityGuidance</li> <li>RWBrokerMessage</li> <li>RWMRCValidationResults</li> <li>RWCorrectionDetails</li></ul>
+      description: 'This endpoint returns an array where each item is a different document and therefore has different contents from the one before it.
+
+
+        The document types included are as listed below. All of them have schemas you can find at the bottom of the page. Note that this is not every document. It is a set which we have found convenient to present together to give background information on a risk. Note particularly that it does not include the RWPlacing contract wording document.
+
+
+        RWComment
+
+
+        RWAttachment
+
+
+        RWAttentionWanted
+
+
+        RWMultiSectionStorer
+
+
+        RWActivity
+
+
+        RWEndorsementFollower
+
+
+        RWFacilityGuidance
+
+
+        RWLineGuidanceSet
+
+
+        RWWrittenLineSet
+
+
+        RWSignedLineSet
+
+
+        RWSubjectivityResponse
+
+
+        RWNoCoverGivenLine
+
+
+        RWRiskAuthorisationState
+
+
+        RWBindableQuoteGuidance
+
+
+        RWQuotedLine
+
+
+        RWQuotedFacilityGuidance
+
+
+        RWBrokerMessage
+
+
+        RWMRCValidationResults
+
+
+        RWCorrectionDetails'
       tags:
       - Overview
       parameters:
@@ -350,6 +413,8 @@ paths:
                       type: string
                       example: RWComment
                       description: RWComment in all cases
+      operationId: getApiOverviewByRootID
+      x-operation-id-source: derived
 components:
   securitySchemes:
     bearerAuth:
