@@ -217,6 +217,139 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ExtendedMRC:
+      type: object
+      description: JSON returned by getExtendedMRC including the Risk and a broader range of data
+      properties:
+        createdAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        updatedAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        type:
+          type: string
+          example: RWPlacing
+          description: RWPlacing in all cases
+        control:
+          $ref: '#/components/schemas/RWPlacing/properties/control'
+        channels:
+          type: array
+          items:
+            type: string
+            example: ajc_ALL
+        MRCContract:
+          $ref: '#/components/schemas/RWPlacing/properties/MRCContract'
+        questionnaire:
+          type: object
+          properties:
+            questionnaire:
+              type: object
+              properties:
+                questions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tag:
+                        type: string
+                        example: Pension_Or_Benefits_Plan_Company_Sponsor
+                        description: name of the tag
+                      text:
+                        type: string
+                        example: Does the company sponsor any pension or benefits plan?
+                        description: The Question text
+                      id:
+                        type: string
+                        example: Pension or Benefits Plan - Company Sponsor
+                        description: the id of the question
+                      hidden:
+                        type: boolean
+                        example: true
+                        description: If the question is hidden or not, usually because the dependant question has not been answered
+                      table:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            tag:
+                              type: string
+                              example: Asset_Amount_Year
+                            text:
+                              type: string
+                              example: Year
+                        required:
+                        - tag
+                        - text
+                    required:
+                    - text
+                    - id
+                    - tag
+              required:
+              - questions
+          required:
+          - questionnaire
+        proposedEndorsementFollowers:
+          type: object
+          description: an object where the keys are the carrier team ids and the values are 'unchosen', 'leader', 'agreementParty', 'notifyParty', 'nonNotifyParty'
+          properties:
+            palermo_ALL:
+              description: as an example, the follower status for the Palermo All Risks team
+              type: string
+              example: leader
+        provenance:
+          type: object
+          description: Meta-data about the document to aid with auditing
+          properties:
+            version:
+              type: string
+              description: Version message of the platform system that created the document
+              example: 2022-04-11@15:04:48
+            dataHash:
+              type: string
+              description: Data hash of the activity document
+              example: 485241de4e5bfc76a0e2ef8bab79350c02d3aa06846fd2996cbf9fc9a7840eb0
+            system:
+              type: string
+              description: The internal name of the platform system
+              example: LavAPI
+            userID:
+              type: string
+              description: The user ID of the user whose action generated the document
+              example: MUB980AB60-1C96-4092-A1B4-B8FB183360D1
+            writtenAt:
+              type: string
+              description: The creation date of the document, in YYYY-MM-DD hh:mm:ss format
+              example: '2022-05-09T11:44:41.000Z'
+            provHash:
+              type: string
+              description: Provisioning hash of the document
+              example: 76a209a16d8b9214e7a33483d78718cc1a7e7aed7047282d2c94417404558e2d
+        accountDocID:
+          type: string
+          example: ''
+        writtenLineSets:
+          type: array
+          description: the written lines on the contract
+          items:
+            $ref: '#/components/schemas/RWWrittenLineSet'
+        signedLineSets:
+          type: array
+          description: the signed lines on the contract
+          items:
+            $ref: '#/components/schemas/RWSignedLineSet'
+        platformReferences:
+          type: object
+          description: document and revision of the risk
+          properties:
+            RiskID:
+              type: string
+              description: the document ID of the risk
+              example: IC08B5EC17-5486-4323-82FC-62CC8C410EA0::FO::EN1
+            Revision:
+              type: string
+              description: the revision of the risk
+              example: 4-b63141573da07d5316b7a2b4585fbd2b
     RWActivity:
       type: object
       description: The summary data associated with an individual activity document.
@@ -498,139 +631,6 @@ components:
           type: boolean
           example: false
           description: True if the message is internal
-    ExtendedMRC:
-      type: object
-      description: JSON returned by getExtendedMRC including the Risk and a broader range of data
-      properties:
-        createdAt:
-          type: string
-          example: '2021-08-04T15:18:02.000Z'
-        updatedAt:
-          type: string
-          example: '2021-08-04T15:18:02.000Z'
-        type:
-          type: string
-          example: RWPlacing
-          description: RWPlacing in all cases
-        control:
-          $ref: '#/components/schemas/RWPlacing/properties/control'
-        channels:
-          type: array
-          items:
-            type: string
-            example: ajc_ALL
-        MRCContract:
-          $ref: '#/components/schemas/RWPlacing/properties/MRCContract'
-        questionnaire:
-          type: object
-          properties:
-            questionnaire:
-              type: object
-              properties:
-                questions:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      tag:
-                        type: string
-                        example: Pension_Or_Benefits_Plan_Company_Sponsor
-                        description: name of the tag
-                      text:
-                        type: string
-                        example: Does the company sponsor any pension or benefits plan?
-                        description: The Question text
-                      id:
-                        type: string
-                        example: Pension or Benefits Plan - Company Sponsor
-                        description: the id of the question
-                      hidden:
-                        type: boolean
-                        example: true
-                        description: If the question is hidden or not, usually because the dependant question has not been answered
-                      table:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            tag:
-                              type: string
-                              example: Asset_Amount_Year
-                            text:
-                              type: string
-                              example: Year
-                        required:
-                        - tag
-                        - text
-                    required:
-                    - text
-                    - id
-                    - tag
-              required:
-              - questions
-          required:
-          - questionnaire
-        proposedEndorsementFollowers:
-          type: object
-          description: an object where the keys are the carrier team ids and the values are 'unchosen', 'leader', 'agreementParty', 'notifyParty', 'nonNotifyParty'
-          properties:
-            palermo_ALL:
-              description: as an example, the follower status for the Palermo All Risks team
-              type: string
-              example: leader
-        provenance:
-          type: object
-          description: Meta-data about the document to aid with auditing
-          properties:
-            version:
-              type: string
-              description: Version message of the platform system that created the document
-              example: 2022-04-11@15:04:48
-            dataHash:
-              type: string
-              description: Data hash of the activity document
-              example: 485241de4e5bfc76a0e2ef8bab79350c02d3aa06846fd2996cbf9fc9a7840eb0
-            system:
-              type: string
-              description: The internal name of the platform system
-              example: LavAPI
-            userID:
-              type: string
-              description: The user ID of the user whose action generated the document
-              example: MUB980AB60-1C96-4092-A1B4-B8FB183360D1
-            writtenAt:
-              type: string
-              description: The creation date of the document, in YYYY-MM-DD hh:mm:ss format
-              example: '2022-05-09T11:44:41.000Z'
-            provHash:
-              type: string
-              description: Provisioning hash of the document
-              example: 76a209a16d8b9214e7a33483d78718cc1a7e7aed7047282d2c94417404558e2d
-        accountDocID:
-          type: string
-          example: ''
-        writtenLineSets:
-          type: array
-          description: the written lines on the contract
-          items:
-            $ref: '#/components/schemas/RWWrittenLineSet'
-        signedLineSets:
-          type: array
-          description: the signed lines on the contract
-          items:
-            $ref: '#/components/schemas/RWSignedLineSet'
-        platformReferences:
-          type: object
-          description: document and revision of the risk
-          properties:
-            RiskID:
-              type: string
-              description: the document ID of the risk
-              example: IC08B5EC17-5486-4323-82FC-62CC8C410EA0::FO::EN1
-            Revision:
-              type: string
-              description: the revision of the risk
-              example: 4-b63141573da07d5316b7a2b4585fbd2b
   securitySchemes:
     bearerAuth:
       type: http
