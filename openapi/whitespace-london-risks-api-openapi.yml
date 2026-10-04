@@ -7604,466 +7604,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    RWPlacing:
-      type: object
-      description: <p>The MRCRisk obect contains the full text and structure of the JMRC Insurance Contract.</p> <p>It includes an MRCContract object where a set of MRCLineItem objects represent the headings and data in the contract, and an MRCRiskControl object which provides summary and meta data about the risk to enable the system's performance.</p>
-      properties:
-        _id:
-          type: string
-          example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
-          description: unique document id for the risk
-        _rev:
-          type: string
-          example: 1-141df67df9e5eaacd0830c65e47a0bf9
-        createdAt:
-          type: string
-          example: '2021-08-04T15:18:02.000Z'
-        updatedAt:
-          type: string
-          example: '2021-08-04T15:18:02.000Z'
-        type:
-          type: string
-          example: RWPlacing
-          description: RWPlacing in all cases
-        control:
-          type: object
-          properties:
-            status:
-              type: string
-              description: The current stage of the contract in the placing process, taken from an enumerated list containing stages such as Draft, Quoted, FirmOrder, etc
-              example: FirmOrder
-            insuranceType:
-              type: string
-              example: Insurance
-              description: Either Insurance or ReInsurance, as specified at contract creation
-            umr:
-              type: string
-              description: The Lloyd's Unique Market Reference number for the contract
-              example: B0999JC201909241622
-            insuredName:
-              type: string
-              example: Acme Widgets Inc
-              description: The name given to the contract
-            contractType:
-              type: string
-              example: Aviation Hull Cover
-              description: The class of business that the contract falls under
-            leadUnderwriterChannel:
-              type: string
-              example: messina_ALL
-              description: The team channel name of the lead underwriter on the risk, once specified
-            leadUnderwriter:
-              type: string
-              example: Messina All Risks
-              description: The plaintext company and team name of the lead underwriter's team, once specified
-            placingBrokerChannel:
-              type: string
-              example: ajc_ALL
-              description: The team channel name of the contract's broker
-            placingBroker:
-              type: string
-              example: AJC All Risks
-              description: The plaintext company and team name of the broker's team
-            limitSummary:
-              type: string
-              description: The limit of liability for the contract
-            originalDocID:
-              type: string
-              description: The unique ID of the document this contract was created from, if any
-              example: IC97799647-4496-4760-B594-02AC726B0D7E
-            endorsementNumber:
-              type: string
-              example: '2'
-              description: If this contract is an endorsement, its endorsement number is stored here
-            endorsementType:
-              type: string
-              description: For endorsements, specifies whether the endorsement is a Mid-Term Participant Change or a standard endorsement
-              enum:
-              - standard
-              - mtpc
-            isFacility:
-              type: boolean
-              example: false
-              description: True if this contract is a facility agreement
-            associatedFacilityIDs:
-              type: array
-              items:
-                type: string
-                example: ICB1213647-4876-4760-B594-02AC7261312412
-                description: If the contract is a declaration, this array lists the unique IDs of all facility agreeements it is attached to
-            placementType:
-              type: string
-              enum:
-              - FullContract
-              - OffPlatform
-              - Template
-              description: The contract type. OffPlatform is for contracts backloaded to duplicate agreements conducted off-platform, Template is for contract templates, and FullContract is for all live contracts
-            verticalVisibility:
-              type: string
-              enum:
-              - OwnStampOnly
-              - AllStamps
-              - LeaderStamps
-              description: If the risk has vertical terms, this string specifies which stamps underwriters can see.
-            createdInVersion:
-              type: number
-              example: 21100
-              description: Which version of the platform the risk was created in.
-            isIndicative:
-              type: boolean
-              example: false
-              description: True if the Indicative flag been toggled, indicating that the contract is not binding.
-            submittedAsCopyOf:
-              type: string
-              example: ICD937404C-87A7-4408-BE4B-D449216F9A85
-              description: If this contract is a placing document shared from another broker, the unique ID of the original producing broker's contract is held here.
-            stampVisibility:
-              type: string
-              description: Decides whose stamps underwriters can see
-              enum:
-              - Allstamps
-              - OwnStampsOnly
-              - LeadersStamps
-        MRCContract:
-          type: object
-          description: a top level object which currently contains only the array of line items
-          properties:
-            lineItems:
-              type: array
-              items:
-                type: object
-                $ref: '#/paths/~1api~1risks~1%7BriskID%7D~1lineitem~1%7BmrcHeading%7D/get/responses/200/content/application~1json/schema/items'
-        channels:
-          type: array
-          items:
-            type: string
-    ExtendedMRC:
-      type: object
-      description: JSON returned by getExtendedMRC including the Risk and a broader range of data
-      properties:
-        createdAt:
-          type: string
-          example: '2021-08-04T15:18:02.000Z'
-        updatedAt:
-          type: string
-          example: '2021-08-04T15:18:02.000Z'
-        type:
-          type: string
-          example: RWPlacing
-          description: RWPlacing in all cases
-        control:
-          $ref: '#/components/schemas/RWPlacing/properties/control'
-        channels:
-          type: array
-          items:
-            type: string
-            example: ajc_ALL
-        MRCContract:
-          $ref: '#/components/schemas/RWPlacing/properties/MRCContract'
-        questionnaire:
-          type: object
-          properties:
-            questionnaire:
-              type: object
-              properties:
-                questions:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      tag:
-                        type: string
-                        example: Pension_Or_Benefits_Plan_Company_Sponsor
-                        description: name of the tag
-                      text:
-                        type: string
-                        example: Does the company sponsor any pension or benefits plan?
-                        description: The Question text
-                      id:
-                        type: string
-                        example: Pension or Benefits Plan - Company Sponsor
-                        description: the id of the question
-                      hidden:
-                        type: boolean
-                        example: true
-                        description: If the question is hidden or not, usually because the dependant question has not been answered
-                      table:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            tag:
-                              type: string
-                              example: Asset_Amount_Year
-                            text:
-                              type: string
-                              example: Year
-                        required:
-                        - tag
-                        - text
-                    required:
-                    - text
-                    - id
-                    - tag
-              required:
-              - questions
-          required:
-          - questionnaire
-        proposedEndorsementFollowers:
-          type: object
-          description: an object where the keys are the carrier team ids and the values are 'unchosen', 'leader', 'agreementParty', 'notifyParty', 'nonNotifyParty'
-          properties:
-            palermo_ALL:
-              description: as an example, the follower status for the Palermo All Risks team
-              type: string
-              example: leader
-        provenance:
-          type: object
-          description: Meta-data about the document to aid with auditing
-          properties:
-            version:
-              type: string
-              description: Version message of the platform system that created the document
-              example: 2022-04-11@15:04:48
-            dataHash:
-              type: string
-              description: Data hash of the activity document
-              example: 485241de4e5bfc76a0e2ef8bab79350c02d3aa06846fd2996cbf9fc9a7840eb0
-            system:
-              type: string
-              description: The internal name of the platform system
-              example: LavAPI
-            userID:
-              type: string
-              description: The user ID of the user whose action generated the document
-              example: MUB980AB60-1C96-4092-A1B4-B8FB183360D1
-            writtenAt:
-              type: string
-              description: The creation date of the document, in YYYY-MM-DD hh:mm:ss format
-              example: '2022-05-09T11:44:41.000Z'
-            provHash:
-              type: string
-              description: Provisioning hash of the document
-              example: 76a209a16d8b9214e7a33483d78718cc1a7e7aed7047282d2c94417404558e2d
-        accountDocID:
-          type: string
-          example: ''
-        writtenLineSets:
-          type: array
-          description: the written lines on the contract
-          items:
-            $ref: '#/components/schemas/RWWrittenLineSet'
-        signedLineSets:
-          type: array
-          description: the signed lines on the contract
-          items:
-            $ref: '#/components/schemas/RWSignedLineSet'
-        platformReferences:
-          type: object
-          description: document and revision of the risk
-          properties:
-            RiskID:
-              type: string
-              description: the document ID of the risk
-              example: IC08B5EC17-5486-4323-82FC-62CC8C410EA0::FO::EN1
-            Revision:
-              type: string
-              description: the revision of the risk
-              example: 4-b63141573da07d5316b7a2b4585fbd2b
-    RWEndorsementFollower:
-      type: object
-      properties:
-        _id:
-          type: string
-          description: Unique ID for this endorsement follower document
-          example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5::SIGNED::EN1::ENF::messina_ALL
-        _rev:
-          type: string
-          description: Revision number for this document
-          example: 3-a1df22093d0dc2978b87f396be3cd2fa
-        agreement:
-          type: object
-          properties:
-            dateOfAgreement:
-              type: string
-              description: Effective date of the endorsement in yyyy-mm-dd hh:mm:ss format
-              example: '2021-08-06 08:15:28'
-            followerType:
-              type: string
-              example: leader
-              description: The role of this follower in the endorsement
-              enum:
-              - leader
-              - agreementParty
-              - notifyParty
-              - nonNotifyParty
-              - doesNotApply
-              - unchosen
-            instruction:
-              type: string
-              example: leaderOnly
-              description: The parties the broker has selected as needing to agree the endorsement
-              enum:
-              - leaderOnly
-              - none
-              - leaderAndAgreementParties
-              - allToAgree
-            leader:
-              type: string
-              example: 'Yes'
-              description: Set to Yes when the underwriter that this document details is the leader of the endorsement
-            numberOfDaysToNotifyFollowers:
-              type: string
-              description: The number of days within which non-Agreement followers must be notified of the endorsement
-              example: '7'
-            user:
-              type: string
-              example: MUE8368329-A451-49D4-A385-915D421A4465
-              description: The unique ID of the underwriter that this document details as a follower of the endorsement
-            uwrChannel:
-              type: string
-              example: messina_ALL
-              description: The team channel of the underwriter that this document details
-            stampDescriptions:
-              type: array
-              items:
-                type: object
-                properties:
-                  stampID:
-                    type: string
-                    example: ST213211241241
-                    description: The ID of the stamp that the follower put down on the endorsement
-                  desc:
-                    type: string
-                    example: 56 (added by Ascot Reinsurance Company Limited)
-                    description: The brief description text field of the stamp identified above
-            mtpcAgreement:
-              type: array
-              items:
-                type: object
-                properties:
-                  type:
-                    description: If the endorsement is a mid-term participant change, this specifies the category of participant change
-                    enum:
-                    - add
-                    - modify
-                    - remove
-                    type: string
-                  line:
-                    $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
-        channels:
-          type: array
-          items:
-            type: string
-            description: A specific channel name identifying one of the entries in the array of team channels of the broker and all followers
-            example: messina_ALL
-        createdAt:
-          type: string
-          description: The date this document was created in yyyy-mm-dd hh:mm:ss format
-          example: '2021-08-06 08:15:28'
-        endorsementDocID:
-          type: string
-          example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5::SIGNED::EN1
-          description: The unique ID of the endorsement that this RWEndorsementFollower document is associated with
-        followerType:
-          type: string
-          example: leader
-          description: The participation type of the follower
-        version:
-          type: integer
-          description: The integer portion of the _ver value, identifying the sequential version number of this document
-          example: 3
-        type:
-          type: string
-          example: RWEndorsementFollower
-          description: The JMRC document type of this document, which will always be RWEndorsementFollower
-        updatedAt:
-          type: string
-          description: The date this document was last updated in yyyy-mm-dd hh:mm:ss format
-          example: '2021-08-06 08:15:28'
-        uwrChannel:
-          type: string
-          example: messina_ALL
-          description: The team channel name of the follower's team
-        template:
-          type: string
-          description: The category of agreement box displayed on the endorsement
-          enum:
-          - GUAStampA
-          - GUAStampB
-          - AVS100B
-          - NonGUA
-        mtpc:
-          type: array
-          items:
-            type: object
-            description: The details of the mid-term participant agreement, if the endorsement is of the MTPC type. Listed properties will change depending on whether the endorsement is adding, removing or modifying participants.
-            properties:
-              type:
-                type: string
-                enum:
-                - add
-                - remove
-                - modify
-                description: The type of change in participation
-              sectionID:
-                example: '1'
-                description: The sectionID of the written line that is being modified/removed
-                type: string
-              setLeader:
-                type: boolean
-                example: true
-                description: True if the MTPC is changing the leader
-              guidance:
-                type: object
-                properties:
-                  conditionsEnabled:
-                    type: boolean
-                    example: true
-                    description: True if there are any conditions on the line guidance
-                  sectionIdentifiers:
-                    type: array
-                    items:
-                      type: string
-                      example: '1'
-                      description: The ID number of the section specifying the line guidance
-                  maxString:
-                    type: string
-                    example: '40'
-                    description: The maximum line percentage requested in the guidance
-                  minString:
-                    type: string
-                    example: '30'
-                    description: The minimum line percentage requested in the guidance
-                  suggestedStamps:
-                    $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
-                  role:
-                    description: The participation role of the follower
-                    type: string
-                    enum:
-                    - leader
-                    - agreementParty
-                    - notifyParty
-                    - nonNotifyParty
-                    - doesNotApply
-                  associatedFacilityId:
-                    type: string
-                    example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
-                    description: The unique ID of the facility agreement, if any, that the declaration is attached to
-                  associatedFacilitySectionID:
-                    type: string
-                    example: '1'
-                    description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
-              section:
-                $ref: '#/components/schemas/RWLineGuidanceSet/properties/sections/items'
-              facilityID:
-                type: string
-                example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5
-                description: The unique ID of the facility agreement, if any, that the risk being endorsed is attached to one
-              newPercentage:
-                type: string
-                example: '50'
-                description: The new percentage value of the line if the MTPC is modifying a line
     RWSignedLineSet:
       type: object
       properties:
@@ -8107,155 +7647,6 @@ components:
           type: string
           example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL
           description: The unique ID of the related RWPlacing document
-      required:
-      - _id
-      - _rev
-      - channels
-      - createdAt
-      - line
-      - parentDocID
-      - provenance
-      - type
-      - updatedAt
-    RWLineGuidanceSet:
-      type: object
-      properties:
-        sections:
-          type: array
-          items:
-            type: object
-            properties:
-              index:
-                type: number
-                example: 1
-              leadUnderwriterChannel:
-                type: string
-                example: offlineafricare_ALL
-                description: The name of the leader's team channel
-              multiSectionName:
-                type: string
-                description: The name of the section
-                example: Hull
-              multiSectionId:
-                type: string
-                description: The ID number of the section
-                example: '1'
-              leadUnderwriter:
-                type: string
-                example: OFFLINEAFRICANRE ALL
-                description: The leader's company and team IDs
-              leadUnderwriterFacility:
-                type: string
-                example: ICD77B5FD4-0790-42B9-BC53-65242FB96558
-                description: The unique ID of the leader's facility agreement
-        contents:
-          type: array
-          items:
-            type: object
-            properties:
-              conditionsEnabled:
-                type: boolean
-                example: true
-                description: Whether there are any conditions on the guidance
-              sectionIdentifiers:
-                type: array
-                items:
-                  type: string
-                  example: '1'
-                  description: The ID number of the section
-              maxString:
-                type: string
-                example: '40'
-                description: The maximum requested line percentage
-              minString:
-                type: string
-                example: '30'
-                description: The minimum requested line percentage
-              suggestedStamps:
-                $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
-              role:
-                description: Facility participation role
-                type: string
-                enum:
-                - leader
-                - agreementParty
-                - notifyParty
-                - nonNotifyParty
-                - doesNotApply
-              associatedFacilityId:
-                type: string
-                example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
-                description: Unique ID of the facility agreement that the declaration is attached to.
-              associatedFacilitySectionID:
-                type: string
-                example: '1'
-                description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
-        associatedPlacingID:
-          type: string
-          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO
-          description: The Unique ID of the Firm Order that this line guidance applies to
-        _id:
-          type: string
-          description: The unique ID of this document
-          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO::CATANIA::ALL::LGUS
-        _rev:
-          type: string
-          description: The revision number of this document
-          example: 1-304aa44d6b3231c380ed83bbda5d8f08
-        channels:
-          type: array
-          items:
-            type: string
-            example: catania_ALL
-        Provenance:
-          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
-        type:
-          type: string
-          description: The named JMRC type descriptor for this document
-          example: RWLineGuidance
-    RWWrittenLineSet:
-      type: object
-      properties:
-        _id:
-          type: string
-          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL::WRLS
-          description: The unique ID of this document
-        _rev:
-          example: 1-087952cf08f44dae740c1c001e2d5ab2
-          type: string
-          description: The revision number of this document
-        channels:
-          type: array
-          items:
-            type: string
-            example: akhil_ALL
-            description: The team IDs of the users who can see the risk
-        createdAt:
-          type: string
-          example: '2024-02-21 15:05:47'
-          description: The creation time of this document
-        contents:
-          type: array
-          items:
-            $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
-        provenance:
-          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
-        type:
-          type: string
-          description: The named JMRC type descriptor for this document
-          example: RWWrittenLineSet
-        updatedAt:
-          type: string
-          example: '2024-02-21 15:05:47'
-          description: The date and time that this document was last updated
-        isOffline:
-          type: boolean
-          example: true
-          description: Whether the stamp is associated with an offline carrier
-        parentDocID:
-          type: string
-          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL
-          description: The unique ID number of the related RWPlacing document
       required:
       - _id
       - _rev
@@ -8904,6 +8295,615 @@ components:
       - provenance
       - type
       - updatedAt
+    ExtendedMRC:
+      type: object
+      description: JSON returned by getExtendedMRC including the Risk and a broader range of data
+      properties:
+        createdAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        updatedAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        type:
+          type: string
+          example: RWPlacing
+          description: RWPlacing in all cases
+        control:
+          $ref: '#/components/schemas/RWPlacing/properties/control'
+        channels:
+          type: array
+          items:
+            type: string
+            example: ajc_ALL
+        MRCContract:
+          $ref: '#/components/schemas/RWPlacing/properties/MRCContract'
+        questionnaire:
+          type: object
+          properties:
+            questionnaire:
+              type: object
+              properties:
+                questions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tag:
+                        type: string
+                        example: Pension_Or_Benefits_Plan_Company_Sponsor
+                        description: name of the tag
+                      text:
+                        type: string
+                        example: Does the company sponsor any pension or benefits plan?
+                        description: The Question text
+                      id:
+                        type: string
+                        example: Pension or Benefits Plan - Company Sponsor
+                        description: the id of the question
+                      hidden:
+                        type: boolean
+                        example: true
+                        description: If the question is hidden or not, usually because the dependant question has not been answered
+                      table:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            tag:
+                              type: string
+                              example: Asset_Amount_Year
+                            text:
+                              type: string
+                              example: Year
+                        required:
+                        - tag
+                        - text
+                    required:
+                    - text
+                    - id
+                    - tag
+              required:
+              - questions
+          required:
+          - questionnaire
+        proposedEndorsementFollowers:
+          type: object
+          description: an object where the keys are the carrier team ids and the values are 'unchosen', 'leader', 'agreementParty', 'notifyParty', 'nonNotifyParty'
+          properties:
+            palermo_ALL:
+              description: as an example, the follower status for the Palermo All Risks team
+              type: string
+              example: leader
+        provenance:
+          type: object
+          description: Meta-data about the document to aid with auditing
+          properties:
+            version:
+              type: string
+              description: Version message of the platform system that created the document
+              example: 2022-04-11@15:04:48
+            dataHash:
+              type: string
+              description: Data hash of the activity document
+              example: 485241de4e5bfc76a0e2ef8bab79350c02d3aa06846fd2996cbf9fc9a7840eb0
+            system:
+              type: string
+              description: The internal name of the platform system
+              example: LavAPI
+            userID:
+              type: string
+              description: The user ID of the user whose action generated the document
+              example: MUB980AB60-1C96-4092-A1B4-B8FB183360D1
+            writtenAt:
+              type: string
+              description: The creation date of the document, in YYYY-MM-DD hh:mm:ss format
+              example: '2022-05-09T11:44:41.000Z'
+            provHash:
+              type: string
+              description: Provisioning hash of the document
+              example: 76a209a16d8b9214e7a33483d78718cc1a7e7aed7047282d2c94417404558e2d
+        accountDocID:
+          type: string
+          example: ''
+        writtenLineSets:
+          type: array
+          description: the written lines on the contract
+          items:
+            $ref: '#/components/schemas/RWWrittenLineSet'
+        signedLineSets:
+          type: array
+          description: the signed lines on the contract
+          items:
+            $ref: '#/components/schemas/RWSignedLineSet'
+        platformReferences:
+          type: object
+          description: document and revision of the risk
+          properties:
+            RiskID:
+              type: string
+              description: the document ID of the risk
+              example: IC08B5EC17-5486-4323-82FC-62CC8C410EA0::FO::EN1
+            Revision:
+              type: string
+              description: the revision of the risk
+              example: 4-b63141573da07d5316b7a2b4585fbd2b
+    RWEndorsementFollower:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Unique ID for this endorsement follower document
+          example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5::SIGNED::EN1::ENF::messina_ALL
+        _rev:
+          type: string
+          description: Revision number for this document
+          example: 3-a1df22093d0dc2978b87f396be3cd2fa
+        agreement:
+          type: object
+          properties:
+            dateOfAgreement:
+              type: string
+              description: Effective date of the endorsement in yyyy-mm-dd hh:mm:ss format
+              example: '2021-08-06 08:15:28'
+            followerType:
+              type: string
+              example: leader
+              description: The role of this follower in the endorsement
+              enum:
+              - leader
+              - agreementParty
+              - notifyParty
+              - nonNotifyParty
+              - doesNotApply
+              - unchosen
+            instruction:
+              type: string
+              example: leaderOnly
+              description: The parties the broker has selected as needing to agree the endorsement
+              enum:
+              - leaderOnly
+              - none
+              - leaderAndAgreementParties
+              - allToAgree
+            leader:
+              type: string
+              example: 'Yes'
+              description: Set to Yes when the underwriter that this document details is the leader of the endorsement
+            numberOfDaysToNotifyFollowers:
+              type: string
+              description: The number of days within which non-Agreement followers must be notified of the endorsement
+              example: '7'
+            user:
+              type: string
+              example: MUE8368329-A451-49D4-A385-915D421A4465
+              description: The unique ID of the underwriter that this document details as a follower of the endorsement
+            uwrChannel:
+              type: string
+              example: messina_ALL
+              description: The team channel of the underwriter that this document details
+            stampDescriptions:
+              type: array
+              items:
+                type: object
+                properties:
+                  stampID:
+                    type: string
+                    example: ST213211241241
+                    description: The ID of the stamp that the follower put down on the endorsement
+                  desc:
+                    type: string
+                    example: 56 (added by Ascot Reinsurance Company Limited)
+                    description: The brief description text field of the stamp identified above
+            mtpcAgreement:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    description: If the endorsement is a mid-term participant change, this specifies the category of participant change
+                    enum:
+                    - add
+                    - modify
+                    - remove
+                    type: string
+                  line:
+                    $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
+        channels:
+          type: array
+          items:
+            type: string
+            description: A specific channel name identifying one of the entries in the array of team channels of the broker and all followers
+            example: messina_ALL
+        createdAt:
+          type: string
+          description: The date this document was created in yyyy-mm-dd hh:mm:ss format
+          example: '2021-08-06 08:15:28'
+        endorsementDocID:
+          type: string
+          example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5::SIGNED::EN1
+          description: The unique ID of the endorsement that this RWEndorsementFollower document is associated with
+        followerType:
+          type: string
+          example: leader
+          description: The participation type of the follower
+        version:
+          type: integer
+          description: The integer portion of the _ver value, identifying the sequential version number of this document
+          example: 3
+        type:
+          type: string
+          example: RWEndorsementFollower
+          description: The JMRC document type of this document, which will always be RWEndorsementFollower
+        updatedAt:
+          type: string
+          description: The date this document was last updated in yyyy-mm-dd hh:mm:ss format
+          example: '2021-08-06 08:15:28'
+        uwrChannel:
+          type: string
+          example: messina_ALL
+          description: The team channel name of the follower's team
+        template:
+          type: string
+          description: The category of agreement box displayed on the endorsement
+          enum:
+          - GUAStampA
+          - GUAStampB
+          - AVS100B
+          - NonGUA
+        mtpc:
+          type: array
+          items:
+            type: object
+            description: The details of the mid-term participant agreement, if the endorsement is of the MTPC type. Listed properties will change depending on whether the endorsement is adding, removing or modifying participants.
+            properties:
+              type:
+                type: string
+                enum:
+                - add
+                - remove
+                - modify
+                description: The type of change in participation
+              sectionID:
+                example: '1'
+                description: The sectionID of the written line that is being modified/removed
+                type: string
+              setLeader:
+                type: boolean
+                example: true
+                description: True if the MTPC is changing the leader
+              guidance:
+                type: object
+                properties:
+                  conditionsEnabled:
+                    type: boolean
+                    example: true
+                    description: True if there are any conditions on the line guidance
+                  sectionIdentifiers:
+                    type: array
+                    items:
+                      type: string
+                      example: '1'
+                      description: The ID number of the section specifying the line guidance
+                  maxString:
+                    type: string
+                    example: '40'
+                    description: The maximum line percentage requested in the guidance
+                  minString:
+                    type: string
+                    example: '30'
+                    description: The minimum line percentage requested in the guidance
+                  suggestedStamps:
+                    $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
+                  role:
+                    description: The participation role of the follower
+                    type: string
+                    enum:
+                    - leader
+                    - agreementParty
+                    - notifyParty
+                    - nonNotifyParty
+                    - doesNotApply
+                  associatedFacilityId:
+                    type: string
+                    example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
+                    description: The unique ID of the facility agreement, if any, that the declaration is attached to
+                  associatedFacilitySectionID:
+                    type: string
+                    example: '1'
+                    description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
+              section:
+                $ref: '#/components/schemas/RWLineGuidanceSet/properties/sections/items'
+              facilityID:
+                type: string
+                example: IC4E49E958-870A-41B3-B60B-B5AAC51F48A5
+                description: The unique ID of the facility agreement, if any, that the risk being endorsed is attached to one
+              newPercentage:
+                type: string
+                example: '50'
+                description: The new percentage value of the line if the MTPC is modifying a line
+    RWPlacing:
+      type: object
+      description: <p>The MRCRisk obect contains the full text and structure of the JMRC Insurance Contract.</p> <p>It includes an MRCContract object where a set of MRCLineItem objects represent the headings and data in the contract, and an MRCRiskControl object which provides summary and meta data about the risk to enable the system's performance.</p>
+      properties:
+        _id:
+          type: string
+          example: IC213DA609-D6B5-4A05-86B8-3FD91E861F57
+          description: unique document id for the risk
+        _rev:
+          type: string
+          example: 1-141df67df9e5eaacd0830c65e47a0bf9
+        createdAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        updatedAt:
+          type: string
+          example: '2021-08-04T15:18:02.000Z'
+        type:
+          type: string
+          example: RWPlacing
+          description: RWPlacing in all cases
+        control:
+          type: object
+          properties:
+            status:
+              type: string
+              description: The current stage of the contract in the placing process, taken from an enumerated list containing stages such as Draft, Quoted, FirmOrder, etc
+              example: FirmOrder
+            insuranceType:
+              type: string
+              example: Insurance
+              description: Either Insurance or ReInsurance, as specified at contract creation
+            umr:
+              type: string
+              description: The Lloyd's Unique Market Reference number for the contract
+              example: B0999JC201909241622
+            insuredName:
+              type: string
+              example: Acme Widgets Inc
+              description: The name given to the contract
+            contractType:
+              type: string
+              example: Aviation Hull Cover
+              description: The class of business that the contract falls under
+            leadUnderwriterChannel:
+              type: string
+              example: messina_ALL
+              description: The team channel name of the lead underwriter on the risk, once specified
+            leadUnderwriter:
+              type: string
+              example: Messina All Risks
+              description: The plaintext company and team name of the lead underwriter's team, once specified
+            placingBrokerChannel:
+              type: string
+              example: ajc_ALL
+              description: The team channel name of the contract's broker
+            placingBroker:
+              type: string
+              example: AJC All Risks
+              description: The plaintext company and team name of the broker's team
+            limitSummary:
+              type: string
+              description: The limit of liability for the contract
+            originalDocID:
+              type: string
+              description: The unique ID of the document this contract was created from, if any
+              example: IC97799647-4496-4760-B594-02AC726B0D7E
+            endorsementNumber:
+              type: string
+              example: '2'
+              description: If this contract is an endorsement, its endorsement number is stored here
+            endorsementType:
+              type: string
+              description: For endorsements, specifies whether the endorsement is a Mid-Term Participant Change or a standard endorsement
+              enum:
+              - standard
+              - mtpc
+            isFacility:
+              type: boolean
+              example: false
+              description: True if this contract is a facility agreement
+            associatedFacilityIDs:
+              type: array
+              items:
+                type: string
+                example: ICB1213647-4876-4760-B594-02AC7261312412
+                description: If the contract is a declaration, this array lists the unique IDs of all facility agreeements it is attached to
+            placementType:
+              type: string
+              enum:
+              - FullContract
+              - OffPlatform
+              - Template
+              description: The contract type. OffPlatform is for contracts backloaded to duplicate agreements conducted off-platform, Template is for contract templates, and FullContract is for all live contracts
+            verticalVisibility:
+              type: string
+              enum:
+              - OwnStampOnly
+              - AllStamps
+              - LeaderStamps
+              description: If the risk has vertical terms, this string specifies which stamps underwriters can see.
+            createdInVersion:
+              type: number
+              example: 21100
+              description: Which version of the platform the risk was created in.
+            isIndicative:
+              type: boolean
+              example: false
+              description: True if the Indicative flag been toggled, indicating that the contract is not binding.
+            submittedAsCopyOf:
+              type: string
+              example: ICD937404C-87A7-4408-BE4B-D449216F9A85
+              description: If this contract is a placing document shared from another broker, the unique ID of the original producing broker's contract is held here.
+            stampVisibility:
+              type: string
+              description: Decides whose stamps underwriters can see
+              enum:
+              - Allstamps
+              - OwnStampsOnly
+              - LeadersStamps
+        MRCContract:
+          type: object
+          description: a top level object which currently contains only the array of line items
+          properties:
+            lineItems:
+              type: array
+              items:
+                type: object
+                $ref: '#/paths/~1api~1risks~1%7BriskID%7D~1lineitem~1%7BmrcHeading%7D/get/responses/200/content/application~1json/schema/items'
+        channels:
+          type: array
+          items:
+            type: string
+    RWWrittenLineSet:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL::WRLS
+          description: The unique ID of this document
+        _rev:
+          example: 1-087952cf08f44dae740c1c001e2d5ab2
+          type: string
+          description: The revision number of this document
+        channels:
+          type: array
+          items:
+            type: string
+            example: akhil_ALL
+            description: The team IDs of the users who can see the risk
+        createdAt:
+          type: string
+          example: '2024-02-21 15:05:47'
+          description: The creation time of this document
+        contents:
+          type: array
+          items:
+            $ref: '#/components/schemas/RWQuotedLine/properties/line/items'
+        provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+        type:
+          type: string
+          description: The named JMRC type descriptor for this document
+          example: RWWrittenLineSet
+        updatedAt:
+          type: string
+          example: '2024-02-21 15:05:47'
+          description: The date and time that this document was last updated
+        isOffline:
+          type: boolean
+          example: true
+          description: Whether the stamp is associated with an offline carrier
+        parentDocID:
+          type: string
+          example: ICD0645233-E126-4768-AB15-0A8828F5F08C::FO::TOMYUNDERWRITING::ALL
+          description: The unique ID number of the related RWPlacing document
+      required:
+      - _id
+      - _rev
+      - channels
+      - createdAt
+      - line
+      - parentDocID
+      - provenance
+      - type
+      - updatedAt
+    RWLineGuidanceSet:
+      type: object
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: number
+                example: 1
+              leadUnderwriterChannel:
+                type: string
+                example: offlineafricare_ALL
+                description: The name of the leader's team channel
+              multiSectionName:
+                type: string
+                description: The name of the section
+                example: Hull
+              multiSectionId:
+                type: string
+                description: The ID number of the section
+                example: '1'
+              leadUnderwriter:
+                type: string
+                example: OFFLINEAFRICANRE ALL
+                description: The leader's company and team IDs
+              leadUnderwriterFacility:
+                type: string
+                example: ICD77B5FD4-0790-42B9-BC53-65242FB96558
+                description: The unique ID of the leader's facility agreement
+        contents:
+          type: array
+          items:
+            type: object
+            properties:
+              conditionsEnabled:
+                type: boolean
+                example: true
+                description: Whether there are any conditions on the guidance
+              sectionIdentifiers:
+                type: array
+                items:
+                  type: string
+                  example: '1'
+                  description: The ID number of the section
+              maxString:
+                type: string
+                example: '40'
+                description: The maximum requested line percentage
+              minString:
+                type: string
+                example: '30'
+                description: The minimum requested line percentage
+              suggestedStamps:
+                $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
+              role:
+                description: Facility participation role
+                type: string
+                enum:
+                - leader
+                - agreementParty
+                - notifyParty
+                - nonNotifyParty
+                - doesNotApply
+              associatedFacilityId:
+                type: string
+                example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
+                description: Unique ID of the facility agreement that the declaration is attached to.
+              associatedFacilitySectionID:
+                type: string
+                example: '1'
+                description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
+        associatedPlacingID:
+          type: string
+          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO
+          description: The Unique ID of the Firm Order that this line guidance applies to
+        _id:
+          type: string
+          description: The unique ID of this document
+          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO::CATANIA::ALL::LGUS
+        _rev:
+          type: string
+          description: The revision number of this document
+          example: 1-304aa44d6b3231c380ed83bbda5d8f08
+        channels:
+          type: array
+          items:
+            type: string
+            example: catania_ALL
+        Provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+        type:
+          type: string
+          description: The named JMRC type descriptor for this document
+          example: RWLineGuidance
   securitySchemes:
     bearerAuth:
       type: http
