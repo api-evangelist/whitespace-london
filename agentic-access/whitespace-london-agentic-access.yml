@@ -1,22 +1,34 @@
-generated: '2026-07-25'
+generated: '2026-09-23'
 method: generated
-source: openapi/whitespace-london-platform-openapi.yml
+source: openapi/whitespace-london-activities-api-openapi.yml, openapi/whitespace-london-attachments-api-openapi.yml,
+  openapi/whitespace-london-bind-notify-parties-api-openapi.yml, openapi/whitespace-london-comments-api-openapi.yml,
+  openapi/whitespace-london-customer-api-openapi.yml, openapi/whitespace-london-data-api-openapi.yml,
+  openapi/whitespace-london-documents-api-openapi.yml, openapi/whitespace-london-endorsements-api-openapi.yml,
+  openapi/whitespace-london-export-api-openapi.yml, openapi/whitespace-london-internal-broker-note-api-openapi.yml,
+  openapi/whitespace-london-labels-api-openapi.yml, openapi/whitespace-london-lines-api-openapi.yml,
+  openapi/whitespace-london-lookup-api-openapi.yml, openapi/whitespace-london-mireport-api-openapi.yml,
+  openapi/whitespace-london-overview-api-openapi.yml, openapi/whitespace-london-owner-api-openapi.yml,
+  openapi/whitespace-london-questionnaire-api-openapi.yml, openapi/whitespace-london-risks-api-openapi.yml,
+  openapi/whitespace-london-sections-api-openapi.yml, openapi/whitespace-london-shared-api-openapi.yml,
+  openapi/whitespace-london-show-declaration-to-facility-api-openapi.yml, openapi/whitespace-london-summary-api-openapi.yml,
+  openapi/whitespace-london-user-api-openapi.yml, openapi/whitespace-london-version-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 121
   by_action_class:
-    connected: 48
-    acting: 73
+    connected: 49
+    acting: 72
   by_consequence:
-    read: 48
+    read: 49
     write: 62
-    physical: 11
+    physical: 10
   human_in_the_loop_required: 0
 operations:
 - path: /api/activities/{riskID}
   method: get
+  operationId: getApiActivitiesByRiskID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -26,6 +38,7 @@ operations:
     audit: none
 - path: /api/activities/{rootID}/full
   method: get
+  operationId: getApiActivitiesByRootIDFull
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -35,6 +48,7 @@ operations:
     audit: none
 - path: /api/activities/filter/help
   method: get
+  operationId: getApiActivitiesFilterHelp
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -44,21 +58,17 @@ operations:
     audit: none
 - path: /api/activities/filter
   method: post
+  operationId: postApiActivitiesFilter
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /api/attachments/{corporate}/{logo}
   method: get
+  operationId: getApiAttachmentsByCorporateByLogo
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -68,6 +78,7 @@ operations:
     audit: none
 - path: /api/attachments/{rootID}
   method: get
+  operationId: getApiAttachmentsByRootID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -77,6 +88,7 @@ operations:
     audit: none
 - path: /api/attachments/array/{rootID}
   method: get
+  operationId: getApiAttachmentsArrayByRootID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -86,6 +98,7 @@ operations:
     audit: none
 - path: /api/attachments/{parentDocID}/{identifier}
   method: get
+  operationId: getApiAttachmentsByParentDocIDByIdentifier
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -95,6 +108,7 @@ operations:
     audit: none
 - path: /api/attachments/{riskID}/{attachmentName}
   method: post
+  operationId: postApiAttachmentsByRiskIDByAttachmentName
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -110,6 +124,7 @@ operations:
     audit: required
 - path: /api/attachments/{rootID}/showToCarriers
   method: post
+  operationId: postApiAttachmentsByRootIDShowToCarriers
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -125,6 +140,7 @@ operations:
     audit: required
 - path: /api/attachbyunderwriter/{riskID}/{underwriter_channel}/{attachmentname}
   method: post
+  operationId: postApiAttachbyunderwriterByRiskIDByUnderwriterChannelByAttachmentname
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -140,21 +156,7 @@ operations:
     audit: required
 - path: /api/bindNotifyParties
   method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/brokerNote/{rootID}/save
-  method: post
+  operationId: postApiBindNotifyParties
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -170,6 +172,7 @@ operations:
     audit: required
 - path: /api/comments
   method: get
+  operationId: getApiComments
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -179,6 +182,7 @@ operations:
     audit: none
 - path: /api/comments
   method: post
+  operationId: postApiComments
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -194,6 +198,7 @@ operations:
     audit: required
 - path: /api/comments/global
   method: get
+  operationId: getApiCommentsGlobal
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -203,6 +208,7 @@ operations:
     audit: none
 - path: /api/customer/{teamID}/{uniqueID}
   method: get
+  operationId: getApiCustomerByTeamIDByUniqueID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -212,6 +218,7 @@ operations:
     audit: none
 - path: /api/customer/{teamID}/{uniqueID}/{key}
   method: post
+  operationId: postApiCustomerByTeamIDByUniqueIDByKey
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -227,6 +234,7 @@ operations:
     audit: required
 - path: /api/customer/{teamID}/{uniqueID}/{key}
   method: delete
+  operationId: deleteApiCustomerByTeamIDByUniqueIDByKey
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -242,6 +250,7 @@ operations:
     audit: required
 - path: /api/v22.04/data/{riskID}
   method: get
+  operationId: getApiV2204DataByRiskID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -251,6 +260,7 @@ operations:
     audit: none
 - path: /api/v22.04/data/{riskID}
   method: post
+  operationId: postApiV2204DataByRiskID
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -266,6 +276,7 @@ operations:
     audit: required
 - path: /api/v22.04/data/{riskID}/tagset/{tagset}
   method: get
+  operationId: getApiV2204DataByRiskIDTagsetByTagset
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -275,6 +286,7 @@ operations:
     audit: none
 - path: /api/v22.04/data/{riskID}/verify
   method: post
+  operationId: postApiV2204DataByRiskIDVerify
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -290,6 +302,7 @@ operations:
     audit: required
 - path: /api/v23.09/data/{riskID}
   method: get
+  operationId: getApiV2309DataByRiskID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -299,6 +312,7 @@ operations:
     audit: none
 - path: /api/v23.09/data/{riskID}
   method: post
+  operationId: postApiV2309DataByRiskID
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -314,6 +328,7 @@ operations:
     audit: required
 - path: /api/v23.09/data/{riskID}/tagset/{tagset}
   method: get
+  operationId: getApiV2309DataByRiskIDTagsetByTagset
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -323,6 +338,7 @@ operations:
     audit: none
 - path: /api/v23.09/data/{riskID}/verify
   method: post
+  operationId: postApiV2309DataByRiskIDVerify
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -336,25 +352,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/declarations/{riskID}/showToFacility/{facilityID}
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: physical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /api/documents/{docID}
   method: get
+  operationId: getApiDocumentsByDocID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -364,6 +364,7 @@ operations:
     audit: none
 - path: /api/documents/corporateApprovedCarriers/getAll
   method: get
+  operationId: getApiDocumentsCorporateApprovedCarriersGetAll
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -373,6 +374,7 @@ operations:
     audit: none
 - path: /api/documents/corporateApprovedCarriers/saveAndPropagate
   method: post
+  operationId: postApiDocumentsCorporateApprovedCarriersSaveAndPropagate
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -388,6 +390,7 @@ operations:
     audit: required
 - path: /api/documents/getLineGuidanceForRoot/{rootID}
   method: get
+  operationId: getApiDocumentsGetLineGuidanceForRootByRootID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -397,6 +400,7 @@ operations:
     audit: none
 - path: /api/endorsements/{rootID}
   method: get
+  operationId: getApiEndorsementsByRootID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -406,6 +410,23 @@ operations:
     audit: none
 - path: /export/pdf/{riskID}
   method: post
+  operationId: postExportPdfByRiskID
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/brokerNote/{rootID}/save
+  method: post
+  operationId: postApiBrokerNoteByRootIDSave
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -421,6 +442,7 @@ operations:
     audit: required
 - path: /api/labels/{root_or_label_ID}
   method: delete
+  operationId: deleteApiLabelsByRootOrLabelID
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -436,6 +458,7 @@ operations:
     audit: required
 - path: /api/labels/{root_or_label_ID}
   method: get
+  operationId: getApiLabelsByRootOrLabelID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -445,6 +468,7 @@ operations:
     audit: none
 - path: /api/labels/{root_or_label_ID}
   method: post
+  operationId: postApiLabelsByRootOrLabelID
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -460,6 +484,7 @@ operations:
     audit: required
 - path: /api/labels/suggested
   method: get
+  operationId: getApiLabelsSuggested
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -469,6 +494,7 @@ operations:
     audit: none
 - path: /api/labels/teamLabels
   method: get
+  operationId: getApiLabelsTeamLabels
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -478,6 +504,7 @@ operations:
     audit: none
 - path: /api/lines/{rootID}/combinedSets
   method: get
+  operationId: getApiLinesByRootIDCombinedSets
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -487,6 +514,7 @@ operations:
     audit: none
 - path: /api/lookup/check/{heading}
   method: get
+  operationId: getApiLookupCheckByHeading
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -496,6 +524,7 @@ operations:
     audit: none
 - path: /api/lookup/headings
   method: get
+  operationId: getApiLookupHeadings
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -505,6 +534,7 @@ operations:
     audit: none
 - path: /api/lookup/endorsementHeadingsInSection/{section}
   method: get
+  operationId: getApiLookupEndorsementHeadingsInSectionBySection
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -514,6 +544,7 @@ operations:
     audit: none
 - path: /api/lookup/headingsInSection/{section}
   method: get
+  operationId: getApiLookupHeadingsInSectionBySection
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -523,6 +554,7 @@ operations:
     audit: none
 - path: /api/lookup/namevariations
   method: get
+  operationId: getApiLookupNamevariations
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -532,6 +564,7 @@ operations:
     audit: none
 - path: /api/lookup/person/{email}
   method: get
+  operationId: getApiLookupPersonByEmail
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -541,6 +574,7 @@ operations:
     audit: none
 - path: /mireport/fetch
   method: post
+  operationId: postMireportFetch
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -556,6 +590,7 @@ operations:
     audit: required
 - path: /mireport/prepare
   method: post
+  operationId: postMireportPrepare
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -571,6 +606,7 @@ operations:
     audit: required
 - path: /api/overview/{rootID}
   method: get
+  operationId: getApiOverviewByRootID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -580,6 +616,7 @@ operations:
     audit: none
 - path: /api/owner/{rootID}
   method: get
+  operationId: getApiOwnerByRootID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -589,6 +626,7 @@ operations:
     audit: none
 - path: /api/owner/{rootID}
   method: post
+  operationId: postApiOwnerByRootID
   x-agentic-access:
     action-class: acting
     consequence: physical
@@ -606,6 +644,7 @@ operations:
     audit: required
 - path: /api/v23.09/data/questionnaire/{riskID}
   method: get
+  operationId: getApiV2309DataQuestionnaireByRiskID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -615,6 +654,7 @@ operations:
     audit: none
 - path: /api/questionnaire/{riskID}
   method: get
+  operationId: getApiQuestionnaireByRiskID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -624,6 +664,7 @@ operations:
     audit: none
 - path: /api/questionnaire/{riskID}/answer
   method: post
+  operationId: postApiQuestionnaireByRiskIDAnswer
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -639,6 +680,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}
   method: get
+  operationId: getApiRisksByRiskID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -648,6 +690,7 @@ operations:
     audit: none
 - path: /api/risks/{riskID}/editLineItem
   method: post
+  operationId: postApiRisksByRiskIDEditLineItem
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -663,6 +706,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/editMultipleLineItems
   method: post
+  operationId: postApiRisksByRiskIDEditMultipleLineItems
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -678,6 +722,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/changeDraftNowQuoteInPreparation
   method: post
+  operationId: postApiRisksByRiskIDChangeDraftNowQuoteInPreparation
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -693,6 +738,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/cloneDraft
   method: post
+  operationId: postApiRisksByRiskIDCloneDraft
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -708,6 +754,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/declineQuoteRequest
   method: post
+  operationId: postApiRisksByRiskIDDeclineQuoteRequest
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -723,6 +770,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/draftToFirmOrder
   method: post
+  operationId: postApiRisksByRiskIDDraftToFirmOrder
   x-agentic-access:
     action-class: acting
     consequence: physical
@@ -740,6 +788,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/endorsementFollowers
   method: get
+  operationId: getApiRisksByRiskIDEndorsementFollowers
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -749,6 +798,7 @@ operations:
     audit: none
 - path: /api/risks/{riskID}/getExtendedMRC
   method: get
+  operationId: getApiRisksByRiskIDGetExtendedMRC
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -758,6 +808,7 @@ operations:
     audit: none
 - path: /api/risks/{riskID}/lineitem/{mrcHeading}
   method: get
+  operationId: getApiRisksByRiskIDLineitemByMrcHeading
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -767,6 +818,7 @@ operations:
     audit: none
 - path: /api/risks/{riskID}/markAsFirmOrder
   method: post
+  operationId: postApiRisksByRiskIDMarkAsFirmOrder
   x-agentic-access:
     action-class: acting
     consequence: physical
@@ -784,6 +836,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/markAsIndicative
   method: post
+  operationId: postApiRisksByRiskIDMarkAsIndicative
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -799,6 +852,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/requestWrittenLineSets
   method: post
+  operationId: postApiRisksByRiskIDRequestWrittenLineSets
   x-agentic-access:
     action-class: acting
     consequence: physical
@@ -816,6 +870,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/showQuoteToBroker
   method: post
+  operationId: postApiRisksByRiskIDShowQuoteToBroker
   x-agentic-access:
     action-class: acting
     consequence: physical
@@ -833,6 +888,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/showToLeadUnderwriter
   method: post
+  operationId: postApiRisksByRiskIDShowToLeadUnderwriter
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -848,6 +904,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/signSets
   method: post
+  operationId: postApiRisksByRiskIDSignSets
   x-agentic-access:
     action-class: acting
     consequence: physical
@@ -865,6 +922,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/reSignSets
   method: post
+  operationId: postApiRisksByRiskIDReSignSets
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -880,6 +938,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/writeLine
   method: post
+  operationId: postApiRisksByRiskIDWriteLine
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -895,6 +954,7 @@ operations:
     audit: required
 - path: /api/risks/newDraft
   method: post
+  operationId: postApiRisksNewDraft
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -910,6 +970,7 @@ operations:
     audit: required
 - path: /api/risks/root/{rootID}
   method: get
+  operationId: getApiRisksRootByRootID
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -919,6 +980,7 @@ operations:
     audit: none
 - path: /api/risks/{rootID}/related/{type}
   method: get
+  operationId: getApiRisksByRootIDRelatedByType
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -928,6 +990,7 @@ operations:
     audit: none
 - path: /api/risks/save
   method: post
+  operationId: postApiRisksSave
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -943,6 +1006,7 @@ operations:
     audit: required
 - path: /api/risks/{EndorsementID}/showEndorsement
   method: post
+  operationId: postApiRisksByEndorsementIDShowEndorsement
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -958,6 +1022,7 @@ operations:
     audit: required
 - path: /api/risks/{EndorsementID}/acceptEndorsement
   method: post
+  operationId: postApiRisksByEndorsementIDAcceptEndorsement
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -973,6 +1038,7 @@ operations:
     audit: required
 - path: /api/risks/changeRiskName/{rootID}
   method: post
+  operationId: postApiRisksChangeRiskNameByRootID
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -988,6 +1054,7 @@ operations:
     audit: required
 - path: /api/risks/{quoteID}/createDraftFromQuote
   method: post
+  operationId: postApiRisksByQuoteIDCreateDraftFromQuote
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1003,6 +1070,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/lineItemAttributes
   method: post
+  operationId: postApiRisksByRiskIDLineItemAttributes
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1018,6 +1086,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/getQuoteDetails
   method: get
+  operationId: getApiRisksByRiskIDGetQuoteDetails
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1027,6 +1096,7 @@ operations:
     audit: none
 - path: /api/risks/{riskID}/saveQuoteDetails
   method: post
+  operationId: postApiRisksByRiskIDSaveQuoteDetails
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1042,6 +1112,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/createBindableQuote
   method: post
+  operationId: postApiRisksByRiskIDCreateBindableQuote
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1057,6 +1128,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/selfApproveSecondApproval
   method: post
+  operationId: postApiRisksByRiskIDSelfApproveSecondApproval
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1072,6 +1144,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/duplicateDraft
   method: post
+  operationId: postApiRisksByRiskIDDuplicateDraft
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1087,6 +1160,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/changeHeadings
   method: post
+  operationId: postApiRisksByRiskIDChangeHeadings
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1102,6 +1176,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/declineFirmOrder
   method: post
+  operationId: postApiRisksByRiskIDDeclineFirmOrder
   x-agentic-access:
     action-class: acting
     consequence: physical
@@ -1119,6 +1194,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/withdrawFirmOrder
   method: post
+  operationId: postApiRisksByRiskIDWithdrawFirmOrder
   x-agentic-access:
     action-class: acting
     consequence: physical
@@ -1136,15 +1212,14 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/saveVerticalLines
   method: post
+  operationId: postApiRisksByRiskIDSaveVerticalLines
   x-agentic-access:
     action-class: acting
-    consequence: physical
+    consequence: write
     subject: required
     audience: null
     token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
+      max-ttl: 900
     escalation:
       human-in-the-loop: conditional
       triggers:
@@ -1153,6 +1228,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/notTakeUpQuotation
   method: post
+  operationId: postApiRisksByRiskIDNotTakeUpQuotation
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1168,6 +1244,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/rollbackSigned
   method: post
+  operationId: postApiRisksByRiskIDRollbackSigned
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1183,6 +1260,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/createEndorsement
   method: post
+  operationId: postApiRisksByRiskIDCreateEndorsement
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1198,6 +1276,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/deleteDraft
   method: post
+  operationId: postApiRisksByRiskIDDeleteDraft
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1213,6 +1292,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/applyTemplate
   method: post
+  operationId: postApiRisksByRiskIDApplyTemplate
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1228,6 +1308,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/rejectWrittenLine/{writtenLineSetID}
   method: post
+  operationId: postApiRisksByRiskIDRejectWrittenLineByWrittenLineSetID
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1243,6 +1324,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/acceptWrittenLine/{writtenLineSetID}
   method: post
+  operationId: postApiRisksByRiskIDAcceptWrittenLineByWrittenLineSetID
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1258,6 +1340,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/createContractCorrection
   method: post
+  operationId: postApiRisksByRiskIDCreateContractCorrection
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1273,6 +1356,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/contractAttributes
   method: post
+  operationId: postApiRisksByRiskIDContractAttributes
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1288,6 +1372,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/setTemplateChannels
   method: post
+  operationId: postApiRisksByRiskIDSetTemplateChannels
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1303,6 +1388,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/quoteOnRequest
   method: post
+  operationId: postApiRisksByRiskIDQuoteOnRequest
   x-agentic-access:
     action-class: acting
     consequence: physical
@@ -1320,6 +1406,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/deleteEndorsement
   method: post
+  operationId: postApiRisksByRiskIDDeleteEndorsement
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1335,6 +1422,7 @@ operations:
     audit: required
 - path: /bodapi/risks/from
   method: post
+  operationId: postBodapiRisksFrom
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1350,6 +1438,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/editLineItemWithBB
   method: post
+  operationId: postApiRisksByRiskIDEditLineItemWithBB
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1365,6 +1454,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/recordLine
   method: post
+  operationId: postApiRisksByRiskIDRecordLine
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1380,6 +1470,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/forwardAsQuoteRequest
   method: post
+  operationId: postApiRisksByRiskIDForwardAsQuoteRequest
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1395,6 +1486,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/setEndorsementFollowerRoles
   method: post
+  operationId: postApiRisksByRiskIDSetEndorsementFollowerRoles
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1410,6 +1502,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/setEndorsementFollowerTemplate
   method: post
+  operationId: postApiRisksByRiskIDSetEndorsementFollowerTemplate
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1425,6 +1518,7 @@ operations:
     audit: required
 - path: /api/risks/{riskID}/completeEndorsement
   method: post
+  operationId: postApiRisksByRiskIDCompleteEndorsement
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1440,6 +1534,7 @@ operations:
     audit: required
 - path: /api/sections/{rootID}/save
   method: post
+  operationId: postApiSectionsByRootIDSave
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1455,6 +1550,7 @@ operations:
     audit: required
 - path: /api/shared/corporate
   method: get
+  operationId: getApiSharedCorporate
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1464,6 +1560,7 @@ operations:
     audit: none
 - path: /api/shared/compressedCorporate
   method: get
+  operationId: getApiSharedCompressedCorporate
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1473,6 +1570,7 @@ operations:
     audit: none
 - path: /api/shared/corporate/memberStates
   method: get
+  operationId: getApiSharedCorporateMemberStates
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1480,8 +1578,43 @@ operations:
     token:
       max-ttl: 3600
     audit: none
+- path: /api/declarations/{riskID}/showToFacility/{facilityID}
+  method: post
+  operationId: postApiDeclarationsByRiskIDShowToFacilityByFacilityID
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/showDeclarationToFacility
+  method: post
+  operationId: postApiShowDeclarationToFacility
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /api/summary
   method: get
+  operationId: getApiSummary
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1491,6 +1624,7 @@ operations:
     audit: none
 - path: /api/summary
   method: post
+  operationId: postApiSummary
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1506,6 +1640,7 @@ operations:
     audit: required
 - path: /api/summary/pinned
   method: get
+  operationId: getApiSummaryPinned
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1513,23 +1648,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /api/showDeclarationToFacility
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /api/user/colleagues
   method: get
+  operationId: getApiUserColleagues
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1539,6 +1660,7 @@ operations:
     audit: none
 - path: /api/user/colleagues/{state}
   method: get
+  operationId: getApiUserColleaguesByState
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1548,6 +1670,7 @@ operations:
     audit: none
 - path: /api/user/myDetails
   method: get
+  operationId: getApiUserMyDetails
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1557,6 +1680,7 @@ operations:
     audit: none
 - path: /api/version
   method: get
+  operationId: getApiVersion
   x-agentic-access:
     action-class: connected
     consequence: read
