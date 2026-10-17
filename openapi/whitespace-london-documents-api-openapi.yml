@@ -201,6 +201,102 @@ components:
           type: string
           description: 'the document name, being ACL:: followed by the broker company ID'
           example: ACL::BLACKPOOL
+    RWLineGuidanceSet:
+      type: object
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: number
+                example: 1
+              leadUnderwriterChannel:
+                type: string
+                example: offlineafricare_ALL
+                description: The name of the leader's team channel
+              multiSectionName:
+                type: string
+                description: The name of the section
+                example: Hull
+              multiSectionId:
+                type: string
+                description: The ID number of the section
+                example: '1'
+              leadUnderwriter:
+                type: string
+                example: OFFLINEAFRICANRE ALL
+                description: The leader's company and team IDs
+              leadUnderwriterFacility:
+                type: string
+                example: ICD77B5FD4-0790-42B9-BC53-65242FB96558
+                description: The unique ID of the leader's facility agreement
+        contents:
+          type: array
+          items:
+            type: object
+            properties:
+              conditionsEnabled:
+                type: boolean
+                example: true
+                description: Whether there are any conditions on the guidance
+              sectionIdentifiers:
+                type: array
+                items:
+                  type: string
+                  example: '1'
+                  description: The ID number of the section
+              maxString:
+                type: string
+                example: '40'
+                description: The maximum requested line percentage
+              minString:
+                type: string
+                example: '30'
+                description: The minimum requested line percentage
+              suggestedStamps:
+                $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
+              role:
+                description: Facility participation role
+                type: string
+                enum:
+                - leader
+                - agreementParty
+                - notifyParty
+                - nonNotifyParty
+                - doesNotApply
+              associatedFacilityId:
+                type: string
+                example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
+                description: Unique ID of the facility agreement that the declaration is attached to.
+              associatedFacilitySectionID:
+                type: string
+                example: '1'
+                description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
+        associatedPlacingID:
+          type: string
+          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO
+          description: The Unique ID of the Firm Order that this line guidance applies to
+        _id:
+          type: string
+          description: The unique ID of this document
+          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO::CATANIA::ALL::LGUS
+        _rev:
+          type: string
+          description: The revision number of this document
+          example: 1-304aa44d6b3231c380ed83bbda5d8f08
+        channels:
+          type: array
+          items:
+            type: string
+            example: catania_ALL
+        Provenance:
+          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
+        type:
+          type: string
+          description: The named JMRC type descriptor for this document
+          example: RWLineGuidance
     CorporateDetail:
       type: object
       properties:
@@ -483,102 +579,6 @@ components:
           example: blackpool
         provenance:
           $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
-    RWLineGuidanceSet:
-      type: object
-      properties:
-        sections:
-          type: array
-          items:
-            type: object
-            properties:
-              index:
-                type: number
-                example: 1
-              leadUnderwriterChannel:
-                type: string
-                example: offlineafricare_ALL
-                description: The name of the leader's team channel
-              multiSectionName:
-                type: string
-                description: The name of the section
-                example: Hull
-              multiSectionId:
-                type: string
-                description: The ID number of the section
-                example: '1'
-              leadUnderwriter:
-                type: string
-                example: OFFLINEAFRICANRE ALL
-                description: The leader's company and team IDs
-              leadUnderwriterFacility:
-                type: string
-                example: ICD77B5FD4-0790-42B9-BC53-65242FB96558
-                description: The unique ID of the leader's facility agreement
-        contents:
-          type: array
-          items:
-            type: object
-            properties:
-              conditionsEnabled:
-                type: boolean
-                example: true
-                description: Whether there are any conditions on the guidance
-              sectionIdentifiers:
-                type: array
-                items:
-                  type: string
-                  example: '1'
-                  description: The ID number of the section
-              maxString:
-                type: string
-                example: '40'
-                description: The maximum requested line percentage
-              minString:
-                type: string
-                example: '30'
-                description: The minimum requested line percentage
-              suggestedStamps:
-                $ref: '#/components/schemas/CorporateDetail/properties/stamps/items'
-              role:
-                description: Facility participation role
-                type: string
-                enum:
-                - leader
-                - agreementParty
-                - notifyParty
-                - nonNotifyParty
-                - doesNotApply
-              associatedFacilityId:
-                type: string
-                example: IC49BB5707-698B-4E51-B3C0-85FA763B94CC
-                description: Unique ID of the facility agreement that the declaration is attached to.
-              associatedFacilitySectionID:
-                type: string
-                example: '1'
-                description: The sectionID of the section of the facility agreement, if any, that the declaration is attached to
-        associatedPlacingID:
-          type: string
-          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO
-          description: The Unique ID of the Firm Order that this line guidance applies to
-        _id:
-          type: string
-          description: The unique ID of this document
-          example: IC006DD9DA-A6EF-4320-BD23-C12D845282FF::FO::CATANIA::ALL::LGUS
-        _rev:
-          type: string
-          description: The revision number of this document
-          example: 1-304aa44d6b3231c380ed83bbda5d8f08
-        channels:
-          type: array
-          items:
-            type: string
-            example: catania_ALL
-        Provenance:
-          $ref: '#/components/schemas/ExtendedMRC/properties/provenance'
-        type:
-          type: string
-          description: The named JMRC type descriptor for this document
-          example: RWLineGuidance
     ExtendedMRC:
       type: object
       description: JSON returned by getExtendedMRC including the Risk and a broader range of data
