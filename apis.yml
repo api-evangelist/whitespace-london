@@ -54,7 +54,7 @@ tags:
 - Reinsurance
 - Property and Casualty
 - Insurtech
-- Brokers
+- Brokerage
 - Underwriting
 - Placing Platform
 - London Market
@@ -76,6 +76,7 @@ tags_raw:
 - ACORD
 - Market Infrastructure
 - Real-Time
+- Brokers
 created: '2026-07-25'
 modified: '2026-07-25'
 specificationVersion: '0.23'
